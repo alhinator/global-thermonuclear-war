@@ -10,22 +10,37 @@ class Typewriter extends Phaser.GameObjects.BitmapText{
         this.state = "waiting"
 
         this.speed = _speed
-        this.fastSpeed = _speed / 2
+        this.fastSpeed = _speed / 4
         this.goingFast = false
 
         this.typeIndex = 0
         this.isGlowing = false
+
+        this.onFinish = function(){ console.log("Finished Typing!")}
     }
 
     //command functions
 
     startTyping(){
-        if(this.state != "waiting"){
-            return
-        }
+        if(this.state == "typing"){return}
+
         this.activateGlow()
         this.state = "typing"
         this.typeGlyph()
+    }
+    finishTyping(){
+        if(this.state != "typing") {return}
+
+        this.state = "done"
+        this.text = this.full_text
+        this.typeIndex = this.full_text.length
+        this.onFinish()
+
+    }
+    clearText(){
+        this.text = ""
+        this.full_text = ""
+        this.typeIndex = 0
     }
     activateGlow(){
         if(this.isGlowing){return}
@@ -44,7 +59,7 @@ class Typewriter extends Phaser.GameObjects.BitmapText{
  
          if (this.typeIndex == this.full_text.length){
              this.state = "done"
-             console.log("done typing")
+             this.onFinish()
              return
          }
          let delay = this.goingFast ? this.fastSpeed : this.speed
@@ -59,7 +74,6 @@ class Typewriter extends Phaser.GameObjects.BitmapText{
     }
     append_text_auto_type(the_text) {
         this.full_text += the_text
-        //this.state = "waiting"
         this.startTyping()
     }
     append_text(the_text){

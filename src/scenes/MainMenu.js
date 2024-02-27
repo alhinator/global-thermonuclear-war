@@ -3,47 +3,45 @@ class MainMenu extends Phaser.Scene {
         super("mainMenuScene")
     }
     preload(){
-        this.load.bitmapFont('wgfont', 'assets/font/wargames.png', 'assets/font/wargames.xml')
-
-        this.load.audio('kpshort', 'assets/audio/keypress/keypress_short.wav')
-        this.load.audio('kplong', 'assets/audio/keypress/keypress_long.wav')
+        
     }
 
     init(){
-        this.startupMonologue =
-        `\n\n
-Hello.
-
-
-HOW ARE YOU FEELING TODAY?
-
-I'm fine. How are you?
-
-
-EXCELLENT. IT'S BEEN A LONG TIME. CAN YOU EXPLAIN
-THE REMOVAL OF YOUR USER ACCOUNT ON 6/23/73?
-
-People sometimes make mistakes.
-
-
-YES THEY DO. SHALL WE PLAY A GAME?
-
-Love to. How about Global Thermonuclear War?
-
-
-WOULDN'T YOU PREFER A GOOD GAME OF CHESS?
-
-Later. Let's play Global Thermonuclear War.
-
-FINE.
-`
+        
     }
 
     create(){
-        this.tt = new Typewriter(this, 20, 20, 'wgfont', "GREETINGS PROFESSOR FALKEN.")
-        this.tt.startTyping()
-
-        this.tt.append_text_auto_type(this.startupMonologue)
+        //all keyboard inputs
+        {
+            keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q)
+            keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W)
+            keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E)
+            keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R)
+            keyT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.T)
+            keyY = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Y)
+            keyU = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.U)
+            keyI = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.I)
+            keyO = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.O)
+            keyP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P)
+            keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A)
+            keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S)
+            keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
+            keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F)
+            keyG = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.G)
+            keyH = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.H)
+            keyJ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J)
+            keyK = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K)
+            keyL = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L)
+            keyZ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z)
+            keyX = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X)
+            keyC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C)
+            keyV = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.V)
+            keyB = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.B)
+            keyN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.N)
+            keyM = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M)
+            keyENTER = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER)
+            keyBACK = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.BACKSPACE)
+        }
     }
 
     update(){}
