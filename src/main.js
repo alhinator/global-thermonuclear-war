@@ -1,7 +1,7 @@
 let config = {
     type: Phaser.AUTO,
-    width: 1920,
-    height:1080,
+    width: 1024,
+    height:768,
     render: {pixelArt: false},
     physics: {
         default: 'arcade',
@@ -10,7 +10,7 @@ let config = {
             debug: true
         }
     },
-    scene: [ Loading, Main, ]
+    scene: [ Loading, MainMenu, ]
 }
 let game = new Phaser.Game(config)
 

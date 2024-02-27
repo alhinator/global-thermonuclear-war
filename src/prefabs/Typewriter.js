@@ -1,8 +1,9 @@
 class Typewriter extends Phaser.GameObjects.BitmapText{
-    constructor(scene, x, y, font, _full_text, _speed, size, align){
-        this.full_text = full_text
+    constructor(scene, x, y, font, _full_text, _speed = 100, size = 16, align = 'left'){
         super(scene, x, y, font, "", size, align)
         scene.add.existing(this)
+        this.full_text = _full_text
+
 
         // the states of a typewriter: initial, typing, done
         this.state = "initial"
@@ -27,16 +28,19 @@ class Typewriter extends Phaser.GameObjects.BitmapText{
     }
 
     typeGlyph(){
+        console.log(this.full_text)
         //add the next index 
         this.text += this.full_text[this.typeIndex]
         this.typeIndex++
 
-        if (this.typeIndex > this.full_text.length()){
+        if (this.typeIndex == this.full_text.length){
             this.state = "done"
+            console.log("done")
             return
         }
-        delay = this.goingFast ? this.fastSpeed : this.speed
-        this.scene.time.delayedCall(delay, ()=>{this.typeGlyph}, null, this)
+        let delay = this.goingFast ? this.fastSpeed : this.speed
+        console.log(delay)
+        this.scene.time.delayedCall(delay, ()=>{this.typeGlyph()}, null, this)
 
     }
 }
