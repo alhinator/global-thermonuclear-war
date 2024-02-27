@@ -1,16 +1,16 @@
 class MainMenu extends Phaser.Scene {
-    constructor(){
+    constructor() {
         super("mainMenuScene")
     }
-    preload(){
-        
+    preload() {
+
     }
 
-    init(){
-        
+    init() {
+
     }
 
-    create(){
+    create() {
         //all keyboard inputs
         {
             keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q)
@@ -42,7 +42,11 @@ class MainMenu extends Phaser.Scene {
             keyENTER = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER)
             keyBACK = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.BACKSPACE)
         }
+
+        this.map = new Typewriter(this, upperConsoleX, upperConsoleY, "wgfont", USA_RUSSIA, 100)
+        this.map.startTyping()
+        this.map.setSpacesSkippable(true)
     }
 
-    update(){}
+    update() { }
 }

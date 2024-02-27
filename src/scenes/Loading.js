@@ -1,18 +1,18 @@
 class Loading extends Phaser.Scene {
-    constructor(){
+    constructor() {
         super("LoadingScene")
     }
 
-    preload(){
+    preload() {
         this.load.bitmapFont('wgfont', 'assets/font/wargames.png', 'assets/font/wargames.xml')
 
         this.load.audio('kpshort', 'assets/audio/keypress/keypress_short.wav')
         this.load.audio('kplong', 'assets/audio/keypress/keypress_long.wav')
 
-       
+
     }
-    init(){
-        this.startupMonologue =`GREETINGS PROFESSOR FALKEN.
+    init() {
+        this.startupMonologue = `GREETINGS PROFESSOR FALKEN.
 
 Hello.
 
@@ -36,14 +36,14 @@ Love to. How about Global Thermonuclear War?
 WOULDN'T YOU PREFER A GOOD GAME OF CHESS?
 
 Later. Let's play Global Thermonuclear War.
-            
+
 FINE.`
         this.introStarted = false
     }
 
 
-    create(){
-        this.myConsole = new TextInput(this,upperConsoleX, upperConsoleY, 'wgfont', "CONNECTION TERMINATED. RE-ESTABLISH? (ENTER)")
+    create() {
+        this.myConsole = new TextInput(this, upperConsoleX, upperConsoleY, 'wgfont', "CONNECTION TERMINATED. RE-ESTABLISH? (ENTER)")
         this.myConsole.startBufferOscillation()
         this.myConsole.startTyping()
 
@@ -56,24 +56,27 @@ FINE.`
     }
 
 
-    update(){
-        if(Phaser.Input.Keyboard.JustDown(keySPACE)){
+    update() {
+        //SKIP THING
+        this.scene.start("mainMenuScene")
+
+        if (Phaser.Input.Keyboard.JustDown(keySPACE)) {
             this.myConsole.setFast(true)
         }
-        if(Phaser.Input.Keyboard.JustUp(keySPACE)){
+        if (Phaser.Input.Keyboard.JustUp(keySPACE)) {
             this.myConsole.setFast(false)
         }
 
-        if(Phaser.Input.Keyboard.JustDown(keyENTER) && !this.introStarted){
+        if (Phaser.Input.Keyboard.JustDown(keyENTER) && !this.introStarted) {
             this.introStarted = true
             this.myConsole.clearText()
             this.myConsole.append_text_auto_type(this.startupMonologue)
-            this.myConsole.onFinish = function(){this.scene.loadinCallback()}
+            this.myConsole.onFinish = function () { this.scene.loadinCallback() }
         }
     }
 
 
-    loadinCallback(){
-        this.time.delayedCall(2000, ()=>{this.scene.start("mainMenuScene")})
+    loadinCallback() {
+        //this.time.delayedCall(2000, ()=>{this.scene.start("mainMenuScene")})
     }
 }

@@ -1,8 +1,8 @@
 let config = {
     type: Phaser.WEBGL,
     width: 1024,
-    height:768,
-    render: {pixelArt: false},
+    height: 768,
+    render: { pixelArt: false },
     physics: {
         default: 'arcade',
         arcade: {
@@ -10,7 +10,7 @@ let config = {
             debug: true
         }
     },
-    scene: [ Loading, MainMenu, ]
+    scene: [Loading, MainMenu,]
 }
 let game = new Phaser.Game(config)
 
