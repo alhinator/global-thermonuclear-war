@@ -43,7 +43,7 @@ class MainMenu extends Phaser.Scene {
             keyBACK = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.BACKSPACE)
         }
 
-        this.map = new Typewriter(this, upperConsoleX, upperConsoleY, "wgfont", USA_RUSSIA, 100)
+        this.map = new Typewriter(this, upperConsoleX, upperConsoleY, "wgfont", USA_RUSSIA, 50)
         this.map.startTyping()
         this.map.setSpacesSkippable(true)
     }

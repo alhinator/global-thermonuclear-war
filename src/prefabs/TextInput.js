@@ -32,6 +32,11 @@ class TextInput extends Typewriter {
 
     //overriding typeGlyph in order to account for endcap character
     typeGlyph() {
+        if (this.typeIndex >= this.full_text.length) {
+            this.state = "done"
+            this.onFinish()
+            return
+        }
         //console.log(this.full_text)
         //add the next index 
         let charr = this.full_text[this.typeIndex]
@@ -44,10 +49,8 @@ class TextInput extends Typewriter {
         if (isntWhitespace(charr)) {
             this.scene.sound.play('kpshort', { loop: false, volume: 0.2 })
         }
-
-
         if (this.skipSpaces && !isntWhitespace(charr)) {
-            while (!isntWhitespace(charr)) {
+            while (!isntWhitespace(charr) && this.typeIndex < this.full_text.length) {
                 charr = this.full_text[this.typeIndex]
                 if (this.hasBufferChar) {
                     this.text = this.text.slice(0, -1) + charr + this.buffChar
@@ -56,14 +59,6 @@ class TextInput extends Typewriter {
                 }
                 this.typeIndex++
             }
-        }
-
-
-
-        if (this.typeIndex >= this.full_text.length) {
-            this.state = "done"
-            this.onFinish()
-            return
         }
         let delay = this.goingFast ? this.fastSpeed : this.speed
         this.scene.time.delayedCall(delay, () => { this.typeGlyph() }, null, this)

@@ -50,6 +50,11 @@ class Typewriter extends Phaser.GameObjects.BitmapText {
         this.postFX.addGlow(0x7797e0, 1, 0.8, false, 0.1, 20)
     }
     typeGlyph() {
+        if (this.typeIndex >= this.full_text.length) {
+            this.state = "done"
+            this.onFinish()
+            return
+        }
         //console.log(this.full_text)
         //add the next index or multiple if skipping spaces.
         let charr = this.full_text[this.typeIndex]
@@ -61,18 +66,14 @@ class Typewriter extends Phaser.GameObjects.BitmapText {
         }
 
         if (this.skipSpaces && !isntWhitespace(charr)) {
-            while (!isntWhitespace(charr)) {
+            while (!isntWhitespace(charr) && this.typeIndex < this.full_text.length) {
                 charr = this.full_text[this.typeIndex]
                 this.text += charr
                 this.typeIndex++
             }
         }
 
-        if (this.typeIndex >= this.full_text.length) {
-            this.state = "done"
-            this.onFinish()
-            return
-        }
+        
         let delay = this.goingFast ? this.fastSpeed : this.speed
         this.scene.time.delayedCall(delay, () => { this.typeGlyph() }, null, this)
 
