@@ -4,6 +4,9 @@ class MainMenu extends Phaser.Scene {
     }
     preload(){
         this.load.bitmapFont('wgfont', 'assets/font/wargames.png', 'assets/font/wargames.xml')
+
+        this.load.audio('kpshort', 'assets/audio/keypress/keypress_short.wav')
+        this.load.audio('kplong', 'assets/audio/keypress/keypress_long.wav')
     }
 
     init(){
@@ -37,7 +40,7 @@ FINE.
     }
 
     create(){
-        this.tt = new Typewriter(this, 50, 50, 'wgfont', "GREETINGS PROFESSOR FALKEN.")
+        this.tt = new Typewriter(this, 20, 20, 'wgfont', "GREETINGS PROFESSOR FALKEN.")
         this.tt.startTyping()
 
         this.tt.append_text_auto_type(this.startupMonologue)

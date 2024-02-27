@@ -38,8 +38,12 @@ class Typewriter extends Phaser.GameObjects.BitmapText{
     typeGlyph(){
        //console.log(this.full_text)
         //add the next index 
-        this.text += this.full_text[this.typeIndex]
+        let charr = this.full_text[this.typeIndex]
+        this.text += charr
         this.typeIndex++
+        if(isAlphanumeric(charr)){
+            this.scene.sound.play('kpshort',{loop:false, volume:0.2})
+        }
 
         if (this.typeIndex == this.full_text.length){
             this.state = "done"
@@ -61,3 +65,10 @@ class Typewriter extends Phaser.GameObjects.BitmapText{
         this.full_text += the_text
     }
 }
+
+
+
+function isAlphanumeric(str) {
+    return /^[a-zA-Z0-9]+$/.test(str);
+  }
+// from https://plainenglish.io/blog/check-if-string-is-alphanumeric-in-javascript
