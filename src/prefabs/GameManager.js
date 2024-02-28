@@ -13,6 +13,8 @@ class GameManager {
         this.USSR = new Country("SOVIET UNION")
         populateUSACities(this.USA)
         populateUSSRCities(this.USSR)
+
+        this.gameTime = 0
     }
 }
 
@@ -43,7 +45,30 @@ function parseOtherCommands(scene, mgr, input, target = scene.infoPanel){
         case "LIST SOVIET UNION":
             panel_print_called(scene, mgr, scene.infoPanel, mgr.USSR.getTargets())
             break;
-
+        case "POP 1":
+        case "POP UNITED STATES":
+            let pop_data = mgr.USA.getPopulationStats()
+            //console.log(pop_data)
+            let info = `DATA FOR UNITED STATES:\n\n` + `
+    ORIGINAL POPULATION (T0): ${pop_data.original}
+    CURRENT LIVING POPULATION (T+${mgr.gameTime}): ${pop_data.original} (${pop_data.percent}%)
+    POPULATION KILLED SINCE T0: ${pop_data.dead}
+    CURRENT IRRADIATED POPULATION (T+${mgr.gameTime}): ${pop_data.irradiated}
+    CURRENT INJURED POPULATION (T+${mgr.gameTime}): ${pop_data.injured}`
+            panel_print_called(scene, mgr, scene.infoPanel, info)
+            break;
+        case "POP 2":
+        case "POP SOVIET UNION":
+            let Spop_data = mgr.USA.getPopulationStats()
+            //console.log(pop_data)
+            let Sinfo = `DATA FOR SOVIET UNION:\n\n` + 
+`   ORIGINAL POPULATION (T0): ${Spop_data.original}
+    LIVING POPULATION (T+${mgr.gameTime}): ${Spop_data.original} (${Spop_data.percent}%)
+    POPULATION KILLED SINCE T0: ${Spop_data.dead}
+    CURRENT IRRADIATED POPULATION (T+${mgr.gameTime}): ${Spop_data.irradiated}
+    CURRENT INJURED POPULATION (T+${mgr.gameTime}): ${Spop_data.injured}`
+            panel_print_called(scene, mgr, scene.infoPanel, Sinfo)
+            break;
         default:
             return -1
     }

@@ -1,6 +1,6 @@
 class TextInput extends Typewriter {
-    constructor(scene, x, y, font, _full_text, _speed = 50, size = 16, align = 'left', _buff_char = '|') {
-        super(scene, x, y, font, _full_text, _speed = 50, size = 16, align = 'left')
+    constructor(scene, x, y, font, _full_text, _speed = 30, size = 16, align = 'left', _buff_char = '|') {
+        super(scene, x, y, font, _full_text, _speed, size = 16, align = 'left')
         this.allowInput = false
         this.hasBufferChar = false
         this.buffChar = _buff_char

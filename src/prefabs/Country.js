@@ -2,7 +2,6 @@ class Country{
     constructor(_name){
         this.name = _name
         this.targets = {}
-        this.population = 0
         this.destroyed = false
     }
 
@@ -23,9 +22,37 @@ class Country{
 
 
 //set commands
-    addTarget(_name, _population, _hasBunkers){
-        this.targets[_name] = new Target(_name, _population, _hasBunkers)
+    addTarget(_name, _population, _defense){
+        this.targets[_name] = new Target(_name, this, _population, _defense)
     }
+
+
+//get commands
+    getPopulationStats(){
+        
+        let og = 0, curr = 0, dead = 0, irr = 0, inj = 0
+
+        for (const key in this.targets){
+            og += this.targets[key].original_population
+            console.log(og)
+            curr += this.targets[key].population
+            dead += this.targets[key].dead_citizens
+            irr += this.targets[key].irradiated_citizens
+            inj += this.targets[key].injured_citizens
+        }
+
+        return {
+            original: og, 
+            current: curr,
+            dead: dead,
+            irradiated: irr,
+            injured: inj,
+            percent: Math.floor(og/curr*100)
+        }
+
+    }
+    
+    get
 
 
 }
