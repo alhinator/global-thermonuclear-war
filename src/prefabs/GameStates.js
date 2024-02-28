@@ -27,10 +27,11 @@ class SideSelect extends State {
         if(input === ""){return}
         if(input === "1" || input == "UNITED STATES") {mgr.team = 1; mgr.FSM.transition('FirstTarget')}
         else if(input === "2" || input == "SOVIET UNION") {mgr.team = 2 ; mgr.FSM.transition('FirstTarget')}
-        else if (parseOtherCommands(scene, mgr, input) == -1) {
+        else if (parseOtherCommands(scene, mgr, input) != -1){ scene.mainConsole.clearUserInput()}
+        else  {
             scene.mainConsole.lockInput()
             scene.mainConsole.clearText()
-            scene.mainConsole.append_text("BAD INPUT. PLEASE TRY AGAIN.\n")
+            scene.mainConsole.append_text(basicBadInputText)
             scene.mainConsole.append_text_auto_type(whichSideText)
         }
     }
@@ -49,15 +50,15 @@ class FirstTarget extends State {
     }
     submit(scene, mgr){
         let input = scene.mainConsole.getInputString()
+        console.log("submit input from firstTarget:" + input)
         if(input === ""){return}
-        else if(input === "LIST UNITED STATES" || "LIST 1") { panel_print_called(scene, mgr, scene.infoPanel, mgr.USA.getTargets())}
-        else if(input === "LIST SOVIET UNION" || "LIST 2") { }
         //if() {} if target is GOOD
         //else if() {} terget is BAD
-        else if (parseOtherCommands(scene, mgr, input) == -1) {
+        else if (parseOtherCommands(scene, mgr, input) != -1){ scene.mainConsole.clearUserInput()}
+        else  {
             scene.mainConsole.lockInput()
             scene.mainConsole.clearText()
-            scene.mainConsole.append_text("BAD INPUT. PLEASE TRY AGAIN.\n")
+            scene.mainConsole.append_text(basicBadInputText)
             scene.mainConsole.append_text_auto_type(firstStrikeText)
         }
 

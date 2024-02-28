@@ -90,6 +90,18 @@ class TextInput extends Typewriter {
             this.text += this.buffChar
         }
     }
+    clearUserInput(){
+        this.full_text = this.full_text.slice(0, - this.userInputString.length)
+        
+        if (this.hasBufferChar) {
+            this.text = this.text.slice(0, -this.userInputString.length - 1) + this.buffChar
+        } else {
+            this.text = this.text.slice(0, -this.userInputString.length)
+        }
+        this.typeIndex = this.full_text.length
+        this.userInputString = ""
+       
+    }
     backspace() {
         if (this.state != "done" || this.full_text.length <= this.originalFTL) { return } // don't want to backspace if we haven't finished typing the whole paragraph OR backspacing into the p
 
@@ -159,6 +171,7 @@ class TextInput extends Typewriter {
         if (Phaser.Input.Keyboard.JustDown(key8)) { this.append_user_input("8") }
         if (Phaser.Input.Keyboard.JustDown(key9)) { this.append_user_input("9") }
         if (Phaser.Input.Keyboard.JustDown(key0)) { this.append_user_input("0") }
+        if (Phaser.Input.Keyboard.JustDown(keyMINUS)) { this.append_user_input("-") }
 
 
     }

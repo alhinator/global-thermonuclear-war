@@ -48,6 +48,7 @@ class MainMenu extends Phaser.Scene {
             key8 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.EIGHT)
             key9 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NINE)
             key0 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ZERO)
+            keyMINUS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.MINUS)
             keyENTER = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER)
             keyBACK = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.BACKSPACE)
             keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
