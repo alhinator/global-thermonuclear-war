@@ -19,6 +19,7 @@ let { height, width } = game.config
 
 let upperConsoleX = 16, upperConsoleY = 32
 let leftConsoleX = 32, leftConsoleY = height/2 + 32
+let rightConsoleX = width*3/8 + 32, rightConsoleY = height/2 + 32
 
 //the Horrors
 //my reasoning: it's fun to do it the old school style. Also - no input sanitization necessary. we convert only alphanum keystrokes directly into str.

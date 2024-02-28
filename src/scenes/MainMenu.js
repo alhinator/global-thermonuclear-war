@@ -53,45 +53,32 @@ class MainMenu extends Phaser.Scene {
             keyBACK = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.BACKSPACE)
             keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
         }
-        this.input.keyboard.on('keydown', this.mainConsoleListener,this)
+        ///make fsm
+        this.GameManager = new GameManager(this)
 
+        console.log('done making fsm')
+//create map & console, but do nothing with it yet.
         this.map = new Typewriter(this, upperConsoleX, upperConsoleY, "wgfont", USA_RUSSIA_new, 20)
         this.map.setSpacesSkippable(true)
-        this.map.onFinish = function (){this.scene.mapFinishedCallback()}
-        this.map.startTyping()
+        this.map.onFinish = function (){this.scene.GameManager.FSM.transition("SideSelect")}
 
-        //SKIP MAP THANG
-        this.map.finishTyping()
+        this.mainConsole = new TextInput(this, leftConsoleX, leftConsoleY, "wgfont", whichSideText)
+        this.input.keyboard.on('keydown', this.mainConsoleListener,this)
+
+        this.infoPanel = new Typewriter(this, rightConsoleX, rightConsoleY, "wgfont", "", 16)
 
     }
 
     update() { 
-        this.handleStateAction()
-    }
-
-
-    mapFinishedCallback(){
-        this.state = "pregame"
-        this.mainConsole = new TextInput(this, leftConsoleX, leftConsoleY, "wgfont", whichSideText)
-        this.mainConsole.startBufferOscillation()
-        this.mainConsole.startTyping()
-    }
-
-    handleStateAction(){
-        switch(this.state){
-            case "drawingMap":
-                break;
-            case "pregame":
-                if(!this.mainConsole.allowInput && this.mainConsole.state == "done") {this.mainConsole.unlockInput()}
-        }
+        this.GameManager.FSM.step()
     }
 
     userHitEnter(){
-        //do stuff
+        this.GameManager.FSM.recieveReturnKey()
     }
 
     mainConsoleListener(){
-        console.log("in keyboard listener")
+        //console.log("in keyboard listener")
         this.mainConsole.handleInput(this)
     }
 }

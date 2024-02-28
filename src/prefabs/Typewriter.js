@@ -45,7 +45,7 @@ class Typewriter extends Phaser.GameObjects.BitmapText {
     activateGlow() {
         if (this.isGlowing) { return }
         this.isGlowing = true
-        this.postFX.addGlow(0x7797e0, 1, 0.8, false, 0.1, 20)
+        this.postFX.addGlow(0x7797e0, 1, 0.8, false, 0.1, 15)
     }
     typeGlyph() {
         if (this.state == "done" || this.typeIndex >= this.full_text.length) {

@@ -6,6 +6,7 @@ class TextInput extends Typewriter {
         this.buffChar = _buff_char
         this.isBufferOscillating = false
         this.originalFTL = _full_text.length
+        this.userInputString = ""
     }
     //command funcs
     lockInput() {
@@ -13,6 +14,9 @@ class TextInput extends Typewriter {
     }
     unlockInput() {
         this.allowInput = true
+    }
+    getInputString(){
+        return this.userInputString
     }
     startBufferOscillation() {
         if (this.isBufferOscillating) { return }
@@ -80,6 +84,7 @@ class TextInput extends Typewriter {
     clearText() {
         this.text = ""
         this.full_text = ""
+        this.userInputString = ""
         this.typeIndex = 0
         if (this.hasBufferChar) {
             this.text += this.buffChar
@@ -94,13 +99,26 @@ class TextInput extends Typewriter {
         } else {
             this.text = this.text.slice(0, -1)
         }
+        this.userInputString = this.userInputString.slice(0,-1)
         this.typeIndex--
         this.scene.sound.play('kpshort', { loop: false, volume: 0.2 })
+    }
+    append_text_auto_type(the_text) {
+        this.full_text += the_text
+        this.originalFTL = this.full_text.length
+        this.startTyping()
+    }
+    append_user_input(the_text) {
+        //console.log("the_text:" + the_text)
+        //if(the_text == `\s`){ console.log("trying to spacebar")}
+        this.full_text += the_text
+        this.userInputString += the_text
+        this.startTyping()
     }
 
     handleInput(_context) { //basically, we take the keystroke from the outside source and convert it into a letter added/removed from the string.
         if(!this.allowInput) { return} //dont waste time if not allowed.
-        console.log("handling input")
+        //console.log("handling input")
         if (Phaser.Input.Keyboard.JustDown(keyENTER)) { _context.userHitEnter()}
         if (Phaser.Input.Keyboard.JustDown(keyBACK)) { this.backspace()}
         if (Phaser.Input.Keyboard.JustDown(keySPACE)) { this.append_user_input(` `)}
@@ -144,12 +162,4 @@ class TextInput extends Typewriter {
 
 
     }
-
-    append_user_input(the_text) {
-        console.log("the_text:" + the_text)
-        //if(the_text == `\s`){ console.log("trying to spacebar")}
-        this.full_text += the_text
-        this.startTyping()
-    }
-
 }
