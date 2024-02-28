@@ -9,7 +9,7 @@ class Loading extends Phaser.Scene {
         this.load.audio('kpshort', 'assets/audio/keypress/keypress_short.wav')
         this.load.audio('kplong', 'assets/audio/keypress/keypress_long.wav')
 
-
+        console.log("in loading preload")
     }
     init() {
         this.introStarted = false
