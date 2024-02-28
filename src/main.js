@@ -17,7 +17,8 @@ let game = new Phaser.Game(config)
 
 let { height, width } = game.config
 
-let upperConsoleX = 20, upperConsoleY = 30
+let upperConsoleX = 16, upperConsoleY = 32
+let leftConsoleX = 32, leftConsoleY = height/2 + 32
 
 //the Horrors
 //my reasoning: it's fun to do it the old school style. Also - no input sanitization necessary. we convert only alphanum keystrokes directly into str.

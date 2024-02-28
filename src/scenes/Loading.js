@@ -12,38 +12,12 @@ class Loading extends Phaser.Scene {
 
     }
     init() {
-        this.startupMonologue = `GREETINGS PROFESSOR FALKEN.
-
-Hello.
-
-
-HOW ARE YOU FEELING TODAY?
-
-I'm fine. How are you?
-
-
-EXCELLENT. IT'S BEEN A LONG TIME. CAN YOU EXPLAIN
-THE REMOVAL OF YOUR USER ACCOUNT ON 6/23/73?
-
-People sometimes make mistakes.
-
-
-YES THEY DO. SHALL WE PLAY A GAME?
-
-Love to. How about Global Thermonuclear War?
-
-
-WOULDN'T YOU PREFER A GOOD GAME OF CHESS?
-
-Later. Let's play Global Thermonuclear War.
-
-FINE.`
         this.introStarted = false
     }
 
 
     create() {
-        this.myConsole = new TextInput(this, upperConsoleX, upperConsoleY, 'wgfont', "CONNECTION TERMINATED. RE-ESTABLISH? (ENTER)")
+        this.myConsole = new TextInput(this, upperConsoleX, upperConsoleY, 'wgfont', "LOGON: Joshua")
         this.myConsole.startBufferOscillation()
         this.myConsole.startTyping()
 
@@ -57,7 +31,7 @@ FINE.`
 
 
     update() {
-        //SKIP THING
+        //SKIP INTRO (debug)
         this.scene.start("mainMenuScene")
 
         if (Phaser.Input.Keyboard.JustDown(keySPACE)) {
@@ -70,13 +44,13 @@ FINE.`
         if (Phaser.Input.Keyboard.JustDown(keyENTER) && !this.introStarted) {
             this.introStarted = true
             this.myConsole.clearText()
-            this.myConsole.append_text_auto_type(this.startupMonologue)
+            this.myConsole.append_text_auto_type(startupMonologue)
             this.myConsole.onFinish = function () { this.scene.loadinCallback() }
         }
     }
 
 
     loadinCallback() {
-        //this.time.delayedCall(2000, ()=>{this.scene.start("mainMenuScene")})
+        this.time.delayedCall(2000, ()=>{this.scene.start("mainMenuScene")})
     }
 }

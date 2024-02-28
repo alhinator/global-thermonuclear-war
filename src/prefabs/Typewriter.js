@@ -32,12 +32,10 @@ class Typewriter extends Phaser.GameObjects.BitmapText {
     }
     finishTyping() {
         if (this.state != "typing") { return }
-
         this.state = "done"
         this.text = this.full_text
         this.typeIndex = this.full_text.length
         this.onFinish()
-
     }
     clearText() {
         this.text = ""
@@ -50,9 +48,11 @@ class Typewriter extends Phaser.GameObjects.BitmapText {
         this.postFX.addGlow(0x7797e0, 1, 0.8, false, 0.1, 20)
     }
     typeGlyph() {
-        if (this.typeIndex >= this.full_text.length) {
-            this.state = "done"
-            this.onFinish()
+        if (this.state == "done" || this.typeIndex >= this.full_text.length) {
+            if (this.state != "done") { //short circut to prevent onFinish from getting called twice if finishtyping() is called
+                this.state = "done"
+                this.onFinish()
+            }
             return
         }
         //console.log(this.full_text)
