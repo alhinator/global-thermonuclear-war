@@ -1,6 +1,6 @@
 class Loading extends Phaser.Scene {
     constructor() {
-        super("LoadingScene")
+        super("loadingScene")
     }
 
     preload() {

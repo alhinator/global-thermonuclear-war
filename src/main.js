@@ -1,7 +1,8 @@
 let config = {
     type: Phaser.WEBGL,
-    width: 1024,
+    width: 1080,
     height: 768,
+    zoom: 0.9,
     render: { pixelArt: false },
     physics: {
         default: 'arcade',
@@ -10,7 +11,7 @@ let config = {
             debug: true
         }
     },
-    scene: [Loading, MainMenu,]
+    scene: [Loading, MainMenu, ExitScene]
 }
 let game = new Phaser.Game(config)
 

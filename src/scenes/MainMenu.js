@@ -7,7 +7,6 @@ class MainMenu extends Phaser.Scene {
     }
 
     init() {
-        this.state = "drawingMap"
     }
 
     create() {
@@ -57,7 +56,7 @@ class MainMenu extends Phaser.Scene {
         this.GameManager = new GameManager(this)
 
         console.log('done making fsm')
-//create map & console, but do nothing with it yet.
+//create map & console & timer, but do nothing with it yet.
         this.map = new Typewriter(this, upperConsoleX, upperConsoleY, "wgfont", USA_RUSSIA_new, 20)
         this.map.setSpacesSkippable(true)
         this.map.onFinish = function (){this.scene.GameManager.FSM.transition("SideSelect")}
@@ -66,6 +65,8 @@ class MainMenu extends Phaser.Scene {
         this.input.keyboard.on('keydown', this.mainConsoleListener,this)
 
         this.infoPanel = new Typewriter(this, rightConsoleX, rightConsoleY, "wgfont", "", 16)
+
+        this.gameTimer = new Typewriter(this, rightConsoleX, rightConsoleY - 32, "wgfont", "", 0)
 
     }
 
