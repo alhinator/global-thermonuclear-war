@@ -13,6 +13,7 @@ class InitialState extends State{
 
 class SideSelect extends State {
     enter(scene, mgr){
+        scene.infoPanel.clearText()
         scene.mainConsole.startBufferOscillation() //start typing
         scene.mainConsole.startTyping()
     }
@@ -29,10 +30,8 @@ class SideSelect extends State {
         else if(input === "2" || input == "SOVIET UNION") {mgr.team = 2 ; mgr.FSM.transition('FirstTarget')}
         else if (parseOtherCommands(scene, mgr, input) != -1){ scene.mainConsole.clearUserInput()}
         else  {
-            scene.mainConsole.lockInput()
-            scene.mainConsole.clearText()
-            scene.mainConsole.append_text(basicBadInputText)
-            scene.mainConsole.append_text_auto_type(whichSideText)
+            scene.mainConsole.clearUserInput()
+            panel_print_called(scene, mgr, scene.infoPanel, basicBadInputText)
         }
     }
 }
@@ -40,6 +39,7 @@ class SideSelect extends State {
 class FirstTarget extends State {
     enter(scene, mgr){
         scene.mainConsole.clearText()
+        scene.infoPanel.clearText()
         scene.mainConsole.lockInput()
         scene.mainConsole.append_text_auto_type(firstStrikeText)
     }
@@ -56,10 +56,8 @@ class FirstTarget extends State {
         //else if() {} terget is BAD
         else if (parseOtherCommands(scene, mgr, input) != -1){ scene.mainConsole.clearUserInput()}
         else  {
-            scene.mainConsole.lockInput()
-            scene.mainConsole.clearText()
-            scene.mainConsole.append_text(basicBadInputText)
-            scene.mainConsole.append_text_auto_type(firstStrikeText)
+            scene.mainConsole.clearUserInput()
+            panel_print_called(scene, mgr, scene.infoPanel, basicBadInputText)
         }
 
     }
