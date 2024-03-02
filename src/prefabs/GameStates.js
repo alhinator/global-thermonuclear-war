@@ -52,8 +52,9 @@ class FirstTarget extends State {
             console.log("ready to move on from initial targets")
             //should make the enemy select initial targets as well.
             console.log(mgr.myInitialTargets)
-            chooseEnemyTargets(scene, mgr, true)
+            mgr.enemyInitialTargets = chooseEnemyTargets(scene, mgr, true)
             console.log(mgr.enemyInitialTargets)
+            mgr.FSM.transition('LaunchMode')
         }
     }
     submit(scene, mgr){
@@ -97,6 +98,31 @@ class FirstTarget extends State {
             panel_print_called(scene, mgr, scene.infoPanel, basicBadTargetText)
         }
         
+
+    }
+}
+
+//this state occurs as soon as a launch command is submitted.
+//it launches the missiles and then goes back into view mode.
+class LaunchMode extends State{ 
+    enter(scene, mgr){
+        if(mgr.myInitialTargets != null){      // we are in first strike mode.
+            //first, clear main console. set infoPanel to "launching..."
+        panel_clear_called(scene,mgr, scene.mainConsole)
+        scene.mainConsole.lockInput()
+        let tt = launchTextMe + "\n" +
+        Object.keys(mgr.myInitialTargets) + "\n\n" +
+        launchTextThem + "\n" + 
+        Object.keys(mgr.enemyInitialTargets)
+        panel_print_called(scene,mgr, scene.infoPanel, tt)
+        mgr.startGameTimer()
+        }
+        
+    }
+    execute(scene, mgr){
+
+    }
+    submit(scene, mgr){
 
     }
 }

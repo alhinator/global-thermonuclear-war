@@ -27,6 +27,7 @@ class GameManager {
             Initial: new InitialState(),
             SideSelect: new SideSelect(),
             FirstTarget: new FirstTarget(),
+            LaunchMode: new LaunchMode(),
         }, [scene, this])
 
         this.team = -1
@@ -268,9 +269,11 @@ function chooseEnemyTargets(scene, mgr, initial = false){
         do{
         second = getRandKeyFromObj(me.targets)
         } while (second == first)
-        tg = []
-        tg.push(first)
-        tg.push(second)
+        tg = {}
+        tg[first.name] = first
+        tg[second.name] = second
+        console.assert(first != second)
+        return tg
     } else {
         //first, pick an available vehicle.
         //second, pick a city within that vehicle's available zones.
