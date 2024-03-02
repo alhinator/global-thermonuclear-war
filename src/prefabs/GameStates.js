@@ -42,6 +42,7 @@ class FirstTarget extends State {
         scene.infoPanel.clearText()
         scene.mainConsole.lockInput()
         scene.mainConsole.append_text_auto_type(firstStrikeText)
+        this.targetsChosen = 0
     }
     execute(scene, mgr){
         if(!scene.mainConsole.allowInput && scene.mainConsole.state == "done") { //once done typing, allow input
@@ -52,7 +53,22 @@ class FirstTarget extends State {
         let input = scene.mainConsole.getInputString()
         console.log("submit input from firstTarget:" + input)
         if(input === ""){return}
-        //if() {} if target is GOOD
+        if(mgr.team == 1){ //we are united states, 
+            if (mgr.USA.getTargetByName(input)){ //selected our own target.
+                scene.mainConsole.clearUserInput()
+                panel_print_called(scene, mgr, scene.infoPanel, selectedSelfTargetText)
+            }
+            else if(mgr.USSR.getTargetByName(input)) { //selected GOOD RUSSIAN TARGET
+                this.targetsChosen ++
+                //now, add the "good" target to the active list.
+
+            } else { //does not ping either side.
+                scene.mainConsole.clearUserInput()
+                panel_print_called(scene, mgr, scene.infoPanel, basicBadTargetText)
+            }
+
+        }
+        
         //else if() {} terget is BAD
         else if (parseOtherCommands(scene, mgr, input) != -1){ scene.mainConsole.clearUserInput()}
         else  {
