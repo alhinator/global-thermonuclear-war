@@ -115,7 +115,7 @@ class LaunchMode extends State{
         launchTextThem + "\n" + 
         Object.keys(mgr.enemyInitialTargets)
         panel_print_called(scene,mgr, scene.infoPanel, tt)
-        mgr.startGameTimer()
+        mgr.startTimer()
         }
         
     }

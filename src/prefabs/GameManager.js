@@ -40,12 +40,27 @@ class GameManager {
         populateUSSRMilitary(this.USSR)
 
         this.gameTime = 0
+        this.gameRawTime = 0
+        this.timerActive = false
 
         this.myInitialTargets = {}
         this.enemyInitialTargets = {}
 
         this.myCurrentTargets = {}
         this.enemyCurrentTargets = {}
+    }
+
+    incTimer(delta){
+        if(this.timerActive == false ) { return}
+        this.gameRawTime += delta
+        this.gameTime = timeToGameClock(this.gameRawTime)
+    }
+
+    startTimer(){
+        this.timerActive = true
+    }
+    stopTimer(){
+        this.timerActive = false
     }
 }
 
@@ -59,8 +74,6 @@ function parseOtherCommands(scene, mgr, input, target = scene.infoPanel){
         panel_print_called(scene, mgr, target, getInfoRequest(mgr, input.slice(5)))
         return
     }
-
-
 
     switch(input){
         case "HELP": 
@@ -291,3 +304,7 @@ function getRandKeyFromObj(obj) {
     var keys = Object.keys(obj);
     return obj[keys[ keys.length * Math.random() << 0]];
 };
+
+function timeToGameClock(time){
+    return time
+}
