@@ -17,11 +17,11 @@ class GameManager {
 
         this.gameTime = 0
 
-        this.myInitialTargets = []
-        this.enemyInitialTargets = []
+        this.myInitialTargets = {}
+        this.enemyInitialTargets = {}
 
-        this.myCurrentTargets = []
-        this.enemyCurrentTargets = []
+        this.myCurrentTargets = {}
+        this.enemyCurrentTargets = {}
     }
 }
 
@@ -134,7 +134,7 @@ function populateUSACities(ct){ //gonna do 24,  and get a nice spread
 
     //console.log("in populateusacities")
     //console.log(ct.getTargets())
-    ct.targets["SEATTLE"].setDestroyed(true)
+    //ct.targets["SEATTLE"].setDestroyed(true)
 }
 
 function populateUSAMilitary(ct){
@@ -167,7 +167,7 @@ function populateUSSRCities(ct){
     ct.addTarget("GORKY", 1438000)
     ct.addTarget("KAZAN", 1094000)
     ct.addTarget("KHARKOV", 1609959)
-    ct.addTarget("KIEV", 2587945)
+    ct.addTarget("KYIV", 2587945)
     ct.addTarget("LUYBYSHEV", 1254000)
     ct.addTarget("LENINGRAD", 5024000)
     ct.addTarget("MINSK", 1607100)
@@ -187,6 +187,6 @@ function populateUSSRCities(ct){
     //ct.targets["ALMA-ATA"].setDestroyed(true) //debug print test
 }
 
-function launchHelper(scene, mgr, self, enemy, target, vehicle, initial = false){
+function launchHelper(scene, mgr, self, enemy, target, vehicle, strength, initial = false){
 
 }

@@ -76,6 +76,7 @@ class TextInput extends Typewriter {
         if (this.state != "typing") { return }
         this.state = "done"
         this.text = this.full_text
+        this.typeIndex = this.text.length
         if (this.hasBufferChar) {
             this.text += this.buffChar
         }
