@@ -257,6 +257,34 @@ function populateUSSRMilitary(ct){
 
 }
 
-function launchHelper(scene, mgr, self, enemy, target, vehicle, strength, initial = false){
+
+function chooseEnemyTargets(scene, mgr, initial = false){
+    let me = mgr.team == 1 ? mgr.USA : mgr.USSR
+    let them = mgr.team == 1 ? mgr.USSR : mgr.USA 
+    let tg
+    if(initial == true){ // get two unique random targets.
+        let first = getRandKeyFromObj(me.targets)
+        let second
+        do{
+        second = getRandKeyFromObj(me.targets)
+        } while (second == first)
+        tg = []
+        tg.push(first)
+        tg.push(second)
+    } else {
+        //first, pick an available vehicle.
+        //second, pick a city within that vehicle's available zones.
+        //third, pick a strength less than or equal to half of the vehicle's remaining strength.
+
+    }
+}
+
+function launchHelper(scene, mgr, target, vehicle, strength, initial = false){
 
 }
+
+//random object picking code taken & slightly edited from https://stackoverflow.com/questions/2532218/pick-random-property-from-a-javascript-object 
+function getRandKeyFromObj(obj) {
+    var keys = Object.keys(obj);
+    return obj[keys[ keys.length * Math.random() << 0]];
+};

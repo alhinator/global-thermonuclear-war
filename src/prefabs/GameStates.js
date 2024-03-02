@@ -51,6 +51,9 @@ class FirstTarget extends State {
         if (this.targetsChosen >= 2) {
             console.log("ready to move on from initial targets")
             //should make the enemy select initial targets as well.
+            console.log(mgr.myInitialTargets)
+            chooseEnemyTargets(scene, mgr, true)
+            console.log(mgr.enemyInitialTargets)
         }
     }
     submit(scene, mgr){
