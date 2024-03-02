@@ -58,6 +58,35 @@ CURRENT INJURED POPULATION (T+${mgr.gameTime}): ${tg.injured_citizens}`
         return retVal
     }
 
+    getVehicleByName(key){
+        //console.log(this.targets[key])
+        if (this.vehicles[key] != null) { return this.vehicles[key]}
+        else { /*console.log("returning false in GVBN")*/ ; return false }
+    }
+
+    getVehicleInfo(key, mgr){
+        let tg = this.getVehicleByName(key)
+        if(!tg) { return false }
+
+      
+        let retVal = `DISPLAYING ${tg.name.toUpperCase()} INFO:\n\n` + 
+`PARENT COUNTRY: ${this.name}
+PAYLOAD DELIVERY METHOD: ${tg.type}
+TARGETABLE ZONES: ${tg.zones}
+CURRENT MISSILE STOCK: ${tg.capacity}
+DEPENDENCIES: ${tg.dependencies}
+`
+        if(tg.dependencies[0] == "NONE") {retVal +=
+`THIS VEHICLE WILL REMAIN OPERATIONAL
+UNTIL ALL YOUR CITIES ARE DESTROYED.`}
+        else if(tg.verifyDepend()) {retVal +=
+`IF ALL DEPENDENCIES ARE DESTROYED,
+THIS VEHICLE BECOMES INACTIVE.`}
+        else { retVal += `\n\n!!INACTIVE!!` }
+        return retVal
+        
+    }
+
 
 //set commands
     addTarget(_name, _population, _defense){

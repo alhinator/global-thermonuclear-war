@@ -1,3 +1,25 @@
+/*my notes on the 'gamification' of a cold-war nuclear simulator
+
+    my intentions are not to build an entirely accurate simulation, rather, one that is more fun in nature while still
+    keeping the original moral "fable" of the only way to win is not to play.
+    however, for the sake of gamifying and allowing the player different strategies in order to 'win', 
+    the two sides sort of follow this guide, which is loosely based off my research but not completely historically accurate.
+
+    the united states has less overall citizens, but they are better protected by superior air defense.
+
+    the USA is generally more "balanced" in terms of its options, however ,its power comes from localized command centers,
+    that, if disabled, cause the player to lose access to their weapons.
+    ex:   the united states loses all of its icbms if it loses NORAD in colorado.
+    additionally, most of its submarine power comes from pearl harbor & california.
+  
+    the soviet union relies heavily on decentralized icbm's and submarines. 
+    they contain less individual power on their own, but taking out one base or vehicle has minimal impact.
+    additionaly, while city populations may SEEM larger, more citizens are killed during nuclear strikes
+    due to high urban crowding and overpopulation.
+
+    the united states also has slightly more missiles.
+*/
+
 class GameManager {
     constructor(scene){
 
@@ -14,6 +36,7 @@ class GameManager {
         populateUSACities(this.USA)
         populateUSSRCities(this.USSR)
         populateUSAMilitary(this.USA)
+        populateUSSRMilitary(this.USSR)
 
         this.gameTime = 0
 
@@ -29,6 +52,10 @@ function parseOtherCommands(scene, mgr, input, target = scene.infoPanel){
     //look for "name-based" commands first.
     if(input.slice(0, 4) === "VIEW") { 
         panel_print_called(scene, mgr, target, getViewRequest(mgr, input.slice(5)))
+        return
+    }
+    if(input.slice(0, 4) === "INFO") { 
+        panel_print_called(scene, mgr, target, getInfoRequest(mgr, input.slice(5)))
         return
     }
 
@@ -105,6 +132,17 @@ function getViewRequest(mgr, target){
     else if (a) { return a}
     else return b
 }
+function getInfoRequest(mgr, target){
+    //steps: make query to both countries.
+    //if neither return, she's false.
+    //if one of them returns, return it.
+    let a = mgr.USA.getVehicleInfo(target, mgr)
+    let b = mgr.USSR.getVehicleInfo(target, mgr)
+    //console.log(a)
+    if (!a && !b) {return basicBadVehicleText} 
+    else if (a) { return a}
+    else return b
+}
 
 function populateUSACities(ct){ //gonna do 24,  and get a nice spread
     ct.addTarget("BALTIMORE", 786775, "US_EAST")
@@ -139,22 +177,24 @@ function populateUSACities(ct){ //gonna do 24,  and get a nice spread
 
 function populateUSAMilitary(ct){
     //icbm's first
-    ct.addVehicle("ELLSWORTH", "ICBM", ["Colorado Springs"], 6, "ALL")
-    ct.addVehicle("GRAND FORKS", "ICBM", ["Colorado Springs"], 6, "ALL")
-    ct.addVehicle("FT WARREN", "ICBM", ["Colorado Springs"], 6, "ALL")
+    ct.addVehicle("ELLSWORTH", "ICBM", ["COLORADO SPRINGS"], 6, "ALL")
+    ct.addVehicle("GRAND FORKS", "ICBM", ["COLORADO SPRINGS"], 6, "ALL")
+    ct.addVehicle("FT WARREN", "ICBM", ["COLORADO SPRINGS"], 6, "ALL")
 
     //now by region for jets and subs.
-    ct.addVehicle("ALAMEDA", "JET", ["Los Angeles", "San Diego"], 10, ["RU_URALS", "RU_SIBERIA", "RU_ASIA"])
-    ct.addVehicle("SAN DIEGO", "SUB", ["San Diego", "Los Angeles"], 12, ["RU_SIBERIA", "RU_ASIA"])
+    ct.addVehicle("ALAMEDA", "JET", ["LOS ANGELES", "SAN DIEGO"], 10, ["RU_URALS", "RU_SIBERIA", "RU_ASIA"])
+    ct.addVehicle("SAN DIEGO", "SUB", ["SAN DIEGO", "LOS ANGELES"], 12, ["RU_SIBERIA", "RU_ASIA"])
 
-    ct.addVehicle("NORFOLK", "SUB", ["Charlotte", "Washington DC"], 16, ["EU_EAST"])
+    ct.addVehicle("NORFOLK", "SUB", ["CHARLOTTE", "WAHINGTON DC"], 10, ["EU_EAST", "RU_WEST"])
+    ct.addVehicle("CHARLESTON", "JET", ["CHARLOTTE", "WASHINGTON DC"], 8, ["EU_EAST", "RU_WEST", "RU_URALS"])
 
-    ct.addVehicle("LAKEHURST", "JET", ["New York", "Boston"], 16, ["EU_EAST", "RU_WEST", "RU_URALS"])
+    ct.addVehicle("LAKEHURST", "JET", ["NEW YORK", "BOSTON"], 16, ["EU_EAST", "RU_WEST", "RU_URALS"])
 
-    ct.addVehicle("PEARL HARBOR", "SUB", ["Honolulu"], 16, ["RU_ASIA", "RU_SIBERIA"])
+    ct.addVehicle("PEARL HARBOR", "SUB", ["HONOLULU"], 16, ["RU_SIBERIA", "RU_ASIA"])
 
 }
-
+//info from https://en.wikipedia.org/wiki/United_States_Navy_submarine_bases 
+// and https://en.wikipedia.org/wiki/List_of_United_States_Air_Force_installations
 
 //United States population data retrieved from https://en.wikipedia.org/wiki/1980_United_States_census#City_rankings
 //Soviet Union population data retrieved from https://sashamaps.net/docs/maps/biggest-soviet-cities/
@@ -170,7 +210,7 @@ function populateUSSRCities(ct){
     ct.addTarget("KYIV", 2587945)
     ct.addTarget("LUYBYSHEV", 1254000)
     ct.addTarget("LENINGRAD", 5024000)
-    ct.addTarget("MINSK", 1607100)
+    ct.addTarget("MURMANSK", 468000)
     ct.addTarget("MOSCOW", 8967000)
     ct.addTarget("NOVOSIBIRSK", 1437000)
     ct.addTarget("ODESSA", 1115371)
@@ -185,6 +225,36 @@ function populateUSSRCities(ct){
     ct.addTarget("YEREVAN", 1201500)
 
     //ct.targets["ALMA-ATA"].setDestroyed(true) //debug print test
+}
+
+//INFO FROM nuke.fas.org/guide/russia/facility/icbm/icbm_1.gif 
+function populateUSSRMilitary(ct){
+    //icbms first, as usual
+    ct.addVehicle("DERAZHNYA", "ICBM", ["LENINGRAD"], 5, "ALL")
+    ct.addVehicle("PERVOMAYSK", "ICBM", ["MOSCOW"], 5, "ALL")
+    ct.addVehicle("DOMBAROVSKIY", "ICBM", ["VOLGOGRAD"], 5, "ALL")
+    ct.addVehicle("UZHUR", "ICBM", ["OMSK"], 5, "ALL")
+    ct.addVehicle("GLADKAYA", "ICBM", ["NOVOSIBIRSK"], 5, "ALL")
+
+    //now lets do subs.
+    ct.addVehicle("LENINGRAD", "SUB", ["LENINGRAD"], 6, "US_EAST", "US_SOUTH")
+    ct.addVehicle("ARKHANGELSK", "SUB", ["MURMANSK"], 2, "US_EAST", "US_SOUTH")
+
+    ct.addVehicle("MURMANSK", "SUB", ["MURMANSK"], 4, "US_EAST", "US_SOUTH", "US_MIDWEST")
+    ct.addVehicle("MAGADAN", "SUB", ["NONE"], 6, "US_WEST", "US_CENTRAL", "US_MIDWEST")
+    ct.addVehicle("ROSTOV ON DON", "SUB", ["ROSTOV ON DON"], 3, "US_EAST")
+    ct.addVehicle("CAM RANH BAY", "SUB", ["NONE"], 5, "US_WEST", "US_CENTRAL", "US_MIDWEST")
+
+    //some jets
+    ct.addVehicle("AFRIKANDA", "JET", ["MURMANSK", "MOSCOW", "LENINGRAD"], 8, "US_EAST", "US_SOUTH", "US_MIDWEST")
+    ct.addVehicle("BEKETOVSK", "JET", ["VOLGOGRAD"], 4, "US_EAST", "US_SOUTH", "US_MIDWEST")
+    ct.addVehicle("ARTSYZ", "JET", ["ODESSA"], 4, "US_EAST", "US_SOUTH", "US_MIDWEST")
+    ct.addVehicle("UZYN", "JET", ["KYIV"], 4, "US_EAST", "US_SOUTH", "US_MIDWEST")
+    ct.addVehicle("ARTEM", "JET", ["NONE"], 6, "US_WEST", "US_CENTRAL")
+    
+
+
+
 }
 
 function launchHelper(scene, mgr, self, enemy, target, vehicle, strength, initial = false){

@@ -48,7 +48,7 @@ class FirstTarget extends State {
         if(!scene.mainConsole.allowInput && scene.mainConsole.state == "done") { //once done typing, allow input
             scene.mainConsole.unlockInput()
         }
-        if (this.targetsChosen >= 6) {
+        if (this.targetsChosen >= 2) {
             console.log("ready to move on from initial targets")
             //should make the enemy select initial targets as well.
         }

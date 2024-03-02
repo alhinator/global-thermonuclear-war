@@ -58,7 +58,8 @@ class Vehicle {
         this.owner = _owner
         this.type = _type
         this.dependencies = _dependencies
-        this.capacity = _capacity
+        this.max_capacity = _capacity
+        this.capacity = this.max_capacity
         this.zones = _zones
     }
 
