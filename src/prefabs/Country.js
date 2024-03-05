@@ -41,7 +41,7 @@ POPULATION KILLED SINCE T0: ${tg.dead_citizens}
 CURRENT IRRADIATED POPULATION (T+${mgr.gameTime}): ${tg.irradiated_citizens}
 CURRENT INJURED POPULATION (T+${mgr.gameTime}): ${tg.injured_citizens}`
 
-        if(tg.getDestroyed) {retVal += `\n\n!!DESTROYED!!`}
+        if(tg.getDestroyed()) {retVal += `\n\n!!DESTROYED!!`}
         return retVal
         
     }
@@ -90,11 +90,11 @@ THIS VEHICLE BECOMES INACTIVE.`}
 
 
 //set commands
-    addTarget(_name, _population, zone, x, y, _defense = 0.4){
+    addTarget(_name, _population, zone, x, y, _defense){
         this.targets[_name] = new Target(this.scene, _name, this, _population,zone, x, y, _defense)
     }
 
-    addVehicle(scene, _name, _type, _dependencies, _capacity, _zones){
+    addVehicle(_name, _type, _dependencies, _capacity, _zones){
         this.vehicles[_name] = new Vehicle(_name, this, _type, _dependencies, _capacity, _zones)
     }
 

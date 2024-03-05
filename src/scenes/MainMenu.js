@@ -74,7 +74,7 @@ class MainMenu extends Phaser.Scene {
 
 
         //divider stuff for missiles. debug
-        this.r1 = new Typewriter(this, 300, 150, "wgfont", "@", 16, 0)
+        this.r1 = new Typewriter(this, 55, 85, "wgfont", "@", 16, 0)
         this.r1.startTyping()
 
 

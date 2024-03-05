@@ -16,7 +16,7 @@ ALL - used for vehicle; means it can target any location. otherwise, locations a
 */
 
 class Target {
-    constructor(scene, _name, _parent, _population, _zone = "null", _x, _y, _defense = 0.4){
+    constructor(scene, _name, _parent, _population, _zone = "null", _x, _y, _defense = 0.3){
         //console.log("in city constructor:" + _name)
         this.name = _name
         this.parent = _parent //parent country
@@ -37,9 +37,9 @@ class Target {
 
         this.x = _x
         this.y = _y
-        this.myLocation = new Typewriter(scene,this.x, this.y, "wgfont", "^",0,16,0)
+        this.myLocation = new Typewriter(scene,this.x, this.y, "wgfont", "@",0,10,0).setDepth(3)
         //this.myLocation.activateGlow()
-        this.myLocation.text = "^"
+        this.myLocation.text = "@"
         //this.myLocation.visible = false
     }
 
