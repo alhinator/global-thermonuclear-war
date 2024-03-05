@@ -67,19 +67,20 @@ class MainMenu extends Phaser.Scene {
 
         this.infoPanel = new Typewriter(this, rightConsoleX, rightConsoleY, "wgfont", "", 16)
 
-        this.gameTimerText = new Phaser.GameObjects.BitmapText(this, rightConsoleX, rightConsoleY-32, "wgfont", "n", 16, 0)
-
+        this.gameTimerText = new Typewriter(this, rightConsoleX, rightConsoleY - 32, "wgfont", "", 16, 0)
+        this.gameTimerText.activateGlow()
+        //console.log("mm: create: " + this.gameTimerText.text)
     }
 
     update(time, delta) { 
         this.GameManager.FSM.step()
-        //this.GameManager.incTimer(delta)
+        this.GameManager.incTimer(delta)
 
         //set clock text to game time.
-        //if(this.GameManager.gameTime > 0){
+        if(this.GameManager.gameRawTime != 0){
            // console.log("game timeer tick")
-            this.gameTimerText.text = "grah" //this.GameManager.gameTime
-      //  }
+            this.gameTimerText.text = this.GameManager.gameTime
+        }
     }
 
     userHitEnter(){

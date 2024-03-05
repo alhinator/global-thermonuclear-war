@@ -27,7 +27,7 @@ let USA_RUSSIA_new = String.raw`
   |.                               |            _/'                                       ./
    \.                              |           /.                                         /v.
     |                             /.           |                                     /'-v/.
-    \._                          /.            |                             _    __/
+    \._                          /.            |                                  __/
        \.__                    ./.              \                         /^~--/. /'
         ^  ^--v,      _/^-v,-^\ \                \                    ,_. \    \'/,
                 \v  ,/         \v.               ^\_           ,-~,_,/  / /.    ^   
@@ -160,4 +160,4 @@ PAYLOAD STRENGTH : <INTEGER>
 let launchTextMe =
 `SUCCESS: OUTBOUND NUCLEAR MISSILES EN ROUTE TO`
 
-let launchTextThem = `WARNING: INBOUND NUCLEAR MISSILE THREAT. LOCATION:`
+let launchTextThem = `WARNING: INBOUND NUCLEAR MISSILE THREAT. LOCATION(S):`

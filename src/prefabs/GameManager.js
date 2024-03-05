@@ -306,5 +306,32 @@ function getRandKeyFromObj(obj) {
 };
 
 function timeToGameClock(time){
-    return time
+    //converting milliseconds into days, hours, minutes, seconds
+    //however, we are scaling up.
+    //one second irl should equate to one minute ingame.
+    //this conversion can be calculated by: time divided by 1000 (ms -> s) * 60 (s to min, scale not convert)
+    let ingame_time = Math.floor(time * 0.06) 
+    
+    // first, calculate days display. this is done by dividing ingame_seconds by 60 (min) div 60 (hr) div 24 (day) = 86400
+    let ingame_days = Math.floor(ingame_time/86400)
+
+    //second, calculate hours display. There should be a cap before it rolls over, so:
+    //divide 60 (min) div 60(hr) % modulo 24.
+    let ingame_hours = Math.floor(ingame_time/3600 % 24)
+
+    //same logic for minutes.
+    //div 60, mod 60
+    let ingame_minutes = Math.floor(ingame_time/60 % 60)
+
+    //last, just mod for seconds.
+    let ingame_seconds = ingame_time % 60
+
+    let dPad = 0, hPad = 0, mPad = 0, sPad = ""
+    ingame_days < 10 ? dPad = "0" : dPad = ""
+    ingame_hours < 10 ? hPad = "0" : hPad = ""
+    ingame_minutes < 10 ? mPad = "0" : mPad = ""
+    ingame_seconds < 10 ? sPad = "0" : sPad = ""
+    let retVal = `T+${dPad}${ingame_days}D:${hPad}${ingame_hours}H:${mPad}${ingame_minutes}M:${sPad}${ingame_seconds}S`
+
+    return retVal
 }
