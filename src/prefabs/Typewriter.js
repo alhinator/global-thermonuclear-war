@@ -30,6 +30,13 @@ class Typewriter extends Phaser.GameObjects.BitmapText {
         this.state = "typing"
         this.typeGlyph()
     }
+    startTypingWithoutGlow() {
+        if (this.state == "typing") { return }
+
+        //this.activateGlow()
+        this.state = "typing"
+        this.typeGlyph()
+    }
     finishTyping() {
         if (this.state != "typing") { return }
         this.state = "done"

@@ -38,21 +38,27 @@ class Target {
         this.x = _x
         this.y = _y
         this.myLocation = new Typewriter(scene,this.x, this.y, "wgfont", "@",0,10,0).setDepth(3)
+        this.myLocation.setTint(0x00ff00)
         //this.myLocation.activateGlow()
+        //KEEP GLOW OFF
         this.myLocation.text = "@"
-        //this.myLocation.visible = false
+        this.myLocation.visible = false
     }
 
+    setVisible(_b){
+        this.myLocation.visible = _b
+    }
     setDestroyed(_b){
         this.destroyed = _b
         this.myLocation.text = this.destroyed ? "x" : "@"
+        this.myLocation.setTint(0xff0000)
     }
 
     getDestroyed(){
         return this.destroyed
     }
 
-    bombLanded(){
+    bombLanded(strength){
         console.log("in bomb landed: " + this.name + "   s" + strength)
         //do stuff
     }

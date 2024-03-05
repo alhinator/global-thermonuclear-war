@@ -54,9 +54,22 @@ class FirstTarget extends State {
             console.log(mgr.myInitialTargets)
             mgr.enemyInitialTargets = chooseEnemyTargets(scene, mgr, true)
             console.log(mgr.enemyInitialTargets)
+            
+            for (const key in mgr.myInitialTargets) {
+                    let obj = mgr.myInitialTargets[key]
+                    mgr.createMissile(obj, 3)
+                }
+                for (const key in mgr.enemyInitialTargets) {
+                    let obj = mgr.enemyInitialTargets[key]
+                    mgr.createMissile(obj, 3)
+                }            
             mgr.FSM.transition('LaunchMode')
+
         }
-    }
+
+
+        }
+    
     submit(scene, mgr){
         let input = scene.mainConsole.getInputString()
         let tg

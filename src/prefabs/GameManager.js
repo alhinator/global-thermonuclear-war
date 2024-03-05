@@ -22,6 +22,7 @@
 
 class GameManager {
     constructor(scene){
+        this.scene = scene
 
         this.FSM = new StateMachine('Initial', {
             Initial: new InitialState(),
@@ -38,6 +39,9 @@ class GameManager {
         populateUSSRCities(this.USSR)
         populateUSAMilitary(this.USA)
         populateUSSRMilitary(this.USSR)
+
+        let USAVisOnMap = false
+        let USSRVisOnMap = false
 
         this.gameTime = 0
         this.gameRawTime = 0
@@ -65,16 +69,23 @@ class GameManager {
     }
 
     createMissile(target, strength){ //target should be a pointer to a target instance.
+        console.log("in create missile for " + target.name)
         //first, check to see if target already has smth aimed at it.
         let missileKey = target.name
-        let stackCount = ""
-        while (this.activeMissiles["" + missileKey + stackCount] != null) {stackCount += "x"} //avoid dupe names.
+
+        while (this.activeMissiles[missileKey] != null) {missileKey += "x"} //avoid dupe names.
         let mDir = target.x < width/5 || target.x > width*3/4 ? missileDrawTextRight : missileDrawTextLeft
-        this.activeMissiles["" + missileKey + stackCount] = new Typewriter(this.scene, target.x, target.y, wgfont, mDir,100, 16, "left").setOrigin(0.5,1)
+        let xOffset = mDir == missileDrawTextLeft ? 135 : 137
+        this.activeMissiles[missileKey] = new Typewriter(this.scene, target.x - xOffset, target.y - 85, "wgfont", mDir,10, 16, "left")
+        //this.activeMissiles[missileKey].setOrigin(0.5,1) weird behavior w textbox
+        this.activeMissiles[missileKey].setTint(0xff0000)
         //set callback function:
-        this.activeMissiles["" + missileKey + stackCount].onFinish = (target, strength) => {
-            target.bombLanded(strength)
-        }
+        this.activeMissiles[missileKey].onFinish = function () {target.bombLanded(strength) ; this.destroy()}
+        //and start with a random delay.
+        this.scene.time.delayedCall(Phaser.Math.Between(100, 500), ()=>{
+            this.activeMissiles[missileKey].startTypingWithoutGlow()
+        }, [missileKey],this)
+
     }
 }
 
@@ -130,6 +141,20 @@ function parseOtherCommands(scene, mgr, input, target = scene.infoPanel){
         case "POP 2":
         case "POP SOVIET UNION":
             panel_print_called(scene, mgr, scene.infoPanel, mgr.USSR.getPopulationStats(mgr))
+            break;
+        case "TOGGLE 1":
+        case "TOGGLE UNITED STATES":
+            mgr.USAVisOnMap = !mgr.USAVisOnMap
+            for (const key in mgr.USA.targets) {
+                mgr.USA.targets[key].setVisible(mgr.USAVisOnMap)
+            }
+            break;
+        case "TOGGLE 2":
+        case "TOGGLE SOVIET UNION":
+            mgr.USSRVisOnMap = !mgr.USSRVisOnMap
+            for (const key in mgr.USSR.targets) {
+                mgr.USSR.targets[key].setVisible(mgr.USSRVisOnMap)
+            }
             break;
         default:
             return -1
@@ -322,7 +347,8 @@ function getRandKeyFromObj(obj) {
 function timeToGameClock(time){
     //converting milliseconds into days, hours, minutes, seconds
     //however, we are scaling up.
-    //one second irl should equate to one minute ingame.
+    //one second irl should equate to one minute ingame. OK SO THIS WAS THE OLD ATTEMPT BUT THE MATH EQUATES OT 
+    // ABOUT LIKE THREE SECONDS IS A MINUTE. AND HONESTLY IT FEELS FINE  SO.. IM LEAVING THE BAD MATH.
     //this conversion can be calculated by: time divided by 1000 (ms -> s) * 60 (s to min, scale not convert)
     let ingame_time = Math.floor(time * 0.06) 
     
