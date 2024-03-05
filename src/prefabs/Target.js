@@ -73,20 +73,25 @@ class Target {
 
             this.myLocation.setTint(0xffff00) //it did - we are under attack.
             //okay. time for nuclear devastaion.
-            let safeCoefficient = this.hasBunkers ? 0.2 : 0.3 //if the city has nuclear bunkers, the attack is only 2/3 as effective.
-            //an attack on a bunkerless target instakills 40% of population.
-            let civ_killed = Math.floor(this.population * safeCoefficient + this.original_population*0.05)//guarantees 5% of og dies, plus 20 or 30% of current.
-            let civ_alr_inj_killed = Math.floor(this.injured_citizens * 0.5 * safeCoefficient) // injured civs can still get nuked. sorry </3
-            let civ_alr_irr_killed = Math.floor(this.irradiated_citizens * 0.3 * safeCoefficient) // irradiated civs can still get nuked. sorry </3
-            let civ_inj = Math.floor(civ_killed * 0.5 * safeCoefficient) //a middling amount of civilians are injured.
-            let civ_irr = Math.floor(civ_killed * 0.25 * safeCoefficient) //a smaller amount are irradiated.
-            //so, the effective difference is that both injured and irradiated civilians will  have a chance to die or recover; irradiation is more deadly.
-            console.log(`killed by bomb ${i}: ${civ_killed} alr_inj:${civ_alr_inj_killed} alr_irr:${civ_alr_irr_killed} |  inj: ${civ_inj} |  irr: ${civ_irr} `)
-            this.population -= (civ_killed + civ_inj + civ_irr)
-            this.dead_citizens += civ_killed
-            this.injured_citizens += civ_inj - civ_alr_inj_killed
-            this.irradiated_citizens += civ_irr - civ_alr_irr_killed
-            this.isRadiationZone = true
+            if(this.population < 80000) { //if population is less than 90,000 - wipe that city off the map.
+                this.population = -1
+            } else {
+                let safeCoefficient = this.hasBunkers ? 0.2 : 0.3 //if the city has nuclear bunkers, the attack is only 2/3 as effective.
+                //an attack on a bunkerless target instakills 30% of population.
+                let civ_killed = Math.floor(this.population * safeCoefficient + this.original_population*0.05)//guarantees 5% of og dies, plus 20 or 30% of current.
+                let civ_alr_inj_killed = Math.floor(this.injured_citizens * 0.5 * safeCoefficient) // injured civs can still get nuked. sorry </3
+                let civ_alr_irr_killed = Math.floor(this.irradiated_citizens * 0.3 * safeCoefficient) // irradiated civs can still get nuked. sorry </3
+                let civ_inj = Math.floor(civ_killed * 0.5 * safeCoefficient) //a middling amount of civilians are injured.
+                let civ_irr = Math.floor(civ_killed * 0.25 * safeCoefficient) //a smaller amount are irradiated.
+                //so, the effective difference is that both injured and irradiated civilians will  have a chance to die or recover; irradiation is more deadly.
+                console.log(`killed by bomb ${i}: ${civ_killed} alr_inj:${civ_alr_inj_killed} alr_irr:${civ_alr_irr_killed} |  inj: ${civ_inj} |  irr: ${civ_irr} `)
+                this.population -= (civ_killed + civ_inj + civ_irr)
+                this.dead_citizens += civ_killed
+                this.injured_citizens += civ_inj - civ_alr_inj_killed
+                this.irradiated_citizens += civ_irr - civ_alr_irr_killed
+                this.isRadiationZone = true
+            }
+            
 
         }
         //check for destruction:
@@ -132,6 +137,12 @@ class Target {
                 this.irradiated_citizens -= irr_sub
                 this.dead_citizens += irr_sub
             }
+        }
+
+        if(this.isRadiationZone){
+            let civ_irr = Math.floor(this.population * 0.02 ) //two percent of the current population will become irradiated if living in the zone.
+            this.population -= civ_irr
+            this.irradiated_citizens += civ_irr
         }
         
 

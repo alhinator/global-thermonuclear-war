@@ -27,7 +27,7 @@ class Country {
         let lr = 0
         for (const key in this.vehicles) {
             let nm = this.vehicles[key].name + " (" + this.vehicles[key].type[0] + ")"
-            if (!this.vehicles[key].verifyDepend()) { nm += " (x)" }
+            if (!this.vehicles[key].verifyDepend() || this.vehicles.capacity <= 0) { nm += " (x)" }
             if (lr == 0 || lr == 1) { retVal += nm; for (let i = 0; i < 20 - nm.length; i++) { retVal += " " } }
             else { retVal += nm + "\n" }
             lr++; if (lr > 2) { lr = 0 }
@@ -90,7 +90,7 @@ CURRENT INJURED POPULATION (${mgr.gameTime}): ${tg.injured_citizens}`
 
     }
 
-    getPopulationStats(mgr) {
+    internalGetStats(mgr) {
         let og = 0, curr = 0, dead = 0, irr = 0, inj = 0
         for (const key in this.targets) {
             og += this.targets[key].original_population
@@ -108,6 +108,11 @@ CURRENT INJURED POPULATION (${mgr.gameTime}): ${tg.injured_citizens}`
             injured: inj,
             percent: Math.floor(curr / og * 100)
         }
+        return pop_data
+    }
+
+    getPopulationStats(mgr) {
+        let pop_data = this.internalGetStats(mgr)
 
         let retVal = `DATA FOR UNITED STATES:\n\n` +
             `ORIGINAL POPULATION (T0): ${pop_data.original}
@@ -119,6 +124,17 @@ CURRENT INJURED POPULATION (${mgr.gameTime}): ${pop_data.injured}`
         return retVal
     }
 
+    checkDestroyed(mgr){
+        let pop_data = this.internalGetStats(mgr)
+        if (pop_data.percent < 10) {
+            //if only ten percent of the population remains, including the irradiated and injured, this country CANNOT WIN
+            //HOWEVER, they may continue launching missiles if they are able.
+            console.log(this.name + " is at broken 10%")
+        } else if (pop_data.percent <= 0) {
+            //this country has been utterly destroyed.
+            console.log(this.name + " has been destroyed.")
+        }
+    }
 
     //set commands
     addTarget(_name, _population, zone, x, y, _defense) {

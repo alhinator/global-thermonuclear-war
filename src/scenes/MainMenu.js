@@ -89,6 +89,9 @@ class MainMenu extends Phaser.Scene {
             this.lastInjIrrTick += 10000
             tickAllCityPops(this, this.GameManager)
             console.log("done ticking city pops")
+
+            this.GameManager.USA.checkDestroyed(this.GameManager)
+            this.GameManager.USSR.checkDestroyed(this.GameManager)
         }
 
         //set clock text to game time.

@@ -75,7 +75,7 @@ class GameManager {
         let missileKey = target.name
 
         while (this.activeMissiles[missileKey] != null) {missileKey += "x"} //avoid dupe names.
-        let mDir = target.x < width/5 || target.x > width/2 ? missileDrawTextRight : missileDrawTextLeft
+        let mDir = target.x < width/5 || (target.x > width/2 && target.x < width *3/4) ? missileDrawTextRight : missileDrawTextLeft
         let xOffset = mDir == missileDrawTextLeft ? 135 : 137
         this.activeMissiles[missileKey] = new Typewriter(this.scene, target.x - xOffset, target.y - 85, "wgfont", mDir,10, 16, "left")
         //this.activeMissiles[missileKey].setOrigin(0.5,1) weird behavior w textbox
