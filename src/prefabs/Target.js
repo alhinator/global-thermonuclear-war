@@ -6,8 +6,8 @@ US_MIDWEST - from dakotas to mn/ohio/illinois
 US_SOUTH - southeast area, west of texas and south of DC
 US_EAST - eastern seaboard to ohio, DC inclusive
 
-EU_EAST - from east germany to far west of the black sea, containing the balkans
-RU_WEST - north eastern european, northwestern russia. 
+RU_WEST - north eastern european, northwestern russia.
+RU_SOUTH - territories south of western russia and south of the urals, including the balkans, and kazakhstan
 RU_URAL - mid-russia, the urals area
 RU_SIBERIA - the central and western siberia regions, reaching to the northeast of the country
 RU_ASIA - southeast russia and its west-asia territories.
