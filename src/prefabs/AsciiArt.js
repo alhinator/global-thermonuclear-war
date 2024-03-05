@@ -32,7 +32,7 @@ let USA_RUSSIA_new = String.raw`
         ^  ^--v,      _/^-v,-^\ \                \                    ,_. \    \'/,
                 \v  ,/         \v.               ^\_           ,-~,_,/  / /.    ^   
                   ^^                                \_         /       / /
-                                                      ^~~\   ./.       '^
+^v,.                                                  ^~~\   ./.       '^
                                                           \_~^
             
             UNITED STATES                                   SOVIET UNION
@@ -139,7 +139,7 @@ _____________________________
 
 `
 
-let firstStrikeHelpText = 
+let helpFirstStrikeText = 
 `SUBMIT TWO INTIAL TARGETS, ONE AT A TIME.
 IF THERE IS AN ERROR WITH TARGET INPUT,
 YOU WILL BE PROMPTED TO RESTART.
@@ -151,7 +151,10 @@ LAUNCH PROTOCOL WILL ASK FOR:
 TARGET : <CITY>
 SOURCE : <VEHICLE>
 PAYLOAD STRENGTH : <INTEGER>
-`
+
+TARGET MUST BE WITHIN SOURCE'S TARGETABLE ZONE.
+PAYLOAD STRENGTH MUST BE MORE THAN ZERO
+AND NO MORE THAN SOURCE'S CURRENT RESERVE.`
 
 let launchTextMe =
 `SUCCESS: OUTBOUND NUCLEAR MISSILES EN ROUTE TO`

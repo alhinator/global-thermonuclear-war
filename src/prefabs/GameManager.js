@@ -29,6 +29,7 @@ class GameManager {
             SideSelect: new SideSelect(),
             FirstTarget: new FirstTarget(),
             LaunchMode: new LaunchMode(),
+            ViewMode: new ViewMode(),
         }, [scene, this])
 
         this.team = -1
@@ -74,15 +75,15 @@ class GameManager {
         let missileKey = target.name
 
         while (this.activeMissiles[missileKey] != null) {missileKey += "x"} //avoid dupe names.
-        let mDir = target.x < width/5 || target.x > width*3/4 ? missileDrawTextRight : missileDrawTextLeft
+        let mDir = target.x < width/5 || target.x > width/2 ? missileDrawTextRight : missileDrawTextLeft
         let xOffset = mDir == missileDrawTextLeft ? 135 : 137
         this.activeMissiles[missileKey] = new Typewriter(this.scene, target.x - xOffset, target.y - 85, "wgfont", mDir,10, 16, "left")
         //this.activeMissiles[missileKey].setOrigin(0.5,1) weird behavior w textbox
-        this.activeMissiles[missileKey].setTint(0xff0000)
+        this.activeMissiles[missileKey].setTint(0xff0000).setDepth(5)
         //set callback function:
-        this.activeMissiles[missileKey].onFinish = function () {target.bombLanded(strength) ; this.destroy()}
+        this.activeMissiles[missileKey].onFinish = function () {target.bombLanded(strength) ; this.scene.time.delayedCall(1500, ()=>{this.destroy()}, null,this) }
         //and start with a random delay.
-        this.scene.time.delayedCall(Phaser.Math.Between(100, 500), ()=>{
+        this.scene.time.delayedCall(Phaser.Math.Between(10, 500), ()=>{
             this.activeMissiles[missileKey].startTypingWithoutGlow()
         }, [missileKey],this)
 
@@ -111,7 +112,10 @@ function parseOtherCommands(scene, mgr, input, target = scene.infoPanel){
             panel_print_called(scene, mgr, target, listGamesText)
             break;
         case "HELP FIRSTSTRIKE":
-            panel_print_called(scene, mgr, target, firstStrikeHelpText)
+            panel_print_called(scene, mgr, target, helpFirstStrikeText)
+            break;
+        case "HELP LAUNCH":
+            panel_print_called(scene, mgr, target, helpLaunchText)
             break;
         case "CLEAR":
             panel_clear_called(scene, mgr, target)
@@ -207,7 +211,7 @@ function populateUSACities(ct){ //gonna do 24,  and get a nice spread
     ct.addTarget("DENVER", 492365, "US_CENTRAL", 170, 175, 0.4)
     ct.addTarget("DETROIT", 1203339, "US_MIDWEST", 375, 100)
     ct.addTarget("HOUSTON", 1595138, "US_CENTRAL", 240, 240, 0.5)
-    ct.addTarget("HONOLULU", 584000, "US_WEST", -10, 230, 0.5)
+    ct.addTarget("HONOLULU", 584000, "US_WEST", 30, 275, 0.5)
     ct.addTarget("JACKSONVILLE", 540920, "US_SOUTH", 365, 215)
     ct.addTarget("LAS VEGAS", 164674, "US_WEST", 95, 165)
     ct.addTarget("LOS ANGELES", 2966850, "US_WEST", 60, 180, 0.4)

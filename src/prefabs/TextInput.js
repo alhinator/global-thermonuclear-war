@@ -86,6 +86,7 @@ class TextInput extends Typewriter {
         this.text = ""
         this.full_text = ""
         this.userInputString = ""
+        this.originalFTL = 0
         this.typeIndex = 0
         if (this.hasBufferChar) {
             this.text += this.buffChar
@@ -104,7 +105,11 @@ class TextInput extends Typewriter {
        
     }
     backspace() {
+        //console.log("bs called" + this.allowInput + this.state)
+        //console.log(this.originalFTL)
+        //console.log(this.full_text.length)
         if (!this.allowInput || this.state != "done" || this.full_text.length <= this.originalFTL) { return } // don't want to backspace if we haven't finished typing the whole paragraph OR backspacing into the p
+        //console.log("bs allowed")
 
         this.full_text = this.full_text.slice(0, -1)
         if (this.hasBufferChar) {
