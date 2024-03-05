@@ -63,16 +63,15 @@ class FirstTarget extends State {
     submit(scene, mgr) {
         let input = scene.mainConsole.getInputString()
         let tg
+        let me = mgr.team == 1 ? mgr.USA : mgr.USSR
+        let them = mgr.team == 1 ? mgr.USSR : mgr.USA
         console.log("submit input from firstTarget:" + input)
         if (input === "") { return }
         if (mgr.myInitialTargets[input]) { //we have already chosen this target as part of initial select.
             scene.mainConsole.clearUserInput()
             panel_print_called(scene, mgr, scene.infoPanel, alreadySelectedInitialText)
         }
-        let me = mgr.team == 1 ? mgr.USA : mgr.USSR
-        let them = mgr.team == 1 ? mgr.USSR : mgr.USA
-
-        if (me.getTargetByName(input)) { //selected our own target.
+        else if (me.getTargetByName(input)) { //selected our own target.
             scene.mainConsole.clearUserInput()
             panel_print_called(scene, mgr, scene.infoPanel, selectedSelfTargetText)
         }

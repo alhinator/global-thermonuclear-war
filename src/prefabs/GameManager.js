@@ -120,6 +120,18 @@ function parseOtherCommands(scene, mgr, input, target = scene.infoPanel){
         case "CLEAR":
             panel_clear_called(scene, mgr, target)
             break;
+        case "PAUSE":
+            if(!mgr.timerActive){
+                break
+            }
+            mgr.stopTimer()
+            break;
+        case "RESUME":
+            if(mgr.timerActive || mgr.gameRawTime == 0){
+                break;
+            }
+            mgr.startTimer()
+            break;
         case "EXIT":
             game_exit_called(scene, mgr)
         case "LIST 1":
@@ -378,4 +390,13 @@ function timeToGameClock(time){
     let retVal = `T+${dPad}${ingame_days}D:${hPad}${ingame_hours}H:${mPad}${ingame_minutes}M:${sPad}${ingame_seconds}S`
 
     return retVal
+}
+
+function tickAllCityPops(scene, mgr){
+    for (const key in mgr.USA.targets) {
+        mgr.USA.targets[key].tickInjIrr()
+    }
+    for (const key in mgr.USSR.targets) {
+        mgr.USSR.targets[key].tickInjIrr()
+    }
 }

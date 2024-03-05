@@ -7,6 +7,7 @@ class MainMenu extends Phaser.Scene {
     }
 
     init() {
+        this.lastInjIrrTick = 10000
     }
 
     create() {
@@ -84,6 +85,11 @@ class MainMenu extends Phaser.Scene {
     update(time, delta) { 
         this.GameManager.FSM.step()
         this.GameManager.incTimer(delta)
+        if(this.GameManager.gameRawTime >= this.lastInjIrrTick){
+            this.lastInjIrrTick += 10000
+            tickAllCityPops(this, this.GameManager)
+            console.log("done ticking city pops")
+        }
 
         //set clock text to game time.
         if(this.GameManager.gameRawTime != 0){
