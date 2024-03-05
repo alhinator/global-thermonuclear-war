@@ -32,8 +32,8 @@ class GameManager {
 
         this.team = -1
 
-        this.USA = new Country("UNITED STATES")
-        this.USSR = new Country("SOVIET UNION")
+        this.USA = new Country("UNITED STATES", scene)
+        this.USSR = new Country("SOVIET UNION", scene)
         populateUSACities(this.USA)
         populateUSSRCities(this.USSR)
         populateUSAMilitary(this.USA)
@@ -46,8 +46,9 @@ class GameManager {
         this.myInitialTargets = {}
         this.enemyInitialTargets = {}
 
-        this.myCurrentTargets = {}
-        this.enemyCurrentTargets = {}
+
+        this.activeMissiles = {}
+
     }
 
     incTimer(delta){
@@ -61,6 +62,19 @@ class GameManager {
     }
     stopTimer(){
         this.timerActive = false
+    }
+
+    createMissile(target, strength){ //target should be a pointer to a target instance.
+        //first, check to see if target already has smth aimed at it.
+        let missileKey = target.name
+        let stackCount = ""
+        while (this.activeMissiles["" + missileKey + stackCount] != null) {stackCount += "x"} //avoid dupe names.
+        let mDir = target.x < width/5 || target.x > width*3/4 ? missileDrawTextRight : missileDrawTextLeft
+        this.activeMissiles["" + missileKey + stackCount] = new Typewriter(this.scene, target.x, target.y, wgfont, mDir,100, 16, "left").setOrigin(0.5,1)
+        //set callback function:
+        this.activeMissiles["" + missileKey + stackCount].onFinish = (target, strength) => {
+            target.bombLanded(strength)
+        }
     }
 }
 
@@ -159,7 +173,7 @@ function getInfoRequest(mgr, target){
 }
 
 function populateUSACities(ct){ //gonna do 24,  and get a nice spread
-    ct.addTarget("BALTIMORE", 786775, "US_EAST")
+    ct.addTarget("BALTIMORE", 786775, "US_EAST", 200, 150, 0.6)
     ct.addTarget("BOSTON", 562994,  "US_EAST")
     ct.addTarget("CHARLOTTE", 314447, "US_SOUTH")
     ct.addTarget("CHICAGO", 3005072,  "US_EAST")

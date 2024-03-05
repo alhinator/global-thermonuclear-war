@@ -16,7 +16,7 @@ ALL - used for vehicle; means it can target any location. otherwise, locations a
 */
 
 class Target {
-    constructor(_name, _parent, _population, _zone = "null", _defense = 0.4){
+    constructor(scene, _name, _parent, _population, _zone = "null", _x, _y, _defense = 0.4){
         //console.log("in city constructor:" + _name)
         this.name = _name
         this.parent = _parent //parent country
@@ -34,14 +34,27 @@ class Target {
         this.isActivelyTargeted = false
         this.hasBunkers = (_population > 800000)
         this.isRadiationZone = false
+
+        this.x = _x
+        this.y = _y
+        this.myLocation = new Typewriter(scene,this.x, this.y, "wgfont", "^",0,16,0)
+        //this.myLocation.activateGlow()
+        this.myLocation.text = "^"
+        //this.myLocation.visible = false
     }
 
     setDestroyed(_b){
         this.destroyed = _b
+        this.myLocation.text = this.destroyed ? "x" : "@"
     }
 
     getDestroyed(){
         return this.destroyed
+    }
+
+    bombLanded(){
+        console.log("in bomb landed: " + this.name + "   s" + strength)
+        //do stuff
     }
     
 }

@@ -70,6 +70,15 @@ class MainMenu extends Phaser.Scene {
         this.gameTimerText = new Typewriter(this, rightConsoleX, rightConsoleY - 32, "wgfont", "", 16, 0)
         this.gameTimerText.activateGlow()
         //console.log("mm: create: " + this.gameTimerText.text)
+
+
+
+        //divider stuff for missiles. debug
+        this.r1 = new Typewriter(this, 300, 150, "wgfont", "@", 16, 0)
+        this.r1.startTyping()
+
+
+
     }
 
     update(time, delta) { 

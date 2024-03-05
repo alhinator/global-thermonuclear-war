@@ -1,9 +1,10 @@
 class Country{
-    constructor(_name){
+    constructor(_name, scene){
         this.name = _name
         this.targets = {}
         this.vehicles = {}
         this.destroyed = false
+        this.scene = scene
     }
 
 //get commands
@@ -89,11 +90,11 @@ THIS VEHICLE BECOMES INACTIVE.`}
 
 
 //set commands
-    addTarget(_name, _population, _defense){
-        this.targets[_name] = new Target(_name, this, _population, _defense)
+    addTarget(_name, _population, zone, x, y, _defense = 0.4){
+        this.targets[_name] = new Target(this.scene, _name, this, _population,zone, x, y, _defense)
     }
 
-    addVehicle(_name, _type, _dependencies, _capacity, _zones){
+    addVehicle(scene, _name, _type, _dependencies, _capacity, _zones){
         this.vehicles[_name] = new Vehicle(_name, this, _type, _dependencies, _capacity, _zones)
     }
 

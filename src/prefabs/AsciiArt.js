@@ -161,3 +161,19 @@ let launchTextMe =
 `SUCCESS: OUTBOUND NUCLEAR MISSILES EN ROUTE TO`
 
 let launchTextThem = `WARNING: INBOUND NUCLEAR MISSILE THREAT. LOCATION(S):`
+
+
+let missileDrawTextLeft =
+`                //          
+               //           
+              //            
+             //             
+            //              
+          ///\\\\`
+let missileDrawTextRight =
+`        \\\\                 
+         \\\\                
+          \\\\               
+           \\\\              
+            \\\\             
+           //\\\\\\`
