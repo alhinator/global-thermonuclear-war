@@ -152,9 +152,13 @@ class Vehicle {
     }
 
     verifyZone(target_zone){ //if the target zone is also in this vehicle's zones, return true. target_zone should be a string.
-        this.zones.forEach(element => {
-            if (element == "ALL" || element === target_zone) return true
-        });
+        //console.log(target_zone)
+        for (const i in this.zones) {
+            if (this.zones[i] === "ALL" || this.zones[i] === target_zone) {
+                console.log(this.zones[i])
+                return true
+            }
+        }
         return false
     }
 }

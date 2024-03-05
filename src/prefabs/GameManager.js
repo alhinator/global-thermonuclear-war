@@ -142,12 +142,12 @@ function parseOtherCommands(scene, mgr, input, target = scene.infoPanel){
         case "LIST SOVIET UNION":
             panel_print_called(scene, mgr, scene.infoPanel, mgr.USSR.getTargets())
             break;
-        case "DEF 1":
-        case "DEF UNITED STATES":
+        case "NUKES 1":
+        case "NUKES UNITED STATES":
             panel_print_called(scene, mgr, scene.infoPanel, mgr.USA.getVehicles())
             break;
-        case "DEF 2":
-        case "DEF SOVIET UNION":
+        case "NUKES 2":
+        case "NUKES SOVIET UNION":
             panel_print_called(scene, mgr, scene.infoPanel, mgr.USSR.getVehicles())
             break;
         case "POP 1":
@@ -184,6 +184,19 @@ function panel_print_called(scene, mgr, target, the_text){
 }
 function panel_clear_called(scene, mgr, target){
     target.clearText()
+}
+function do_panel_magic(scene, mgr, buffer){
+            //now some console magic. it turns the previous input into part of the textbox now that it's submitted.
+            //also clears the infopanel.
+            panel_clear_called(scene, mgr, scene.infoPanel)
+            scene.mainConsole.lockInput()
+            let tt = scene.mainConsole.text
+            if (scene.mainConsole.hasBufferChar) { tt = tt.slice(0, -1) }
+            tt += buffer
+            panel_clear_called(scene, mgr, scene.mainConsole)
+            panel_print_called(scene, mgr, scene.mainConsole, tt)
+            scene.mainConsole.finishTyping()
+            scene.mainConsole.unlockInput()
 }
 
 function game_exit_called(scene, mgr){
@@ -299,27 +312,27 @@ function populateUSSRCities(ct){
 //INFO FROM nuke.fas.org/guide/russia/facility/icbm/icbm_1.gif 
 function populateUSSRMilitary(ct){
     //icbms first, as usual
-    ct.addVehicle("DERAZHNYA", "ICBM", ["LENINGRAD"], 5, "ALL")
-    ct.addVehicle("PERVOMAYSK", "ICBM", ["MOSCOW"], 5, "ALL")
-    ct.addVehicle("DOMBAROVSKIY", "ICBM", ["VOLGOGRAD"], 5, "ALL")
-    ct.addVehicle("UZHUR", "ICBM", ["OMSK"], 5, "ALL")
-    ct.addVehicle("GLADKAYA", "ICBM", ["NOVOSIBIRSK"], 5, "ALL")
+    ct.addVehicle("DERAZHNYA", "ICBM", ["LENINGRAD"], 5, ["ALL"])
+    ct.addVehicle("PERVOMAYSK", "ICBM", ["MOSCOW"], 5, ["ALL"])
+    ct.addVehicle("DOMBAROVSKIY", "ICBM", ["VOLGOGRAD"], 5, ["ALL"])
+    ct.addVehicle("UZHUR", "ICBM", ["OMSK"], 5, ["ALL"])
+    ct.addVehicle("GLADKAYA", "ICBM", ["NOVOSIBIRSK"], 5, ["ALL"])
 
     //now lets do subs.
-    ct.addVehicle("LENINGRAD", "SUB", ["LENINGRAD"], 6, "US_EAST", "US_SOUTH")
-    ct.addVehicle("ARKHANGELSK", "SUB", ["MURMANSK"], 2, "US_EAST", "US_SOUTH")
+    ct.addVehicle("LENINGRAD", "SUB", ["LENINGRAD"], 6,[ "US_EAST", "US_SOUTH"])
+    ct.addVehicle("ARKHANGELSK", "SUB", ["MURMANSK"], 2, ["US_EAST", "US_SOUTH"])
 
-    ct.addVehicle("MURMANSK", "SUB", ["MURMANSK"], 4, "US_EAST", "US_SOUTH", "US_MIDWEST")
-    ct.addVehicle("MAGADAN", "SUB", ["NONE"], 6, "US_WEST", "US_CENTRAL", "US_MIDWEST")
-    ct.addVehicle("ROSTOV ON DON", "SUB", ["ROSTOV ON DON"], 3, "US_EAST")
-    ct.addVehicle("CAM RANH BAY", "SUB", ["NONE"], 5, "US_WEST", "US_CENTRAL", "US_MIDWEST")
+    ct.addVehicle("MURMANSK", "SUB", ["MURMANSK"], 4,[ "US_EAST", "US_SOUTH", "US_MIDWEST"])
+    ct.addVehicle("MAGADAN", "SUB", ["NONE"], 6, "US_WEST", ["US_CENTRAL", "US_MIDWEST"])
+    ct.addVehicle("ROSTOV ON DON", "SUB", ["ROSTOV ON DON"], 3, ["US_EAST"])
+    ct.addVehicle("CAM RANH BAY", "SUB", ["NONE"], 5, "US_WEST", ["US_CENTRAL", "US_MIDWEST"])
 
     //some jets
-    ct.addVehicle("AFRIKANDA", "JET", ["MURMANSK", "MOSCOW", "LENINGRAD"], 8, "US_EAST", "US_SOUTH", "US_MIDWEST")
-    ct.addVehicle("BEKETOVSK", "JET", ["VOLGOGRAD"], 4, "US_EAST", "US_SOUTH", "US_MIDWEST")
-    ct.addVehicle("ARTSYZ", "JET", ["ODESSA"], 4, "US_EAST", "US_SOUTH", "US_MIDWEST")
-    ct.addVehicle("UZYN", "JET", ["KYIV"], 4, "US_EAST", "US_SOUTH", "US_MIDWEST")
-    ct.addVehicle("ARTEM", "JET", ["NONE"], 6, "US_WEST", "US_CENTRAL")
+    ct.addVehicle("AFRIKANDA", "JET", ["MURMANSK", "MOSCOW", "LENINGRAD"], 8, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
+    ct.addVehicle("BEKETOVSK", "JET", ["VOLGOGRAD"], 4, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
+    ct.addVehicle("ARTSYZ", "JET", ["ODESSA"], 4, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
+    ct.addVehicle("UZYN", "JET", ["KYIV"], 4, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
+    ct.addVehicle("ARTEM", "JET", ["NONE"], 6, ["US_WEST", "US_CENTRAL"])
     
 
 
@@ -350,8 +363,26 @@ function chooseEnemyTargets(scene, mgr, initial = false){
     }
 }
 
-function launchHelper(scene, mgr, target, vehicle, strength, initial = false){
+function launchHelper(scene, mgr, target, vehicle, strength){
+    console.log(`in launch helper! \n   ${target}\n     ${vehicle}\n    ${strength}`)
 
+    //decrease capacity
+    vehicle.capacity -= strength
+
+    let randomFailureChance = Math.random()
+    if (randomFailureChance > 0.99) {
+    panel_print_called(scene, mgr, scene.infoPanel,
+`ERROR: CRITICAL LAUNCH FAILURE ENCOUNTERED.
+PAYLOAD FAILED TO DELIVER.`)
+        return
+    } //lulw
+
+    mgr.createMissile(target, strength)
+    
+    let tt = `LAUNCH SUCCESSFUL:
+    PAYLOAD EN ROUTE FROM ${vehicle.name}
+    TO ${target.name}`
+    panel_print_called(scene, mgr, scene.infoPanel, tt)
 }
 
 //random object picking code taken & slightly edited from https://stackoverflow.com/questions/2532218/pick-random-property-from-a-javascript-object 
