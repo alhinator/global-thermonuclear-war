@@ -211,8 +211,8 @@ function getViewRequest(mgr, target){
     let b = mgr.USSR.getTargetInfo(target, mgr)
     //console.log(a)
     if (!a && !b) {return basicBadTargetText} 
-    else if (a) { return a}
-    else return b
+    else if (a) { mgr.USA.targets[target].viewMe() ; return a }
+    else {mgr.USSR.targets[target].viewMe() ; return b}
 }
 function getInfoRequest(mgr, target){
     //steps: make query to both countries.
@@ -258,10 +258,10 @@ function populateUSACities(ct){ //gonna do 24,  and get a nice spread
 }
 
 function populateUSAMilitary(ct){
-    //icbm's first
-    ct.addVehicle("ELLSWORTH", "ICBM", ["COLORADO SPRINGS"], 6, "ALL")
-    ct.addVehicle("GRAND FORKS", "ICBM", ["COLORADO SPRINGS"], 6, "ALL")
-    ct.addVehicle("FT WARREN", "ICBM", ["COLORADO SPRINGS"], 6, "ALL")
+    //icbms first
+    ct.addVehicle("ELLSWORTH", "ICBM", ["COLORADO SPRINGS"], 6, ["ALL"])
+    ct.addVehicle("GRAND FORKS", "ICBM", ["COLORADO SPRINGS"], 6, ["ALL"])
+    ct.addVehicle("FT WARREN", "ICBM", ["COLORADO SPRINGS"], 6, ["ALL"])
 
     //now by region for jets and subs.
     ct.addVehicle("ALAMEDA", "JET", ["LOS ANGELES", "SAN DIEGO"], 10, ["RU_URALS", "RU_SIBERIA", "RU_ASIA"])
@@ -272,7 +272,7 @@ function populateUSAMilitary(ct){
 
     ct.addVehicle("LAKEHURST", "JET", ["NEW YORK", "BOSTON"], 16, ["RU_SOUTH", "RU_WEST", "RU_URALS"])
 
-    ct.addVehicle("PEARL HARBOR", "SUB", ["HONOLULU"], 16, ["RU_SIBERIA", "RU_ASIA"])
+    ct.addVehicle("PEARL HARBOR", "SUB", ["HONOLULU"], 16, ["RU_SIBERIA", "RU_ASIA", "RU_URALS"])
 
 }
 //info from https://en.wikipedia.org/wiki/United_States_Navy_submarine_bases 
@@ -285,13 +285,13 @@ function populateUSSRCities(ct){
     ct.addTarget("BAKU", 1795000, "RU_SOUTH", 600, 260)
     ct.addTarget("CHELYABINSK", 1107000, "RU_URALS", 650, 175)
     ct.addTarget("DNEPROPETROVSK", 1177897, "RU_SOUTH", 570, 210)
-    ct.addTarget("DONETSK", 1109102, "RU_SOUTH", 585, 215)
-    ct.addTarget("GORKY", 1438000, "RU_WEST", 605, 160)
     ct.addTarget("KAZAN", 1094000, "RU_WEST", 615, 165)
     ct.addTarget("KHARKOV", 1609959, "RU_SOUTH", 580, 195)
     ct.addTarget("KYIV", 2587945,"RU_SOUTH", 550, 200)
-    ct.addTarget("KUYBYSHEV", 1254000, "RU_WEST", 620, 190)
     ct.addTarget("LENINGRAD", 5024000, "RU_WEST", 585, 120, 0.4)
+
+    ct.addTarget("MAGADAN", 63000, "RU_ASIA", 900, 200)
+
     ct.addTarget("MURMANSK", 468000, "RU_WEST", 580, 90, 0.5)
     ct.addTarget("MOSCOW", 8967000, "RU_WEST", 590, 150, 0.5)
     ct.addTarget("NOVOSIBIRSK", 1437000, "RU_SIBERIA", 710, 175)
@@ -303,7 +303,13 @@ function populateUSSRCities(ct){
     ct.addTarget("TASHKENT", 2072459, "RU_SOUTH", 665, 290)
     ct.addTarget("TBILISI", 1259692, "RU_SOUTH", 630, 260)
     ct.addTarget("UFA", 1082000, "RU_URALS", 635, 200)
+
+    ct.addTarget("VLADIVOSTOK", 631000, "RU_ASIA", 805, 260)
+
     ct.addTarget("VOLGOGRAD", 999000, "RU_WEST", 620, 230, 0.4)
+
+    ct.addTarget("YAKUTSK", 110000, "RU_SIBERIA", 825, 160)
+
     ct.addTarget("YEREVAN", 1201500, "RU_SOUTH", 645, 270)
 
     //ct.targets["ALMA-ATA"].setDestroyed(true) //debug print test
@@ -322,10 +328,10 @@ function populateUSSRMilitary(ct){
     ct.addVehicle("LENINGRAD", "SUB", ["LENINGRAD"], 6,[ "US_EAST", "US_SOUTH"])
     ct.addVehicle("ARKHANGELSK", "SUB", ["MURMANSK"], 2, ["US_EAST", "US_SOUTH"])
 
-    ct.addVehicle("MURMANSK", "SUB", ["MURMANSK"], 4,[ "US_EAST", "US_SOUTH", "US_MIDWEST"])
-    ct.addVehicle("MAGADAN", "SUB", ["NONE"], 6, "US_WEST", ["US_CENTRAL", "US_MIDWEST"])
+    ct.addVehicle("MURMANSK", "SUB", ["MURMANSK"], 8,[ "US_EAST", "US_SOUTH", "US_MIDWEST"])
+    ct.addVehicle("MAGADAN", "SUB", ["MAGADAN", "VLADIVOSTOK"], 8, ["US_WEST","US_CENTRAL", "US_MIDWEST"])
     ct.addVehicle("ROSTOV ON DON", "SUB", ["ROSTOV ON DON"], 3, ["US_EAST"])
-    ct.addVehicle("CAM RANH BAY", "SUB", ["NONE"], 5, "US_WEST", ["US_CENTRAL", "US_MIDWEST"])
+    ct.addVehicle("CAM RANH BAY", "SUB", ["NONE"], 5, ["US_WEST", "US_CENTRAL", "US_MIDWEST"])
 
     //some jets
     ct.addVehicle("AFRIKANDA", "JET", ["MURMANSK", "MOSCOW", "LENINGRAD"], 8, ["US_EAST", "US_SOUTH", "US_MIDWEST"])

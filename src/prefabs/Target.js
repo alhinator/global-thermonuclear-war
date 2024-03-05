@@ -21,6 +21,7 @@ class Target {
         this.name = _name
         this.parent = _parent //parent country
         this.zone = _zone
+        this.scene = scene
 
         this.original_population = _population
         this.population = _population
@@ -39,7 +40,7 @@ class Target {
 
         this.x = _x
         this.y = _y
-        this.myLocation = new Typewriter(scene,this.x, this.y, "wgfont", "@",50,12,0).setDepth(3)
+        this.myLocation = new Typewriter(this.scene,this.x, this.y, "wgfont", "@",50,12,0).setDepth(3)
         this.myLocation.setTint(0x00ff00)
         //this.myLocation.activateGlow()
         //KEEP GLOW OFF
@@ -66,12 +67,15 @@ class Target {
             //strength = the number of bombs being sent. 
             //repeat for each bomb that's attempted.
             let success = Math.random()
-            if (success < this.defense_rating){ continue;} //this means the bomb did not get past our air defenses.
+            let dfReal = this.defense_rating - strength*0.05 //using many bombs at once increases the chance of one breaching air defense.
+            dfReal < 0 ? dfReal = 0.1 : dfReal              //however, they should never be guaranteed 100% success.
+            if (success < dfReal){ continue;} //this means the bomb did not go off.
+
             this.myLocation.setTint(0xffff00) //it did - we are under attack.
             //okay. time for nuclear devastaion.
             let safeCoefficient = this.hasBunkers ? 0.2 : 0.3 //if the city has nuclear bunkers, the attack is only 2/3 as effective.
             //an attack on a bunkerless target instakills 40% of population.
-            let civ_killed = Math.floor(this.population * safeCoefficient)
+            let civ_killed = Math.floor(this.population * safeCoefficient + this.original_population*0.05)//guarantees 5% of og dies, plus 20 or 30% of current.
             let civ_alr_inj_killed = Math.floor(this.injured_citizens * 0.5 * safeCoefficient) // injured civs can still get nuked. sorry </3
             let civ_alr_irr_killed = Math.floor(this.irradiated_citizens * 0.3 * safeCoefficient) // irradiated civs can still get nuked. sorry </3
             let civ_inj = Math.floor(civ_killed * 0.5 * safeCoefficient) //a middling amount of civilians are injured.
@@ -82,10 +86,23 @@ class Target {
             this.dead_citizens += civ_killed
             this.injured_citizens += civ_inj - civ_alr_inj_killed
             this.irradiated_citizens += civ_irr - civ_alr_irr_killed
+            this.isRadiationZone = true
 
         }
-        //do stuff
-        //debug: 
+        //check for destruction:
+        if(this.population < 0){
+            this.setDestroyed(true)
+            this.population = 0
+            this.injured_citizens = 0
+            this.dead_citizens = this.original_population
+            this.irradiated_citizens = 0
+        } else if (this.population / this.original_population * 100 < 10) {
+            this.setDestroyed(true)
+        }
+
+
+
+         
     }
 
     tickInjIrr(){
@@ -118,6 +135,15 @@ class Target {
         }
         
 
+    }
+
+    viewMe(){
+        this.myLocation.setTint(0x00ffff)
+        this.myLocation.setFontSize(16)
+        this.scene.time.delayedCall(10000, ()=>{
+            this.destroyed ? this.myLocation.setTint(0xff0000) : 
+                this.isRadiationZone ? this.myLocation.setTint(0xffff00) : 
+                    this.myLocation.setTint(0x00ff00) ; this.myLocation.setFontSize(12)}, null, this)
     }
     
 }
