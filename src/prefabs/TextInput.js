@@ -16,7 +16,7 @@ class TextInput extends Typewriter {
         this.allowInput = true
     }
     getInputString(){
-        return this.userInputString
+        return this.userInputString.trim()
     }
     startBufferOscillation() {
         if (this.isBufferOscillating) { return }

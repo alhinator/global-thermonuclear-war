@@ -1,8 +1,9 @@
 class Country {
-    constructor(_name, scene) {
+    constructor(_name, scene, _zones) {
         this.name = _name
         this.targets = {}
         this.vehicles = {}
+        this.zones = _zones
         this.destroyed = false
         this.scene = scene
     }
@@ -10,14 +11,27 @@ class Country {
     //get commands
     getTargets() {
         let retVal = "SIGNIFICANT TARGETS IN THE " + this.name + ":\n\n"
-        let lr = 0
-        for (const key in this.targets) {
-            let nm = this.targets[key].name
-            if (this.targets[key].destroyed) { nm += " (x)" }
-            if (lr == 0 || lr == 1) { retVal += nm; for (let i = 0; i < 20 - nm.length; i++) { retVal += " " } }
-            else { retVal += nm + "\n" }
-            lr++; if (lr > 2) { lr = 0 }
+        for (const zz in this.zones){
+            let c_zone = this.zones[zz]
+            let lr = 0
+            retVal += "["+c_zone+"]\n"
+            //less efficient, but better for players. sort by zone.
+            for (const key in this.targets) {
+                if(this.targets[key].zone == c_zone){
+                    let nm = this.targets[key].name
+                    if (this.targets[key].destroyed) { nm += " (x)" }
+                    if (lr == 0 || lr == 1) { retVal += nm; for (let i = 0; i < 20 - nm.length; i++) { retVal += " " } }
+                    else { retVal += nm + "\n" }
+                    lr++; if (lr > 2) { lr = 0 }
+                }
+            }
+            if(retVal.charAt(retVal.length-1) != '\n') {
+                retVal+='\n'
+            } 
+            retVal += '\n'
         }
+
+        
         //console.log(retVal)
         return retVal
     }
@@ -114,7 +128,7 @@ CURRENT INJURED POPULATION (${mgr.gameTime}): ${tg.injured_citizens}`
     getPopulationStats(mgr) {
         let pop_data = this.internalGetStats(mgr)
 
-        let retVal = `DATA FOR UNITED STATES:\n\n` +
+        let retVal = `POPULATION DATA FOR ${this.name}:\n\n` +
             `ORIGINAL POPULATION (T0): ${pop_data.original}
 CURRENT LIVING POPULATION (${mgr.gameTime}): ${pop_data.current} (${pop_data.percent}%)
 POPULATION KILLED SINCE T0: ${pop_data.dead}

@@ -16,7 +16,7 @@ ALL - used for vehicle; means it can target any location. otherwise, locations a
 */
 
 class Target {
-    constructor(scene, _name, _parent, _population, _zone = "null", _x, _y, _defense = 0.3){
+    constructor(scene, _name, _parent, _population, _zone = "null", _x, _y, _defense = 0.3, _specifyHasBunker){
         //console.log("in city constructor:" + _name)
         this.name = _name
         this.parent = _parent //parent country
@@ -35,7 +35,7 @@ class Target {
 
         this.destroyed = false
         this.isActivelyTargeted = false
-        this.hasBunkers = (_population > 500000)
+        this.hasBunkers = (_population > 500000) || _specifyHasBunker
         this.isRadiationZone = false
 
         this.x = _x

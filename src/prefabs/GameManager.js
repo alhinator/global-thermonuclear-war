@@ -34,8 +34,8 @@ class GameManager {
 
         this.team = -1
 
-        this.USA = new Country("UNITED STATES", scene)
-        this.USSR = new Country("SOVIET UNION", scene)
+        this.USA = new Country("UNITED STATES", scene, ["US_WEST", "US_CENTRAL", "US_MIDWEST", "US_EAST", "US_SOUTH"])
+        this.USSR = new Country("SOVIET UNION", scene, ["RU_WEST", "RU_SOUTH", "RU_URALS", "RU_SIBERIA", "RU_ASIA"])
         populateUSACities(this.USA)
         populateUSSRCities(this.USSR)
         populateUSAMilitary(this.USA)
@@ -104,6 +104,7 @@ function parseOtherCommands(scene, mgr, input, target = scene.infoPanel){
     switch(input){
         case "HELP": 
             panel_print_called(scene, mgr, target, helpText)
+            target.finishTyping()
             break;
         case "HELP GAMES":
             panel_print_called(scene, mgr, target, helpGamesText)
@@ -112,10 +113,13 @@ function parseOtherCommands(scene, mgr, input, target = scene.infoPanel){
             panel_print_called(scene, mgr, target, listGamesText)
             break;
         case "HELP FIRSTSTRIKE":
+        case "HELP FIRST STRIKE":
             panel_print_called(scene, mgr, target, helpFirstStrikeText)
+            target.finishTyping()
             break;
         case "HELP LAUNCH":
             panel_print_called(scene, mgr, target, helpLaunchText)
+            target.finishTyping()
             break;
         case "CLEAR":
             panel_clear_called(scene, mgr, target)
@@ -231,7 +235,7 @@ function populateUSACities(ct){ //gonna do 24,  and get a nice spread
     ct.addTarget("BOSTON", 562994,  "US_EAST", 435, 90, 0.4)
     ct.addTarget("CHARLOTTE", 314447, "US_SOUTH", 325, 170)
     ct.addTarget("CHICAGO", 3005072,  "US_MIDWEST", 355, 110)
-    ct.addTarget("COLORADO SPRINGS", 215150, "US_CENTRAL", 170, 160, 0.5)
+    ct.addTarget("COLORADO SPRINGS", 215150, "US_CENTRAL", 170, 160, 0.6, true)
     ct.addTarget("DALLAS", 904078, "US_CENTRAL", 235, 215)
     ct.addTarget("DENVER", 492365, "US_CENTRAL", 170, 175, 0.4)
     ct.addTarget("DETROIT", 1203339, "US_MIDWEST", 375, 100)
@@ -259,9 +263,9 @@ function populateUSACities(ct){ //gonna do 24,  and get a nice spread
 
 function populateUSAMilitary(ct){
     //icbms first
-    ct.addVehicle("ELLSWORTH", "ICBM", ["COLORADO SPRINGS"], 6, ["ALL"])
-    ct.addVehicle("GRAND FORKS", "ICBM", ["COLORADO SPRINGS"], 6, ["ALL"])
-    ct.addVehicle("FT WARREN", "ICBM", ["COLORADO SPRINGS"], 6, ["ALL"])
+    ct.addVehicle("ELLSWORTH", "ICBM", ["COLORADO SPRINGS", "WASHINGTON DC"], 6, ["ALL"])
+    ct.addVehicle("GRAND FORKS", "ICBM", ["COLORADO SPRINGS", "WASHINGTON DC"], 6, ["ALL"])
+    ct.addVehicle("FT WARREN", "ICBM", ["COLORADO SPRINGS", "WASHINGTON DC"], 6, ["ALL"])
 
     //now by region for jets and subs.
     ct.addVehicle("ALAMEDA", "JET", ["LOS ANGELES", "SAN DIEGO"], 10, ["RU_URALS", "RU_SIBERIA", "RU_ASIA"])
@@ -325,20 +329,20 @@ function populateUSSRMilitary(ct){
     ct.addVehicle("GLADKAYA", "ICBM", ["NOVOSIBIRSK"], 5, ["ALL"])
 
     //now lets do subs.
-    ct.addVehicle("LENINGRAD", "SUB", ["LENINGRAD"], 6,[ "US_EAST", "US_SOUTH"])
+    ct.addVehicle("LENINGRAD", "SUB", ["LENINGRAD"], 4,[ "US_EAST", "US_SOUTH"])
     ct.addVehicle("ARKHANGELSK", "SUB", ["MURMANSK"], 2, ["US_EAST", "US_SOUTH"])
 
-    ct.addVehicle("MURMANSK", "SUB", ["MURMANSK"], 8,[ "US_EAST", "US_SOUTH", "US_MIDWEST"])
-    ct.addVehicle("MAGADAN", "SUB", ["MAGADAN", "VLADIVOSTOK"], 8, ["US_WEST","US_CENTRAL", "US_MIDWEST"])
+    ct.addVehicle("MURMANSK", "SUB", ["MURMANSK"], 5,[ "US_EAST", "US_SOUTH", "US_MIDWEST"])
+    ct.addVehicle("MAGADAN", "SUB", ["MAGADAN", "VLADIVOSTOK"], 5, ["US_WEST","US_CENTRAL", "US_MIDWEST"])
     ct.addVehicle("ROSTOV ON DON", "SUB", ["ROSTOV ON DON"], 3, ["US_EAST"])
     ct.addVehicle("CAM RANH BAY", "SUB", ["NONE"], 5, ["US_WEST", "US_CENTRAL", "US_MIDWEST"])
 
     //some jets
-    ct.addVehicle("AFRIKANDA", "JET", ["MURMANSK", "MOSCOW", "LENINGRAD"], 8, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
+    ct.addVehicle("AFRIKANDA", "JET", ["MURMANSK", "MOSCOW", "LENINGRAD"], 6, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
     ct.addVehicle("BEKETOVSK", "JET", ["VOLGOGRAD"], 4, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
     ct.addVehicle("ARTSYZ", "JET", ["ODESSA"], 4, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
     ct.addVehicle("UZYN", "JET", ["KYIV"], 4, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
-    ct.addVehicle("ARTEM", "JET", ["NONE"], 6, ["US_WEST", "US_CENTRAL"])
+    ct.addVehicle("ARTEM", "JET", ["NONE"], 4, ["US_WEST", "US_CENTRAL"])
     
 
 

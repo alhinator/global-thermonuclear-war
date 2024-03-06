@@ -4,7 +4,7 @@ class InitialState extends State {
         console.log("end initialstate enter")
 
         //SKIP MAP THANG
-        //scene.map.finishTyping()
+        scene.map.finishTyping()
     }
     execute(scene, mgr) {
 
@@ -130,6 +130,10 @@ class LaunchMode extends State {
             scene.mainConsole.lockInput()
             panel_print_called(scene, mgr, scene.mainConsole, launchText1)
             this.state = "source"
+            let me = mgr.team == 1 ? mgr.USA : mgr.USSR
+            let them = mgr.team == 1 ? mgr.USSR : mgr.USA
+            panel_print_called(scene, mgr, scene.infoPanel, me.getVehicles())
+            scene.infoPanel.finishTyping()
         }
 
     }
@@ -148,6 +152,7 @@ class LaunchMode extends State {
             let src, dest, payload
             switch (this.state) {
                 case "source": //we need to verify the user has input a valid source.
+                    
                     if ((src = me.getVehicleByName(input)) == false) {
                         //bad vehicle.
                         panel_print_called(scene, mgr, scene.infoPanel, basicBadVehicleText)
@@ -161,11 +166,14 @@ class LaunchMode extends State {
                     } else { // good SOURCE INPUT
                         this.activeSource = src
                         this.state = "dest"
-                        do_panel_magic(scene, mgr, launchText2)
+                        do_panel_magic(scene, mgr, `\n\nZONES IN RANGE:\n${this.activeSource.zones}${launchText2}`)
+                        panel_print_called(scene, mgr, scene.infoPanel, them.getTargets())
+                        scene.infoPanel.finishTyping()
                     }
                     break
                 case "dest":
-                    console.log(this.activeSource)
+                    //console.log(this.activeSource)
+                    
                     if ((dest = them.getTargetByName(input)) == false) {
                         //bad target.
                         panel_print_called(scene, mgr, scene.infoPanel, basicBadTargetText)
