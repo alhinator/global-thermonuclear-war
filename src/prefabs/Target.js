@@ -198,4 +198,8 @@ class Vehicle {
         }
         return false
     }
+
+    verifyAll(){
+        return this.verifyDepend() && this.capacity > 0
+    }
 }

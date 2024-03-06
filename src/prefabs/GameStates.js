@@ -4,7 +4,7 @@ class InitialState extends State {
         console.log("end initialstate enter")
 
         //SKIP MAP THANG
-        //scene.map.finishTyping()
+        scene.map.finishTyping()
     }
     execute(scene, mgr) {
 
@@ -28,6 +28,7 @@ class SideSelect extends State {
         if (input === "") { return }
         if (input === "1" || input == "UNITED STATES") { mgr.team = 1; mgr.FSM.transition('FirstTarget') }
         else if (input === "2" || input == "SOVIET UNION") { mgr.team = 2; mgr.FSM.transition('FirstTarget') }
+        //else if (input === "0" || input == "AUTOMATE") {mgr.team = 1; mgr.fullyAutomate = true; mgr.FSM.transition('FirstTarget')}
         else if (parseOtherCommands(scene, mgr, input) != -1) { scene.mainConsole.clearUserInput() }
         else {
             scene.mainConsole.clearUserInput()

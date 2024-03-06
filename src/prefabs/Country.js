@@ -140,13 +140,16 @@ CURRENT INJURED POPULATION (${mgr.gameTime}): ${pop_data.injured}`
 
     checkDestroyed(mgr){
         let pop_data = this.internalGetStats(mgr)
-        if (pop_data.percent < 10) {
-            //if only ten percent of the population remains, including the irradiated and injured, this country CANNOT WIN
+        if (pop_data.percent < 20) {
+            //if less than twenty percent of the population remains, including the irradiated and injured, this country CANNOT WIN
             //HOWEVER, they may continue launching missiles if they are able.
-            console.log(this.name + " is at broken 10%")
+            return -1
         } else if (pop_data.percent <= 0) {
             //this country has been utterly destroyed.
             console.log(this.name + " has been destroyed.")
+            return 1
+        } else {
+            return 0
         }
     }
 

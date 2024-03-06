@@ -21,7 +21,7 @@
 */
 
 class GameManager {
-    constructor(scene){
+    constructor(scene) {
         this.scene = scene
 
         this.FSM = new StateMachine('Initial', {
@@ -33,6 +33,8 @@ class GameManager {
         }, [scene, this])
 
         this.team = -1
+
+        this.fullyAutomated = false
 
         this.USA = new Country("UNITED STATES", scene, ["US_WEST", "US_CENTRAL", "US_MIDWEST", "US_EAST", "US_SOUTH"])
         this.USSR = new Country("SOVIET UNION", scene, ["RU_WEST", "RU_SOUTH", "RU_URALS", "RU_SIBERIA", "RU_ASIA"])
@@ -56,53 +58,57 @@ class GameManager {
 
     }
 
-    incTimer(delta){
-        if(this.timerActive == false ) { return}
+    incTimer(delta) {
+        if (this.timerActive == false) { return }
         this.gameRawTime += delta
         this.gameTime = timeToGameClock(this.gameRawTime)
     }
 
-    startTimer(){
+    startTimer() {
         this.timerActive = true
     }
-    stopTimer(){
+    stopTimer() {
         this.timerActive = false
     }
 
-    createMissile(target, strength){ //target should be a pointer to a target instance.
+    createMissile(target, strength) { //target should be a pointer to a target instance.
         console.log("in create missile for " + target.name)
         //first, check to see if target already has smth aimed at it.
         let missileKey = target.name
 
-        while (this.activeMissiles[missileKey] != null) {missileKey += "x"} //avoid dupe names.
-        let mDir = target.x < width/5 || (target.x > width/2 && target.x < width *3/4) ? missileDrawTextRight : missileDrawTextLeft
+        while (this.activeMissiles[missileKey] != null) { missileKey += "x" } //avoid dupe names.
+        let mDir = target.x < width / 5 || (target.x > width / 2 && target.x < width * 3 / 4) ? missileDrawTextRight : missileDrawTextLeft
         let xOffset = mDir == missileDrawTextLeft ? 135 : 137
-        this.activeMissiles[missileKey] = new Typewriter(this.scene, target.x - xOffset, target.y - 85, "wgfont", mDir,10, 16, "left")
-        //this.activeMissiles[missileKey].setOrigin(0.5,1) weird behavior w textbox
-        this.activeMissiles[missileKey].setTint(0xff0000).setDepth(5)
-        //set callback function:
-        this.activeMissiles[missileKey].onFinish = function () {target.bombLanded(strength) ; this.scene.time.delayedCall(1500, ()=>{this.destroy()}, null,this) }
-        //and start with a random delay.
-        this.scene.time.delayedCall(Phaser.Math.Between(10, 500), ()=>{
-            this.activeMissiles[missileKey].startTypingWithoutGlow()
-        }, [missileKey],this)
+
+        let payloadDelay = 100*strength //the larger an attack is, the longer it takes to arm.
+        this.scene.time.delayedCall(payloadDelay, () => {
+            this.activeMissiles[missileKey] = new Typewriter(this.scene, target.x - xOffset, target.y - 85, "wgfont", mDir, 10, 16, "left")
+            this.activeMissiles[missileKey].setTint(0xff0000).setDepth(5)
+            //set callback function:
+            this.activeMissiles[missileKey].onFinish = function () { target.bombLanded(strength); this.scene.time.delayedCall(1500, () => { this.destroy() }, null, this) }
+            //and start with a random delay.
+            this.scene.time.delayedCall(Phaser.Math.Between(10, 500), () => {
+                this.activeMissiles[missileKey].startTypingWithoutGlow()
+            }, [missileKey], this)
+        }, null, this)
+        
 
     }
 }
 
-function parseOtherCommands(scene, mgr, input, target = scene.infoPanel){
+function parseOtherCommands(scene, mgr, input, target = scene.infoPanel) {
     //look for "name-based" commands first.
-    if(input.slice(0, 4) === "VIEW") { 
+    if (input.slice(0, 4) === "VIEW") {
         panel_print_called(scene, mgr, target, getViewRequest(mgr, input.slice(5)))
         return
     }
-    if(input.slice(0, 4) === "INFO") { 
+    if (input.slice(0, 4) === "INFO") {
         panel_print_called(scene, mgr, target, getInfoRequest(mgr, input.slice(5)))
         return
     }
 
-    switch(input){
-        case "HELP": 
+    switch (input) {
+        case "HELP":
             panel_print_called(scene, mgr, target, helpText)
             target.finishTyping()
             break;
@@ -125,13 +131,13 @@ function parseOtherCommands(scene, mgr, input, target = scene.infoPanel){
             panel_clear_called(scene, mgr, target)
             break;
         case "PAUSE":
-            if(!mgr.timerActive){
+            if (!mgr.timerActive) {
                 break
             }
             mgr.stopTimer()
             break;
         case "RESUME":
-            if(mgr.timerActive || mgr.gameRawTime == 0){
+            if (mgr.timerActive || mgr.gameRawTime == 0) {
                 break;
             }
             mgr.startTimer()
@@ -162,15 +168,11 @@ function parseOtherCommands(scene, mgr, input, target = scene.infoPanel){
         case "POP SOVIET UNION":
             panel_print_called(scene, mgr, scene.infoPanel, mgr.USSR.getPopulationStats(mgr))
             break;
-        case "TOGGLE 1":
-        case "TOGGLE UNITED STATES":
+        case "TOGGLE":
             mgr.USAVisOnMap = !mgr.USAVisOnMap
             for (const key in mgr.USA.targets) {
                 mgr.USA.targets[key].setVisible(mgr.USAVisOnMap)
             }
-            break;
-        case "TOGGLE 2":
-        case "TOGGLE SOVIET UNION":
             mgr.USSRVisOnMap = !mgr.USSRVisOnMap
             for (const key in mgr.USSR.targets) {
                 mgr.USSR.targets[key].setVisible(mgr.USSRVisOnMap)
@@ -182,60 +184,64 @@ function parseOtherCommands(scene, mgr, input, target = scene.infoPanel){
 
 }
 
-function panel_print_called(scene, mgr, target, the_text){
+function panel_print_called(scene, mgr, target, the_text) {
     target.clearText()
     target.append_text_auto_type(the_text)
 }
-function panel_clear_called(scene, mgr, target){
+function panel_clear_called(scene, mgr, target) {
     target.clearText()
 }
-function do_panel_magic(scene, mgr, buffer){
-            //now some console magic. it turns the previous input into part of the textbox now that it's submitted.
-            //also clears the infopanel.
-            panel_clear_called(scene, mgr, scene.infoPanel)
-            scene.mainConsole.lockInput()
-            let tt = scene.mainConsole.text
-            if (scene.mainConsole.hasBufferChar) { tt = tt.slice(0, -1) }
-            tt += buffer
-            panel_clear_called(scene, mgr, scene.mainConsole)
-            panel_print_called(scene, mgr, scene.mainConsole, tt)
-            scene.mainConsole.finishTyping()
-            scene.mainConsole.unlockInput()
+function do_panel_magic(scene, mgr, buffer) {
+    //now some console magic. it turns the previous input into part of the textbox now that it's submitted.
+    //also clears the infopanel.
+    panel_clear_called(scene, mgr, scene.infoPanel)
+    scene.mainConsole.lockInput()
+    let tt = scene.mainConsole.text
+    if (scene.mainConsole.hasBufferChar) { tt = tt.slice(0, -1) }
+    tt += buffer
+    panel_clear_called(scene, mgr, scene.mainConsole)
+    panel_print_called(scene, mgr, scene.mainConsole, tt)
+    scene.mainConsole.finishTyping()
+    scene.mainConsole.unlockInput()
 }
 
-function game_exit_called(scene, mgr){
+function game_exit_called(scene, mgr) {
+    scene.scene.start("exitScene")
+}
+function game_restart_called(scene, mgr) {
+    //scene.scene.launch("resultsScene") //will be actual thing. placeholder rn
     scene.scene.start("exitScene")
 }
 
-function getViewRequest(mgr, target){
+function getViewRequest(mgr, target) {
     //steps: make query to both countries.
     //if neither return, she's false.
     //if one of them returns, return it.
     let a = mgr.USA.getTargetInfo(target, mgr)
     let b = mgr.USSR.getTargetInfo(target, mgr)
     //console.log(a)
-    if (!a && !b) {return basicBadTargetText} 
-    else if (a) { mgr.USA.targets[target].viewMe() ; return a }
-    else {mgr.USSR.targets[target].viewMe() ; return b}
+    if (!a && !b) { return basicBadTargetText }
+    else if (a) { mgr.USA.targets[target].viewMe(); return a }
+    else { mgr.USSR.targets[target].viewMe(); return b }
 }
-function getInfoRequest(mgr, target){
+function getInfoRequest(mgr, target) {
     //steps: make query to both countries.
     //if neither return, she's false.
     //if one of them returns, return it.
     let a = mgr.USA.getVehicleInfo(target, mgr)
     let b = mgr.USSR.getVehicleInfo(target, mgr)
     //console.log(a)
-    if (!a && !b) {return basicBadVehicleText} 
-    else if (a) { return a}
+    if (!a && !b) { return basicBadVehicleText }
+    else if (a) { return a }
     else return b
 }
 
-function populateUSACities(ct){ //gonna do 24,  and get a nice spread
+function populateUSACities(ct) { //gonna do 24,  and get a nice spread
     ct.addTarget("BALTIMORE", 786775, "US_EAST", 390, 145, 0.5)
-    ct.addTarget("BOSTON", 562994,  "US_EAST", 435, 90, 0.4)
-    ct.addTarget("CHARLOTTE", 314447, "US_SOUTH", 325, 170)
-    ct.addTarget("CHICAGO", 3005072,  "US_MIDWEST", 355, 110)
-    ct.addTarget("COLORADO SPRINGS", 215150, "US_CENTRAL", 170, 160, 0.6, true)
+    ct.addTarget("BOSTON", 562994, "US_EAST", 435, 90, 0.4)
+    ct.addTarget("CHARLOTTE", 314447, "US_SOUTH", 325, 170, 0.4)
+    ct.addTarget("CHICAGO", 3005072, "US_MIDWEST", 355, 110)
+    ct.addTarget("COLORADO SPRINGS", 215150, "US_CENTRAL", 170, 160, 0.9, true)
     ct.addTarget("DALLAS", 904078, "US_CENTRAL", 235, 215)
     ct.addTarget("DENVER", 492365, "US_CENTRAL", 170, 175, 0.4)
     ct.addTarget("DETROIT", 1203339, "US_MIDWEST", 375, 100)
@@ -254,18 +260,18 @@ function populateUSACities(ct){ //gonna do 24,  and get a nice spread
     ct.addTarget("SAN DIEGO", 875538, "US_WEST", 70, 195, 0.4)
     ct.addTarget("SAN FRANCISCO", 678974, "US_WEST", 40, 150)
     ct.addTarget("SEATTLE", 493846, "US_WEST", 65, 70)
-    ct.addTarget("WASHINGTON DC", 638333, "US_EAST", 400, 135, 0.6)
+    ct.addTarget("WASHINGTON DC", 638333, "US_EAST", 400, 135, 0.8)
 
     //console.log("in populateusacities")
     //console.log(ct.getTargets())
     //ct.targets["SEATTLE"].setDestroyed(true)
 }
 
-function populateUSAMilitary(ct){
+function populateUSAMilitary(ct) {
     //icbms first
-    ct.addVehicle("ELLSWORTH", "ICBM", ["COLORADO SPRINGS", "WASHINGTON DC"], 60, ["ALL"])
-    ct.addVehicle("GRAND FORKS", "ICBM", ["COLORADO SPRINGS", "WASHINGTON DC"], 60, ["ALL"])
-    ct.addVehicle("FT WARREN", "ICBM", ["COLORADO SPRINGS", "WASHINGTON DC"], 60, ["ALL"])
+    ct.addVehicle("ELLSWORTH", "ICBM", ["COLORADO SPRINGS", "WASHINGTON DC"], 90, ["ALL"])
+    ct.addVehicle("GRAND FORKS", "ICBM", ["COLORADO SPRINGS", "WASHINGTON DC"], 90, ["ALL"])
+    ct.addVehicle("FT WARREN", "ICBM", ["COLORADO SPRINGS", "WASHINGTON DC"], 90, ["ALL"])
 
     //now by region for jets and subs.
     ct.addVehicle("ALAMEDA", "JET", ["LOS ANGELES", "SAN DIEGO"], 100, ["RU_URALS", "RU_SIBERIA", "RU_ASIA"])
@@ -284,23 +290,23 @@ function populateUSAMilitary(ct){
 
 //United States population data retrieved from https://en.wikipedia.org/wiki/1980_United_States_census#City_rankings
 //Soviet Union population data retrieved from https://sashamaps.net/docs/maps/biggest-soviet-cities/
-function populateUSSRCities(ct){
+function populateUSSRCities(ct) {
     ct.addTarget("ALMA ATA", 1127884, "RU_SOUTH", 695, 275)
     ct.addTarget("BAKU", 1795000, "RU_SOUTH", 600, 260)
     ct.addTarget("CHELYABINSK", 1107000, "RU_URALS", 650, 175)
     ct.addTarget("DNEPROPETROVSK", 1177897, "RU_SOUTH", 570, 210)
     ct.addTarget("KAZAN", 1094000, "RU_WEST", 615, 165)
     ct.addTarget("KHARKOV", 1609959, "RU_SOUTH", 580, 195)
-    ct.addTarget("KYIV", 2587945,"RU_SOUTH", 550, 200)
-    ct.addTarget("LENINGRAD", 5024000, "RU_WEST", 585, 120, 0.4)
+    ct.addTarget("KYIV", 2587945, "RU_SOUTH", 550, 200, 0.4)
+    ct.addTarget("LENINGRAD", 5024000, "RU_WEST", 585, 120, 0.5)
 
     ct.addTarget("MAGADAN", 63000, "RU_ASIA", 900, 200)
 
     ct.addTarget("MURMANSK", 468000, "RU_WEST", 580, 90, 0.5)
-    ct.addTarget("MOSCOW", 8967000, "RU_WEST", 590, 150, 0.5)
+    ct.addTarget("MOSCOW", 8967000, "RU_WEST", 590, 150, 0.7)
     ct.addTarget("NOVOSIBIRSK", 1437000, "RU_SIBERIA", 710, 175)
     ct.addTarget("ODESSA", 1115371, "RU_SOUTH", 560, 230)
-    ct.addTarget("OMSK", 1149000, "RU_URALS", 675, 180)
+    ct.addTarget("OMSK", 1149000, "RU_URALS", 675, 180, 0.4)
     ct.addTarget("PERM", 1091000, "RU_URALS", 640, 155)
     ct.addTarget("ROSTOV ON DON", 1019000, "RU_SOUTH", 590, 220)
     ct.addTarget("SVERDLOVSK", 1365000, "RU_URALS", 645, 170)
@@ -320,7 +326,7 @@ function populateUSSRCities(ct){
 }
 
 //INFO FROM nuke.fas.org/guide/russia/facility/icbm/icbm_1.gif 
-function populateUSSRMilitary(ct){
+function populateUSSRMilitary(ct) {
     //icbms first, as usual
     ct.addVehicle("DERAZHNYA", "ICBM", ["LENINGRAD"], 50, ["ALL"])
     ct.addVehicle("PERVOMAYSK", "ICBM", ["MOSCOW"], 50, ["ALL"])
@@ -329,36 +335,41 @@ function populateUSSRMilitary(ct){
     ct.addVehicle("GLADKAYA", "ICBM", ["NOVOSIBIRSK"], 50, ["ALL"])
 
     //now lets do subs.
-    ct.addVehicle("LENINGRAD", "SUB", ["LENINGRAD"], 40,[ "US_EAST", "US_SOUTH"])
+    ct.addVehicle("LENINGRAD", "SUB", ["LENINGRAD"], 40, ["US_EAST", "US_SOUTH"])
     ct.addVehicle("ARKHANGELSK", "SUB", ["MURMANSK"], 20, ["US_EAST", "US_SOUTH"])
 
-    ct.addVehicle("MURMANSK", "SUB", ["MURMANSK"], 50,[ "US_EAST", "US_SOUTH", "US_MIDWEST"])
-    ct.addVehicle("MAGADAN", "SUB", ["MAGADAN", "VLADIVOSTOK"], 50, ["US_WEST","US_CENTRAL", "US_MIDWEST"])
+    ct.addVehicle("MURMANSK", "SUB", ["MURMANSK"], 50, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
+    ct.addVehicle("MAGADAN", "SUB", ["MAGADAN", "VLADIVOSTOK"], 50, ["US_WEST", "US_CENTRAL", "US_MIDWEST"])
     ct.addVehicle("ROSTOV ON DON", "SUB", ["ROSTOV ON DON"], 30, ["US_EAST"])
     ct.addVehicle("CAM RANH BAY", "SUB", ["NONE"], 50, ["US_WEST", "US_CENTRAL", "US_MIDWEST"])
 
     //some jets
-    ct.addVehicle("AFRIKANDA", "JET", ["MURMANSK", "MOSCOW", "LENINGRAD"], 60, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
-    ct.addVehicle("BEKETOVSK", "JET", ["VOLGOGRAD"], 40, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
-    ct.addVehicle("ARTSYZ", "JET", ["ODESSA"], 40, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
-    ct.addVehicle("UZYN", "JET", ["KYIV"], 40, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
-    ct.addVehicle("ARTEM", "JET", ["NONE"], 40, ["US_WEST", "US_CENTRAL"])
-    
+    ct.addVehicle("AFRIKANDA", "JET", ["MURMANSK", "MOSCOW", "LENINGRAD"], 50, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
+    ct.addVehicle("BEKETOVSK", "JET", ["VOLGOGRAD"], 30, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
+    ct.addVehicle("ARTSYZ", "JET", ["ODESSA"], 30, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
+    ct.addVehicle("UZYN", "JET", ["KYIV"], 30, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
+    ct.addVehicle("ARTEM", "JET", ["NONE"], 30, ["US_WEST", "US_CENTRAL"])
+    ct.addVehicle("SEMEY", "JET", ["ALMA ATA"], 30, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
+
+
 
 
 
 }
 
+function enemyAttack(scene, mgr){
+    let tg = chooseEnemyTargets(scene, mgr, false)
 
-function chooseEnemyTargets(scene, mgr, initial = false){
+}
+function chooseEnemyTargets(scene, mgr, initial = false) {
     let me = mgr.team == 1 ? mgr.USA : mgr.USSR
-    let them = mgr.team == 1 ? mgr.USSR : mgr.USA 
+    let them = mgr.team == 1 ? mgr.USSR : mgr.USA
     let tg
-    if(initial == true){ // get two unique random targets.
+    if (initial == true) { // get two unique random targets.
         let first = getRandKeyFromObj(me.targets)
         let second
-        do{
-        second = getRandKeyFromObj(me.targets)
+        do {
+            second = getRandKeyFromObj(me.targets)
         } while (second == first)
         tg = {}
         tg[first.name] = first
@@ -366,14 +377,36 @@ function chooseEnemyTargets(scene, mgr, initial = false){
         console.assert(first != second)
         return tg
     } else {
-        //first, pick an available vehicle.
-        //second, pick a city within that vehicle's available zones.
-        //third, pick a strength less than or equal to half of the vehicle's remaining strength.
+        //random is too complex for my tiny brain. lol
+        // doing it funky then.
+        //going to go down from the top, and target the largest alive city available.
+
+        for (const key in them.vehicles) {
+            const src = them.vehicles[key];
+            if (!src.verifyAll()) {continue} //if the src can't shoot, gonext
+            let highest
+            for (const kiki in me.targets) {
+                const potential_dest = me.targets[kiki]
+                if ((!highest || potential_dest.population > highest.population) && !potential_dest.getDestroyed() && src.verifyZone(potential_dest.zone)){
+                    highest = potential_dest
+                }
+            }
+            if (highest != null){
+                strength = Math.ceil(src.capacity/5)
+                launchHelper(scene, mgr, highest,src, strength, true )
+                return
+            }
+            //else: if no viable target, continue.
+
+        }
+        //if we got here, enemy is unable to select a city.
+        //do stuff
+        
 
     }
 }
 
-function launchHelper(scene, mgr, target, vehicle, strength){
+function launchHelper(scene, mgr, target, vehicle, strength, enemy = false) {
     console.log(`in launch helper! \n   ${target}\n     ${vehicle}\n    ${strength}`)
 
     //decrease capacity
@@ -381,44 +414,56 @@ function launchHelper(scene, mgr, target, vehicle, strength){
 
     let randomFailureChance = Math.random()
     if (randomFailureChance > 0.99) {
-    panel_print_called(scene, mgr, scene.infoPanel,
-`ERROR: CRITICAL LAUNCH FAILURE ENCOUNTERED.
-PAYLOAD FAILED TO DELIVER.`)
+        if (enemy){
+            panel_print_called(scene, mgr, scene.infoPanel,
+                `ALERT: CRITICAL LAUNCH FAILURE REPORTED.
+    ENEMY ROCKETS FAILED TO LAUNCH.`)
+        } else {
+            panel_print_called(scene, mgr, scene.infoPanel,
+                `ERROR: CRITICAL LAUNCH FAILURE ENCOUNTERED.
+    PAYLOAD FAILED TO DELIVER.`)
+        }
         return
     } //lulw
 
     mgr.createMissile(target, strength)
-    
-    let tt = `LAUNCH SUCCESSFUL:
+
+    let tt
+    if(enemy){
+        tt = `!! WARHEADS DETECTED IN AIRSPACE: ${target.name}!!`
+        panel_print_called(scene, mgr, scene.airspaceAlert, tt)
+    } else {
+        tt = `LAUNCH SUCCESSFUL:
     PAYLOAD EN ROUTE FROM ${vehicle.name}
-    TO ${target.name}`
-    panel_print_called(scene, mgr, scene.infoPanel, tt)
+        TO ${target.name}`
+        panel_print_called(scene, mgr, scene.infoPanel, tt)
+    }
 }
 
 //random object picking code taken & slightly edited from https://stackoverflow.com/questions/2532218/pick-random-property-from-a-javascript-object 
 function getRandKeyFromObj(obj) {
     var keys = Object.keys(obj);
-    return obj[keys[ keys.length * Math.random() << 0]];
+    return obj[keys[keys.length * Math.random() << 0]];
 };
 
-function timeToGameClock(time){
+function timeToGameClock(time) {
     //converting milliseconds into days, hours, minutes, seconds
     //however, we are scaling up.
     //one second irl should equate to one minute ingame. OK SO THIS WAS THE OLD ATTEMPT BUT THE MATH EQUATES OT 
     // ABOUT LIKE THREE SECONDS IS A MINUTE. AND HONESTLY IT FEELS FINE  SO.. IM LEAVING THE BAD MATH.
     //this conversion can be calculated by: time divided by 1000 (ms -> s) * 60 (s to min, scale not convert)
-    let ingame_time = Math.floor(time * 0.06) 
-    
+    let ingame_time = Math.floor(time * 0.06)
+
     // first, calculate days display. this is done by dividing ingame_seconds by 60 (min) div 60 (hr) div 24 (day) = 86400
-    let ingame_days = Math.floor(ingame_time/86400)
+    let ingame_days = Math.floor(ingame_time / 86400)
 
     //second, calculate hours display. There should be a cap before it rolls over, so:
     //divide 60 (min) div 60(hr) % modulo 24.
-    let ingame_hours = Math.floor(ingame_time/3600 % 24)
+    let ingame_hours = Math.floor(ingame_time / 3600 % 24)
 
     //same logic for minutes.
     //div 60, mod 60
-    let ingame_minutes = Math.floor(ingame_time/60 % 60)
+    let ingame_minutes = Math.floor(ingame_time / 60 % 60)
 
     //last, just mod for seconds.
     let ingame_seconds = ingame_time % 60
@@ -433,11 +478,82 @@ function timeToGameClock(time){
     return retVal
 }
 
-function tickAllCityPops(scene, mgr){
+function tickAllCityPops(scene, mgr) {
     for (const key in mgr.USA.targets) {
         mgr.USA.targets[key].tickInjIrr()
     }
     for (const key in mgr.USSR.targets) {
         mgr.USSR.targets[key].tickInjIrr()
+    }
+}
+
+function winCons(scene, mgr) {
+
+    let me = mgr.team == 1 ? mgr.USA : mgr.USSR
+    let them = mgr.team == 1 ? mgr.USSR : mgr.USA
+
+    let myState = me.checkDestroyed(mgr)
+    let enState = them.checkDestroyed(mgr)
+
+    let tt = ""
+    // 0 = ok , -1 = warn, 1 = dead
+    /*out of our two returns, we have multiple cases: (we stan truth tables)
+        top is self, left is  enemy
+
+                ok       warn      dead
+        ok      nthg      warn s    win en
+                            
+        warn    warn en   lose bth   lose bth
+
+        dead    win s     lose bth      lose bth
+
+        
+    */
+    //trivial case first
+    if (!myState && !enState) { return }
+    // warnings now.
+    else if (myState == -1 && !enState) {
+        panel_print_called(scene, mgr, scene.infoPanel, lossWarningText)
+    } else if (!myState && enState == -1) {
+        panel_print_called(scene, mgr, scene.infoPanel, winWarningText)
+    }
+    // now for global collapses.
+    //logic: need to cover: -1 & -1, 1 & -1, -1 & 1, 1 & 1. ez claps
+    else if (Math.abs(myState * enState) == 1) { //FAUX TO FORCE GAMEOVER
+        panel_print_called(scene, mgr, scene.infoPanel, bothLossText)
+        panel_clear_called(scene, mgr, scene.mainConsole)
+        scene.mainConsole.lockInput()
+        scene.infoPanel.onFinish = function () {
+            scene.bigGameOverText = new Typewriter(scene, width / 2, height / 2, "wgfont", bothLossBig, 150, 72, 1)
+            scene.bigGameOverText.setOrigin(0.5, 0.5)
+            scene.bigGameOverText.startTypingWithoutGlow()
+            scene.time.delayedCall(3000, () => { game_restart_called(scene, mgr) }, null, this)
+        }
+    } else if (!myState && enState) {//my win
+        panel_print_called(scene, mgr, scene.infoPanel, myWinText)
+        panel_clear_called(scene, mgr, scene.mainConsole)
+        scene.mainConsole.lockInput()
+        mgr.stopTimer()
+        scene.infoPanel.onFinish = function () {
+            scene.bigGameOverText = new Typewriter(scene, width / 2, height / 2, "wgfont", `WINNER: ${me.name}`, 150, 72, 1)
+            scene.bigGameOverText.setOrigin(0.5, 0.5)
+            scene.bigGameOverText.startTypingWithoutGlow()
+            scene.bigGameOverText.onFinish = function () {
+                scene.time.delayedCall(3000, () => { game_restart_called(scene, mgr) }, null, this)
+            }
+        }
+    } else if (1 == 1 || myState && !enState) {//their win
+        panel_print_called(scene, mgr, scene.infoPanel, myLossText)
+        panel_clear_called(scene, mgr, scene.mainConsole)
+        scene.mainConsole.lockInput()
+        mgr.stopTimer()
+        scene.infoPanel.onFinish = function () {
+            scene.bigGameOverText = new Typewriter(scene, width / 2, height / 2, "wgfont", `WINNER: ${them.name}`, 150, 72, 1)
+            scene.bigGameOverText.setOrigin(0.5, 0.5)
+            scene.bigGameOverText.startTypingWithoutGlow()
+            scene.bigGameOverText.onFinish = function () {
+                scene.time.delayedCall(3000, () => { game_restart_called(scene, mgr) }, null, this)
+            }
+        }
     }
 }

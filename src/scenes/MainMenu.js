@@ -73,6 +73,16 @@ class MainMenu extends Phaser.Scene {
         this.gameTimerText.activateGlow()
         //console.log("mm: create: " + this.gameTimerText.text)
 
+        this.airspaceAlert = new Typewriter(this, rightConsoleX, rightConsoleY - 64, "wgfont", "", 16, 0)
+        this.airspaceAlert.onFinish = function () {
+            this.scene.time.delayedCall(5000, ()=>{
+                if(this.state = "done"){ //in-case it gets overwritten.
+                    panel_clear_called(this.scene, this.scene.GameManager, this)
+                }
+            }, null, this)
+        }
+
+
 
 
         //divider stuff for missiles and cities. debug
@@ -90,9 +100,14 @@ class MainMenu extends Phaser.Scene {
             this.lastInjIrrTick += 10000
             tickAllCityPops(this, this.GameManager)
             //console.log("done ticking city pops")
+            //check game winCons.
+            winCons(this, this.GameManager)
+        }
 
-            this.GameManager.USA.checkDestroyed(this.GameManager)
-            this.GameManager.USSR.checkDestroyed(this.GameManager)
+
+        if(this.GameManager.gameRawTime >= this.enemyAggroTick){
+            this.enemyAggroTick += Phaser.Math.Between(15000, 30000)
+            enemyAttack(this, this.GameManager)
         }
 
         //set clock text to game time.
