@@ -241,7 +241,7 @@ function populateUSACities(ct) { //gonna do 24,  and get a nice spread
     ct.addTarget("BOSTON", 562994, "US_EAST", 435, 90, 0.4)
     ct.addTarget("CHARLOTTE", 314447, "US_SOUTH", 325, 170, 0.4)
     ct.addTarget("CHICAGO", 3005072, "US_MIDWEST", 355, 110)
-    ct.addTarget("COLORADO SPRINGS", 215150, "US_CENTRAL", 170, 160, 0.9, true)
+    ct.addTarget("COLORADO SPRINGS", 215150, "US_CENTRAL", 170, 160, 0.7, true)
     ct.addTarget("DALLAS", 904078, "US_CENTRAL", 235, 215)
     ct.addTarget("DENVER", 492365, "US_CENTRAL", 170, 175, 0.4)
     ct.addTarget("DETROIT", 1203339, "US_MIDWEST", 375, 100)
@@ -260,7 +260,7 @@ function populateUSACities(ct) { //gonna do 24,  and get a nice spread
     ct.addTarget("SAN DIEGO", 875538, "US_WEST", 70, 195, 0.4)
     ct.addTarget("SAN FRANCISCO", 678974, "US_WEST", 40, 150)
     ct.addTarget("SEATTLE", 493846, "US_WEST", 65, 70)
-    ct.addTarget("WASHINGTON DC", 638333, "US_EAST", 400, 135, 0.8)
+    ct.addTarget("WASHINGTON DC", 638333, "US_EAST", 400, 135, 0.7)
 
     //console.log("in populateusacities")
     //console.log(ct.getTargets())
@@ -415,13 +415,11 @@ function launchHelper(scene, mgr, target, vehicle, strength, enemy = false) {
     let randomFailureChance = Math.random()
     if (randomFailureChance > 0.99) {
         if (enemy){
-            panel_print_called(scene, mgr, scene.infoPanel,
-                `ALERT: CRITICAL LAUNCH FAILURE REPORTED.
-    ENEMY ROCKETS FAILED TO LAUNCH.`)
+            panel_print_called(scene, mgr, scene.airspaceAlert,`ALERT: ENEMY ROCKET FAILURE.`)
         } else {
             panel_print_called(scene, mgr, scene.infoPanel,
-                `ERROR: CRITICAL LAUNCH FAILURE ENCOUNTERED.
-    PAYLOAD FAILED TO DELIVER.`)
+`ERROR: CRITICAL LAUNCH FAILURE ENCOUNTERED.
+PAYLOAD FAILED TO DELIVER.`)
         }
         return
     } //lulw
@@ -435,7 +433,7 @@ function launchHelper(scene, mgr, target, vehicle, strength, enemy = false) {
     } else {
         tt = `LAUNCH SUCCESSFUL:
     PAYLOAD EN ROUTE FROM ${vehicle.name}
-        TO ${target.name}`
+    TO ${target.name}`
         panel_print_called(scene, mgr, scene.infoPanel, tt)
     }
 }
@@ -512,14 +510,26 @@ function winCons(scene, mgr) {
     //trivial case first
     if (!myState && !enState) { return }
     // warnings now.
-    else if (myState == -1 && !enState) {
+    else if (!this.alreadyWarnedMe && myState == -1 && !enState) {
+        scene.mainConsole.lockInput()
+        this.alreadyWarnedMe = true
         panel_print_called(scene, mgr, scene.infoPanel, lossWarningText)
-    } else if (!myState && enState == -1) {
+        scene.infoPanel.onFinish = function () {
+            scene.mainConsole.unlockInput()
+            scene.infoPanel.onFinish = function (){}
+        }
+    } else if (!this.alredyWarnedThem && !myState && enState == -1) {
+        scene.mainConsole.lockInput()
+        this.alreadyWarnedThem = true
         panel_print_called(scene, mgr, scene.infoPanel, winWarningText)
+        scene.infoPanel.onFinish = function () {
+            scene.mainConsole.unlockInput()
+            scene.infoPanel.onFinish = function (){}
+        }
     }
     // now for global collapses.
     //logic: need to cover: -1 & -1, 1 & -1, -1 & 1, 1 & 1. ez claps
-    else if (Math.abs(myState * enState) == 1) { //FAUX TO FORCE GAMEOVER
+    else if (Math.abs(myState * enState) == 1) { 
         panel_print_called(scene, mgr, scene.infoPanel, bothLossText)
         panel_clear_called(scene, mgr, scene.mainConsole)
         scene.mainConsole.lockInput()
