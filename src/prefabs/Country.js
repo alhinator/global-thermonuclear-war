@@ -120,7 +120,7 @@ CURRENT INJURED POPULATION (${mgr.gameTime}): ${tg.injured_citizens}`
             dead: dead,
             irradiated: irr,
             injured: inj,
-            percent: Math.floor(current / og * 100)
+            percent: Math.floor(curr+inj+irr / og * 100)
         }
         return pop_data
     }
