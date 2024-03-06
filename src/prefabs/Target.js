@@ -55,6 +55,7 @@ class Target {
         this.destroyed = _b
         this.myLocation.text = this.destroyed ? "x" : "@"
         this.myLocation.setTint(0xff0000)
+        this.defense_rating = 0
     }
 
     getDestroyed(){

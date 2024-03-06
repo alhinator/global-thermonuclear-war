@@ -297,7 +297,7 @@ function populateUSSRCities(ct) {
     ct.addTarget("DNEPROPETROVSK", 1177897, "RU_SOUTH", 570, 210)
     ct.addTarget("KAZAN", 1094000, "RU_WEST", 615, 165)
     ct.addTarget("KHARKOV", 1609959, "RU_SOUTH", 580, 195)
-    ct.addTarget("KYIV", 2587945, "RU_SOUTH", 550, 200, 0.4)
+    ct.addTarget("KIEV", 2587945, "RU_SOUTH", 550, 200, 0.4)
     ct.addTarget("LENINGRAD", 5024000, "RU_WEST", 585, 120, 0.5)
 
     ct.addTarget("MAGADAN", 63000, "RU_ASIA", 900, 200)
@@ -347,7 +347,7 @@ function populateUSSRMilitary(ct) {
     ct.addVehicle("AFRIKANDA", "JET", ["MURMANSK", "MOSCOW", "LENINGRAD"], 50, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
     ct.addVehicle("BEKETOVSK", "JET", ["VOLGOGRAD"], 30, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
     ct.addVehicle("ARTSYZ", "JET", ["ODESSA"], 30, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
-    ct.addVehicle("UZYN", "JET", ["KYIV"], 30, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
+    ct.addVehicle("UZYN", "JET", ["KIEV"], 30, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
     ct.addVehicle("ARTEM", "JET", ["NONE"], 30, ["US_WEST", "US_CENTRAL"])
     ct.addVehicle("SEMEY", "JET", ["ALMA ATA"], 30, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
 

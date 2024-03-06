@@ -97,7 +97,8 @@ ORIGINAL POPULATION: ${tg.original_population}
 CURRENT LIVING POPULATION: ${tg.population + tg.injured_citizens + tg.irradiated_citizens} (${Math.floor(((tg.population + tg.injured_citizens + tg.irradiated_citizens) / tg.original_population) * 100)}%)
 POPULATION KILLED SINCE T0: ${tg.dead_citizens}
 CURRENT IRRADIATED POPULATION (${mgr.gameTime}): ${tg.irradiated_citizens}
-CURRENT INJURED POPULATION (${mgr.gameTime}): ${tg.injured_citizens}`
+CURRENT INJURED POPULATION (${mgr.gameTime}): ${tg.injured_citizens}
+AIR DEFENSE COEFFICIENT: ${tg.defense_rating}`
 
         if (tg.getDestroyed()) { retVal += `\n\n!!DESTROYED!!` }
         return retVal
