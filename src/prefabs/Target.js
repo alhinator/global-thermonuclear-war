@@ -67,7 +67,7 @@ class Target {
             //strength = the number of bombs being sent. 
             //repeat for each bomb that's attempted.
             let success = Math.random()
-            let dfReal = this.defense_rating - strength*0.05 //using many bombs at once increases the chance of one breaching air defense.
+            let dfReal = this.defense_rating - strength*0.01 //using many bombs at once increases the chance of one breaching air defense.
             dfReal < 0 ? dfReal = 0.1 : dfReal              //however, they should never be guaranteed 100% success.
             if (success < dfReal){ continue;} //this means the bomb did not go off.
 

@@ -8,6 +8,7 @@ class MainMenu extends Phaser.Scene {
 
     init() {
         this.lastInjIrrTick = 10000
+        this.enemyAggroTick = 6000
     }
 
     create() {
@@ -88,7 +89,7 @@ class MainMenu extends Phaser.Scene {
         if(this.GameManager.gameRawTime >= this.lastInjIrrTick){
             this.lastInjIrrTick += 10000
             tickAllCityPops(this, this.GameManager)
-            console.log("done ticking city pops")
+            //console.log("done ticking city pops")
 
             this.GameManager.USA.checkDestroyed(this.GameManager)
             this.GameManager.USSR.checkDestroyed(this.GameManager)

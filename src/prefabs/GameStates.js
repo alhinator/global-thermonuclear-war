@@ -42,6 +42,8 @@ class FirstTarget extends State {
         scene.infoPanel.clearText()
         scene.mainConsole.lockInput()
         scene.mainConsole.append_text_auto_type(firstStrikeText)
+        panel_print_called(scene, mgr, scene.infoPanel, helpFirstStrikeText)
+        scene.infoPanel.finishTyping()
         this.targetsChosen = 0
     }
     execute(scene, mgr) {
@@ -196,7 +198,7 @@ class LaunchMode extends State {
                         //good payload. we now have all three components needed to launch.
                         this.activePayload = payload //technically unnecessary, but good for consistancy.
                         launchHelper(scene, mgr, this.activeDest, this.activeSource, this.activePayload)
-
+                        mgr.startTimer()
                         mgr.FSM.transition("ViewMode")
                     } else { // bad payload
                         panel_print_called(scene, mgr, scene.infoPanel, basicBadPayloadText)

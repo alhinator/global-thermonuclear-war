@@ -263,20 +263,20 @@ function populateUSACities(ct){ //gonna do 24,  and get a nice spread
 
 function populateUSAMilitary(ct){
     //icbms first
-    ct.addVehicle("ELLSWORTH", "ICBM", ["COLORADO SPRINGS", "WASHINGTON DC"], 6, ["ALL"])
-    ct.addVehicle("GRAND FORKS", "ICBM", ["COLORADO SPRINGS", "WASHINGTON DC"], 6, ["ALL"])
-    ct.addVehicle("FT WARREN", "ICBM", ["COLORADO SPRINGS", "WASHINGTON DC"], 6, ["ALL"])
+    ct.addVehicle("ELLSWORTH", "ICBM", ["COLORADO SPRINGS", "WASHINGTON DC"], 60, ["ALL"])
+    ct.addVehicle("GRAND FORKS", "ICBM", ["COLORADO SPRINGS", "WASHINGTON DC"], 60, ["ALL"])
+    ct.addVehicle("FT WARREN", "ICBM", ["COLORADO SPRINGS", "WASHINGTON DC"], 60, ["ALL"])
 
     //now by region for jets and subs.
-    ct.addVehicle("ALAMEDA", "JET", ["LOS ANGELES", "SAN DIEGO"], 10, ["RU_URALS", "RU_SIBERIA", "RU_ASIA"])
-    ct.addVehicle("SAN DIEGO", "SUB", ["SAN DIEGO", "LOS ANGELES"], 12, ["RU_SIBERIA", "RU_ASIA"])
+    ct.addVehicle("ALAMEDA", "JET", ["LOS ANGELES", "SAN DIEGO"], 100, ["RU_URALS", "RU_SIBERIA", "RU_ASIA"])
+    ct.addVehicle("SAN DIEGO", "SUB", ["SAN DIEGO", "LOS ANGELES"], 120, ["RU_SIBERIA", "RU_ASIA"])
 
-    ct.addVehicle("NORFOLK", "SUB", ["CHARLOTTE", "WAHINGTON DC"], 10, ["RU_SOUTH", "RU_WEST"])
-    ct.addVehicle("CHARLESTON", "JET", ["CHARLOTTE", "WASHINGTON DC"], 8, ["RU_SOUTH", "RU_WEST", "RU_URALS"])
+    ct.addVehicle("NORFOLK", "SUB", ["CHARLOTTE", "WAHINGTON DC"], 100, ["RU_SOUTH", "RU_WEST"])
+    ct.addVehicle("CHARLESTON", "JET", ["CHARLOTTE", "WASHINGTON DC"], 80, ["RU_SOUTH", "RU_WEST", "RU_URALS"])
 
-    ct.addVehicle("LAKEHURST", "JET", ["NEW YORK", "BOSTON"], 16, ["RU_SOUTH", "RU_WEST", "RU_URALS"])
+    ct.addVehicle("LAKEHURST", "JET", ["NEW YORK", "BOSTON"], 160, ["RU_SOUTH", "RU_WEST", "RU_URALS"])
 
-    ct.addVehicle("PEARL HARBOR", "SUB", ["HONOLULU"], 16, ["RU_SIBERIA", "RU_ASIA", "RU_URALS"])
+    ct.addVehicle("PEARL HARBOR", "SUB", ["HONOLULU"], 160, ["RU_SIBERIA", "RU_ASIA", "RU_URALS"])
 
 }
 //info from https://en.wikipedia.org/wiki/United_States_Navy_submarine_bases 
@@ -322,27 +322,27 @@ function populateUSSRCities(ct){
 //INFO FROM nuke.fas.org/guide/russia/facility/icbm/icbm_1.gif 
 function populateUSSRMilitary(ct){
     //icbms first, as usual
-    ct.addVehicle("DERAZHNYA", "ICBM", ["LENINGRAD"], 5, ["ALL"])
-    ct.addVehicle("PERVOMAYSK", "ICBM", ["MOSCOW"], 5, ["ALL"])
-    ct.addVehicle("DOMBAROVSKIY", "ICBM", ["VOLGOGRAD"], 5, ["ALL"])
-    ct.addVehicle("UZHUR", "ICBM", ["OMSK"], 5, ["ALL"])
-    ct.addVehicle("GLADKAYA", "ICBM", ["NOVOSIBIRSK"], 5, ["ALL"])
+    ct.addVehicle("DERAZHNYA", "ICBM", ["LENINGRAD"], 50, ["ALL"])
+    ct.addVehicle("PERVOMAYSK", "ICBM", ["MOSCOW"], 50, ["ALL"])
+    ct.addVehicle("DOMBAROVSKIY", "ICBM", ["VOLGOGRAD"], 50, ["ALL"])
+    ct.addVehicle("UZHUR", "ICBM", ["OMSK"], 50, ["ALL"])
+    ct.addVehicle("GLADKAYA", "ICBM", ["NOVOSIBIRSK"], 50, ["ALL"])
 
     //now lets do subs.
-    ct.addVehicle("LENINGRAD", "SUB", ["LENINGRAD"], 4,[ "US_EAST", "US_SOUTH"])
-    ct.addVehicle("ARKHANGELSK", "SUB", ["MURMANSK"], 2, ["US_EAST", "US_SOUTH"])
+    ct.addVehicle("LENINGRAD", "SUB", ["LENINGRAD"], 40,[ "US_EAST", "US_SOUTH"])
+    ct.addVehicle("ARKHANGELSK", "SUB", ["MURMANSK"], 20, ["US_EAST", "US_SOUTH"])
 
-    ct.addVehicle("MURMANSK", "SUB", ["MURMANSK"], 5,[ "US_EAST", "US_SOUTH", "US_MIDWEST"])
-    ct.addVehicle("MAGADAN", "SUB", ["MAGADAN", "VLADIVOSTOK"], 5, ["US_WEST","US_CENTRAL", "US_MIDWEST"])
-    ct.addVehicle("ROSTOV ON DON", "SUB", ["ROSTOV ON DON"], 3, ["US_EAST"])
-    ct.addVehicle("CAM RANH BAY", "SUB", ["NONE"], 5, ["US_WEST", "US_CENTRAL", "US_MIDWEST"])
+    ct.addVehicle("MURMANSK", "SUB", ["MURMANSK"], 50,[ "US_EAST", "US_SOUTH", "US_MIDWEST"])
+    ct.addVehicle("MAGADAN", "SUB", ["MAGADAN", "VLADIVOSTOK"], 50, ["US_WEST","US_CENTRAL", "US_MIDWEST"])
+    ct.addVehicle("ROSTOV ON DON", "SUB", ["ROSTOV ON DON"], 30, ["US_EAST"])
+    ct.addVehicle("CAM RANH BAY", "SUB", ["NONE"], 50, ["US_WEST", "US_CENTRAL", "US_MIDWEST"])
 
     //some jets
-    ct.addVehicle("AFRIKANDA", "JET", ["MURMANSK", "MOSCOW", "LENINGRAD"], 6, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
-    ct.addVehicle("BEKETOVSK", "JET", ["VOLGOGRAD"], 4, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
-    ct.addVehicle("ARTSYZ", "JET", ["ODESSA"], 4, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
-    ct.addVehicle("UZYN", "JET", ["KYIV"], 4, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
-    ct.addVehicle("ARTEM", "JET", ["NONE"], 4, ["US_WEST", "US_CENTRAL"])
+    ct.addVehicle("AFRIKANDA", "JET", ["MURMANSK", "MOSCOW", "LENINGRAD"], 60, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
+    ct.addVehicle("BEKETOVSK", "JET", ["VOLGOGRAD"], 40, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
+    ct.addVehicle("ARTSYZ", "JET", ["ODESSA"], 40, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
+    ct.addVehicle("UZYN", "JET", ["KYIV"], 40, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
+    ct.addVehicle("ARTEM", "JET", ["NONE"], 40, ["US_WEST", "US_CENTRAL"])
     
 
 

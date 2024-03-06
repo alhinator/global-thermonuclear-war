@@ -40,8 +40,8 @@ class Country {
         let retVal = "DELIVERY METHODS IN THE " + this.name + ":\n\n"
         let lr = 0
         for (const key in this.vehicles) {
-            let nm = this.vehicles[key].name + " (" + this.vehicles[key].type[0] + ")"
-            if (!this.vehicles[key].verifyDepend() || this.vehicles.capacity <= 0) { nm += " (x)" }
+            let nm = this.vehicles[key].name
+            if (!this.vehicles[key].verifyDepend() || this.vehicles[key].capacity <= 0) { nm += " (x)" }
             if (lr == 0 || lr == 1) { retVal += nm; for (let i = 0; i < 20 - nm.length; i++) { retVal += " " } }
             else { retVal += nm + "\n" }
             lr++; if (lr > 2) { lr = 0 }
@@ -120,7 +120,7 @@ CURRENT INJURED POPULATION (${mgr.gameTime}): ${tg.injured_citizens}`
             dead: dead,
             irradiated: irr,
             injured: inj,
-            percent: Math.floor(curr+inj+irr / og * 100)
+            percent: Math.floor((curr+inj+irr) / og * 100)
         }
         return pop_data
     }
