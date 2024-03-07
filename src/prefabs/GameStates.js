@@ -12,14 +12,25 @@ class InitialState extends State {
 }
 
 class SideSelect extends State {
+    
     enter(scene, mgr) {
         scene.infoPanel.clearText()
         scene.mainConsole.startBufferOscillation() //start typing
         scene.mainConsole.startTyping()
+
+        this.beginnerTime = 0
+        this.alreadyAlerted = 0
     }
     execute(scene, mgr) {
         if (!scene.mainConsole.allowInput && scene.mainConsole.state == "done") { //once done typing, allow input
             scene.mainConsole.unlockInput()
+        }
+
+        this.beginnerTime++
+        //console.log(this.beginnerTime)
+        if(!this.alreadyAlerted && this.beginnerTime >= 500){
+            this.alreadyAlerted = true
+            panel_print_called(scene, mgr, scene.infoPanel, gettingStartedText)
         }
     }
     submit(scene, mgr) {
@@ -46,11 +57,16 @@ class FirstTarget extends State {
         panel_print_called(scene, mgr, scene.infoPanel, helpFirstStrikeText)
         scene.infoPanel.finishTyping()
         this.targetsChosen = 0
+
+
+        this.beginnerTime = 0
+        this.alreadyAlerted = 0
     }
     execute(scene, mgr) {
         if (!scene.mainConsole.allowInput && scene.mainConsole.state == "done") { //once done typing, allow input
             scene.mainConsole.unlockInput()
         }
+
         if (this.targetsChosen >= 2) {
             //console.log("ready to move on from initial targets")
             //should make the enemy select initial targets as well.
@@ -60,7 +76,7 @@ class FirstTarget extends State {
 
             mgr.FSM.transition('LaunchMode')
 
-        }
+        } 
     }
 
     submit(scene, mgr) {

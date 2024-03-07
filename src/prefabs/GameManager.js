@@ -80,7 +80,7 @@ class GameManager {
         let mDir = target.x < width / 5 || (target.x > width / 2 && target.x < width * 3 / 4) ? missileDrawTextRight : missileDrawTextLeft
         let xOffset = mDir == missileDrawTextLeft ? 135 : 137
 
-        let payloadDelay = 100*strength //the larger an attack is, the longer it takes to arm.
+        let payloadDelay = 100 * strength //the larger an attack is, the longer it takes to arm.
         this.scene.time.delayedCall(payloadDelay, () => {
             this.activeMissiles[missileKey] = new Typewriter(this.scene, target.x - xOffset, target.y - 85, "wgfont", mDir, 10, 16, "left")
             this.activeMissiles[missileKey].setTint(0xff0000).setDepth(5)
@@ -91,7 +91,7 @@ class GameManager {
                 this.activeMissiles[missileKey].startTypingWithoutGlow()
             }, [missileKey], this)
         }, null, this)
-        
+
 
     }
 }
@@ -111,6 +111,9 @@ function parseOtherCommands(scene, mgr, input, target = scene.infoPanel) {
         case "HELP":
             panel_print_called(scene, mgr, target, helpText)
             target.finishTyping()
+            break;
+        case "MANUAL":
+            window.open('./WOPR System Operation Manual.pdf', '_blank')
             break;
         case "HELP GAMES":
             panel_print_called(scene, mgr, target, helpGamesText)
@@ -274,13 +277,13 @@ function populateUSAMilitary(ct) {
     ct.addVehicle("FT WARREN", "ICBM", ["COLORADO SPRINGS", "WASHINGTON DC"], 90, ["ALL"])
 
     //now by region for jets and subs.
-    ct.addVehicle("ALAMEDA", "JET", ["LOS ANGELES", "SAN DIEGO"], 100, ["RU_URALS", "RU_SIBERIA", "RU_ASIA"])
+    ct.addVehicle("ALAMEDA", "JET", ["LOS ANGELES", "SAN DIEGO", "SAN FRANCISCO"], 100, ["RU_URALS", "RU_SIBERIA", "RU_ASIA"])
     ct.addVehicle("SAN DIEGO", "SUB", ["SAN DIEGO", "LOS ANGELES"], 120, ["RU_SIBERIA", "RU_ASIA"])
 
     ct.addVehicle("NORFOLK", "SUB", ["CHARLOTTE", "WAHINGTON DC"], 100, ["RU_SOUTH", "RU_WEST"])
     ct.addVehicle("CHARLESTON", "JET", ["CHARLOTTE", "WASHINGTON DC"], 80, ["RU_SOUTH", "RU_WEST", "RU_URALS"])
 
-    ct.addVehicle("LAKEHURST", "JET", ["NEW YORK", "BOSTON"], 160, ["RU_SOUTH", "RU_WEST", "RU_URALS"])
+    ct.addVehicle("LAKEHURST", "JET", ["NEW YORK", "BOSTON", "PHILADELPHIA"], 160, ["RU_SOUTH", "RU_WEST", "RU_URALS"])
 
     ct.addVehicle("PEARL HARBOR", "SUB", ["HONOLULU"], 160, ["RU_SIBERIA", "RU_ASIA", "RU_URALS"])
 
@@ -356,7 +359,7 @@ function populateUSSRMilitary(ct) {
 
 }
 
-function enemyAttack(scene, mgr){
+function enemyAttack(scene, mgr) {
     let tg = chooseEnemyTargets(scene, mgr, false)
 
 }
@@ -382,17 +385,17 @@ function chooseEnemyTargets(scene, mgr, initial = false) {
 
         for (const key in them.vehicles) {
             const src = them.vehicles[key];
-            if (!src.verifyAll()) {continue} //if the src can't shoot, gonext
+            if (!src.verifyAll()) { continue } //if the src can't shoot, gonext
             let highest
             for (const kiki in me.targets) {
                 const potential_dest = me.targets[kiki]
-                if ((!highest || potential_dest.population > highest.population) && !potential_dest.getDestroyed() && src.verifyZone(potential_dest.zone)){
+                if ((!highest || potential_dest.population > highest.population) && !potential_dest.getDestroyed() && src.verifyZone(potential_dest.zone)) {
                     highest = potential_dest
                 }
             }
-            if (highest != null){
-                strength = Math.ceil(src.capacity/5)
-                launchHelper(scene, mgr, highest,src, strength, true )
+            if (highest != null) {
+                strength = Math.ceil(src.capacity / 5)
+                launchHelper(scene, mgr, highest, src, strength, true)
                 return
             }
             //else: if no viable target, continue.
@@ -400,7 +403,7 @@ function chooseEnemyTargets(scene, mgr, initial = false) {
         }
         //if we got here, enemy is unable to select a city.
         //do stuff
-        
+
 
     }
 }
@@ -413,11 +416,11 @@ function launchHelper(scene, mgr, target, vehicle, strength, enemy = false) {
 
     let randomFailureChance = Math.random()
     if (randomFailureChance > 0.99) {
-        if (enemy){
-            panel_print_called(scene, mgr, scene.airspaceAlert,`ALERT: ENEMY ROCKET FAILURE.`)
+        if (enemy) {
+            panel_print_called(scene, mgr, scene.airspaceAlert, `ALERT: ENEMY ROCKET FAILURE.`)
         } else {
             panel_print_called(scene, mgr, scene.infoPanel,
-`ERROR: CRITICAL LAUNCH FAILURE ENCOUNTERED.
+                `ERROR: CRITICAL LAUNCH FAILURE ENCOUNTERED.
 PAYLOAD FAILED TO DELIVER.`)
         }
         return
@@ -426,7 +429,7 @@ PAYLOAD FAILED TO DELIVER.`)
     mgr.createMissile(target, strength)
 
     let tt
-    if(enemy){
+    if (enemy) {
         tt = `!! WARHEADS DETECTED IN AIRSPACE: ${target.name}!!`
         panel_print_called(scene, mgr, scene.airspaceAlert, tt)
     } else {
@@ -436,7 +439,7 @@ PAYLOAD FAILED TO DELIVER.`)
         panel_print_called(scene, mgr, scene.infoPanel, tt)
     }
 
-    if (!enemy){
+    if (!enemy) {
         computePlayerResponseTime(scene, mgr)
     }
 }
@@ -519,7 +522,7 @@ function winCons(scene, mgr) {
         panel_print_called(scene, mgr, scene.infoPanel, lossWarningText)
         scene.infoPanel.onFinish = function () {
             scene.mainConsole.unlockInput()
-            scene.infoPanel.onFinish = function (){}
+            scene.infoPanel.onFinish = function () { }
         }
     } else if (!scene.alredyWarnedThem && !myState && enState == -1) {
         scene.mainConsole.lockInput()
@@ -527,18 +530,18 @@ function winCons(scene, mgr) {
         panel_print_called(scene, mgr, scene.infoPanel, winWarningText)
         scene.infoPanel.onFinish = function () {
             scene.mainConsole.unlockInput()
-            scene.infoPanel.onFinish = function (){}
+            scene.infoPanel.onFinish = function () { }
         }
     }
     // now for global collapses.
     //logic: need to cover: -1 & -1, 1 & -1, -1 & 1, 1 & 1. ez claps
-    else if (Math.abs(myState * enState) == 1) { 
+    else if (Math.abs(myState * enState) == 1) {
         scene.gameEndBool = true
         panel_print_called(scene, mgr, scene.infoPanel, bothLossText)
         panel_clear_called(scene, mgr, scene.mainConsole)
         scene.mainConsole.lockInput()
         scene.infoPanel.onFinish = function () {
-            scene.blankPanel = new Phaser.GameObjects.Rectangle(scene, 0,0,width,height,0x00000, 100)
+            scene.blankPanel = new Phaser.GameObjects.Rectangle(scene, 0, 0, width, height, 0x00000, 100)
             scene.bigGameOverText = new Typewriter(scene, width / 2, height / 2, "wgfont", bothLossBig, 150, 72, 1)
             scene.bigGameOverText.setOrigin(0.5, 0.5)
             scene.bigGameOverText.startTypingWithoutGlow()
@@ -551,7 +554,7 @@ function winCons(scene, mgr) {
         scene.mainConsole.lockInput()
         mgr.stopTimer()
         scene.infoPanel.onFinish = function () {
-            scene.blankPanel = new Phaser.GameObjects.Rectangle(scene, 0,0,width,height,0x00000, 100)
+            scene.blankPanel = new Phaser.GameObjects.Rectangle(scene, 0, 0, width, height, 0x00000, 100)
             scene.bigGameOverText = new Typewriter(scene, width / 2, height / 2, "wgfont", `WINNER: ${me.name}`, 150, 72, 1)
             scene.bigGameOverText.setOrigin(0.5, 0.5)
             scene.bigGameOverText.startTypingWithoutGlow()
@@ -566,7 +569,7 @@ function winCons(scene, mgr) {
         scene.mainConsole.lockInput()
         mgr.stopTimer()
         scene.infoPanel.onFinish = function () {
-            scene.blankPanel = new Phaser.GameObjects.Rectangle(scene, 0,0,width,height,0x00000, 100)
+            scene.blankPanel = new Phaser.GameObjects.Rectangle(scene, 0, 0, width, height, 0x00000, 100)
             scene.bigGameOverText = new Typewriter(scene, width / 2, height / 2, "wgfont", `WINNER: ${them.name}`, 150, 72, 1)
             scene.bigGameOverText.setOrigin(0.5, 0.5)
             scene.bigGameOverText.startTypingWithoutGlow()
@@ -577,28 +580,28 @@ function winCons(scene, mgr) {
     }
 }
 
-function computePlayerResponseTime(scene, mgr){ //this is called whenever a player responds.
+function computePlayerResponseTime(scene, mgr) { //this is called whenever a player responds.
     console.log("in player response time:")
     let newTime = mgr.gameRawTime - scene.timeSincePlayerResponse
     console.log(newTime)
     scene.timeSincePlayerResponse = mgr.gameRawTime
     scene.playerResponseTimes.push(newTime)
-    if (scene.playerResponseTimes.length > 5){
+    if (scene.playerResponseTimes.length > 5) {
         scene.playerResponseTimes.shift()
     }
     //averaging function from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce 
     let initialValue = 0;
     scene.playerResponseSlidingAverage = scene.playerResponseTimes.reduce(
-    (accumulator, currentValue) => accumulator + currentValue, initialValue,) / scene.playerResponseTimes.length;
+        (accumulator, currentValue) => accumulator + currentValue, initialValue,) / scene.playerResponseTimes.length;
 
 }
 
-function computeEnemyAggroTimes(scene, mgr){
+function computeEnemyAggroTimes(scene, mgr) {
     let base = scene.playerResponseSlidingAverage
 
     //math:  set the LOW END of random response time
-        //minimum response time cannot exceed 80,000ms or be less than 10,000ms.
-        //otherwise, low end response time is 3,000ms faster than the player's average response.
+    //minimum response time cannot exceed 80,000ms or be less than 10,000ms.
+    //otherwise, low end response time is 3,000ms faster than the player's average response.
     scene.enemyAggroLow = base > 80000 ? 80000 : base < 4000 ? 1000 : base - 3000
 
     //the reason minimums are so low is to prevent "pause-spamming".
@@ -606,8 +609,8 @@ function computeEnemyAggroTimes(scene, mgr){
     //get a chance to respond, if they are pause-spamming.
 
     //math: set the HIGH END of random response time
-        //maximum response time cannot exceetd 120,000ms or be less than 3,000ms
-        //otherwise, high end response is 3,000ms slower than the player's average response.
+    //maximum response time cannot exceetd 120,000ms or be less than 3,000ms
+    //otherwise, high end response is 3,000ms slower than the player's average response.
 
     scene.enemyAggroHigh = base > 120000 ? 120000 : base < 3000 ? 3000 : base + 3000
 
