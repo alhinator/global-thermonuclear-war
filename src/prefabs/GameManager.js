@@ -396,14 +396,15 @@ function chooseEnemyTargets(scene, mgr, initial = false) {
             if (highest != null) {
                 //what we want to do here is optimize the ratio of missiles to air-defense.
                 //if every missiles "removes" 0.01 of air defense, and the minimum threshold for air defense is 0.1,
+                //but let's aim for 0.2
                 //then:
-                //formula:      (airDef - 0.1) = ideal defense reduction
+                //formula:      (airDef - 0.2) = ideal defense reduction
                 //              if ideal*100 > capacity then launch max
                 //              else launch ideal*100
 
-                //       however; aiming for 0.1 every time is inefficient. let's only launch 80%
+                //       however; aiming for 0.2 every time is inefficient. let's only launch 80%
                 //          of the missiles we need.
-                let ideal_reduction = highest.defense_rating - 0.1
+                let ideal_reduction = highest.defense_rating - 0.2
                 console.log("ideal reduction:" + ideal_reduction)
                 if (Math.ceil(ideal_reduction *80) > src.capacity) { strength = src.capacity }
                 else { strength = Math.ceil(ideal_reduction * 80) }
