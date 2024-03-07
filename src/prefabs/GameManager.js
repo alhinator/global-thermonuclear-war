@@ -347,9 +347,8 @@ function populateUSSRMilitary(ct) {
     ct.addVehicle("AFRIKANDA", "JET", ["MURMANSK", "MOSCOW", "LENINGRAD"], 50, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
     ct.addVehicle("BEKETOVSK", "JET", ["VOLGOGRAD"], 30, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
     ct.addVehicle("ARTSYZ", "JET", ["ODESSA"], 30, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
-    ct.addVehicle("UZYN", "JET", ["KIEV"], 30, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
-    ct.addVehicle("ARTEM", "JET", ["NONE"], 30, ["US_WEST", "US_CENTRAL"])
-    ct.addVehicle("SEMEY", "JET", ["ALMA ATA"], 30, ["US_EAST", "US_SOUTH", "US_MIDWEST"])
+    ct.addVehicle("UZYN", "JET", ["KIEV"], 30, ["US_EAST", "US_SOUTH", "US_CENTRAL"])
+    ct.addVehicle("SEMEY", "JET", ["ALMA ATA"], 30, ["US_EAST", "US_SOUTH", "US_CENTRAL"])
 
 
 
@@ -436,13 +435,17 @@ PAYLOAD FAILED TO DELIVER.`)
     TO ${target.name}`
         panel_print_called(scene, mgr, scene.infoPanel, tt)
     }
+
+    if (!enemy){
+        computePlayerResponseTime()
+    }
 }
 
 //random object picking code taken & slightly edited from https://stackoverflow.com/questions/2532218/pick-random-property-from-a-javascript-object 
 function getRandKeyFromObj(obj) {
     var keys = Object.keys(obj);
     return obj[keys[keys.length * Math.random() << 0]];
-};
+}
 
 function timeToGameClock(time) {
     //converting milliseconds into days, hours, minutes, seconds
@@ -566,4 +569,13 @@ function winCons(scene, mgr) {
             }
         }
     }
+}
+
+function computePlayerResponseTime(scene, mgr){ //this is called whenever a player responds.
+    let newTime = mgr.gameRawTime - scene.timeSincePlayerResponse
+
+}
+
+function computeEnemyAggroTimes(scene, mgr){
+    //let 
 }

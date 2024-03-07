@@ -9,6 +9,12 @@ class MainMenu extends Phaser.Scene {
     init() {
         this.lastInjIrrTick = 10000
         this.enemyAggroTick = 20000
+        this.enemyAggroLow = 16000
+        this.enemyAggroHigh = 32000
+
+        this.timeSincePlayerResponse = 0
+        this.playerResponseTimes = []
+        this.playerSlidingAverageResponse = 0
     }
 
     create() {
@@ -106,7 +112,8 @@ class MainMenu extends Phaser.Scene {
 
 
         if(this.GameManager.gameRawTime >= this.enemyAggroTick){
-            this.enemyAggroTick += Phaser.Math.Between(16000, 32000)
+            computeEnemyAggroTimes(this, mgr)
+            this.enemyAggroTick += Phaser.Math.Between(this.enemyAggroLow, this.enemyAggroHigh)
             enemyAttack(this, this.GameManager)
         }
 
