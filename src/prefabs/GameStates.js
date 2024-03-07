@@ -128,10 +128,12 @@ class LaunchMode extends State {
             mgr.enemyInitialTargets = null
             mgr.FSM.transition('ViewMode')
         }
-        else { // we are NOT in first strike mode, therefore, need to verify launch calls.
+        else { // we are NOT in first strike mode, ask for launch calls regularly.
             panel_clear_called(scene, mgr, scene.mainConsole)
             scene.mainConsole.lockInput()
             panel_print_called(scene, mgr, scene.mainConsole, launchText1)
+            scene.mainConsole.finishTyping()
+
             this.state = "source"
             let me = mgr.team == 1 ? mgr.USA : mgr.USSR
             let them = mgr.team == 1 ? mgr.USSR : mgr.USA
