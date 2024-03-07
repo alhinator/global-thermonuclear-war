@@ -244,26 +244,26 @@ function populateUSACities(ct) { //gonna do 24,  and get a nice spread
     ct.addTarget("BOSTON", 562994, "US_EAST", 435, 90, 0.4)
     ct.addTarget("CHARLOTTE", 314447, "US_SOUTH", 325, 170, 0.4)
     ct.addTarget("CHICAGO", 3005072, "US_MIDWEST", 355, 110)
-    ct.addTarget("COLORADO SPRINGS", 215150, "US_CENTRAL", 170, 160, 0.7, true)
+    ct.addTarget("COLORADO SPRINGS", 215150, "US_CENTRAL", 170, 160, 0.92, true)
     ct.addTarget("DALLAS", 904078, "US_CENTRAL", 235, 215)
     ct.addTarget("DENVER", 492365, "US_CENTRAL", 170, 175, 0.4)
     ct.addTarget("DETROIT", 1203339, "US_MIDWEST", 375, 100)
     ct.addTarget("HOUSTON", 1595138, "US_CENTRAL", 240, 240, 0.5)
-    ct.addTarget("HONOLULU", 584000, "US_WEST", 30, 275, 0.5)
+    ct.addTarget("HONOLULU", 584000, "US_WEST", 30, 275, 0.75)
     ct.addTarget("JACKSONVILLE", 540920, "US_SOUTH", 365, 215)
     ct.addTarget("LAS VEGAS", 164674, "US_WEST", 95, 165)
     ct.addTarget("LOS ANGELES", 2966850, "US_WEST", 60, 180, 0.4)
     ct.addTarget("MIAMI", 346865, "US_SOUTH", 370, 250, 0.5)
     ct.addTarget("MINNEAPOLIS", 370951, "US_MIDWEST", 335, 80)
     ct.addTarget("NEW ORLEANS", 557515, "US_SOUTH", 310, 230)
-    ct.addTarget("NEW YORK", 7071639, "US_EAST", 410, 115)
+    ct.addTarget("NEW YORK", 7071639, "US_EAST", 410, 115, 0.6)
     ct.addTarget("PHILADELPHIA", 1688210, "US_EAST", 405, 120)
     ct.addTarget("PHOENIX", 789704, "US_CENTRAL", 120, 185)
     ct.addTarget("PORTLAND", 366383, "US_WEST", 60, 85)
-    ct.addTarget("SAN DIEGO", 875538, "US_WEST", 70, 195, 0.4)
+    ct.addTarget("SAN DIEGO", 875538, "US_WEST", 70, 195, 0.65)
     ct.addTarget("SAN FRANCISCO", 678974, "US_WEST", 40, 150)
     ct.addTarget("SEATTLE", 493846, "US_WEST", 65, 70)
-    ct.addTarget("WASHINGTON DC", 638333, "US_EAST", 400, 135, 0.7)
+    ct.addTarget("WASHINGTON DC", 638333, "US_EAST", 400, 135, 0.9)
 
     //console.log("in populateusacities")
     //console.log(ct.getTargets())
@@ -294,19 +294,19 @@ function populateUSAMilitary(ct) {
 //United States population data retrieved from https://en.wikipedia.org/wiki/1980_United_States_census#City_rankings
 //Soviet Union population data retrieved from https://sashamaps.net/docs/maps/biggest-soviet-cities/
 function populateUSSRCities(ct) {
-    ct.addTarget("ALMA ATA", 1127884, "RU_SOUTH", 695, 275)
+    ct.addTarget("ALMA ATA", 1127884, "RU_SOUTH", 695, 275, 0.4)
     ct.addTarget("BAKU", 1795000, "RU_SOUTH", 600, 260)
     ct.addTarget("CHELYABINSK", 1107000, "RU_URALS", 650, 175)
     ct.addTarget("DNEPROPETROVSK", 1177897, "RU_SOUTH", 570, 210)
     ct.addTarget("KAZAN", 1094000, "RU_WEST", 615, 165)
     ct.addTarget("KHARKOV", 1609959, "RU_SOUTH", 580, 195)
-    ct.addTarget("KIEV", 2587945, "RU_SOUTH", 550, 200, 0.4)
-    ct.addTarget("LENINGRAD", 5024000, "RU_WEST", 585, 120, 0.5)
+    ct.addTarget("KIEV", 2587945, "RU_SOUTH", 550, 200, 0.6)
+    ct.addTarget("LENINGRAD", 5024000, "RU_WEST", 585, 120, 0.6)
 
     ct.addTarget("MAGADAN", 63000, "RU_ASIA", 900, 200)
 
     ct.addTarget("MURMANSK", 468000, "RU_WEST", 580, 90, 0.5)
-    ct.addTarget("MOSCOW", 8967000, "RU_WEST", 590, 150, 0.7)
+    ct.addTarget("MOSCOW", 8967000, "RU_WEST", 590, 150, 0.75)
     ct.addTarget("NOVOSIBIRSK", 1437000, "RU_SIBERIA", 710, 175)
     ct.addTarget("ODESSA", 1115371, "RU_SOUTH", 560, 230)
     ct.addTarget("OMSK", 1149000, "RU_URALS", 675, 180, 0.4)
@@ -394,7 +394,19 @@ function chooseEnemyTargets(scene, mgr, initial = false) {
                 }
             }
             if (highest != null) {
-                strength = Math.ceil(src.capacity / 5)
+                //what we want to do here is optimize the ratio of missiles to air-defense.
+                //if every TEN missiles "removes" 0.1 of air defense, and the ideal threshold for air defense is 0.3,
+                //then:
+                //formula:      (airDef - 0.3) = ideal defense reduction
+                //              if ideal*10 > capacity then launch max
+                //              if ideal == 0 (default def) then launch 5
+                //              else launch ideal*10
+                let ideal_reduction = target.defenseRating - 0.3
+                console.log("ideal reduction:" + ideal_reduction)
+                if (ideal_reduction * 10 > src.capacity || src.capacity < 5) { strength = src.capacity }
+                else if (ideal_reduction <= 0) { strength = 5 }
+                else { strength = ideal_reduction * 10 }
+
                 launchHelper(scene, mgr, highest, src, strength, true)
                 return
             }

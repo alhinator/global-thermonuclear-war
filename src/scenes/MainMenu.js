@@ -7,6 +7,10 @@ class MainMenu extends Phaser.Scene {
     }
 
     init() {
+        this.alreadyWarnedMe = false
+        this.alreadyWarnedThem = false
+        this.gameEndBool = false
+
         this.lastInjIrrTick = 10000
         this.enemyAggroTick = 20000
         this.enemyAggroLow = 16000
@@ -19,7 +23,6 @@ class MainMenu extends Phaser.Scene {
         this.playerResponseTimes = [25000]
         this.playerResponseSlidingAverage = 25000
 
-        this.gameEndBool = false
     }
 
     create() {
