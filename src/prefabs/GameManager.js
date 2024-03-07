@@ -511,7 +511,7 @@ function winCons(scene, mgr) {
         
     */
     //trivial case first
-    if (!myState && !enState) { return }
+    if (scene.gameEndBool == true || (!myState && !enState)) { return }
     // warnings now.
     else if (!scene.alreadyWarnedMe && myState == -1 && !enState) {
         scene.mainConsole.lockInput()
@@ -533,21 +533,25 @@ function winCons(scene, mgr) {
     // now for global collapses.
     //logic: need to cover: -1 & -1, 1 & -1, -1 & 1, 1 & 1. ez claps
     else if (Math.abs(myState * enState) == 1) { 
+        scene.gameEndBool = true
         panel_print_called(scene, mgr, scene.infoPanel, bothLossText)
         panel_clear_called(scene, mgr, scene.mainConsole)
         scene.mainConsole.lockInput()
         scene.infoPanel.onFinish = function () {
+            scene.blankPanel = new Phaser.GameObjects.Rectangle(scene, 0,0,width,height,0x00000, 100)
             scene.bigGameOverText = new Typewriter(scene, width / 2, height / 2, "wgfont", bothLossBig, 150, 72, 1)
             scene.bigGameOverText.setOrigin(0.5, 0.5)
             scene.bigGameOverText.startTypingWithoutGlow()
             scene.time.delayedCall(3000, () => { game_restart_called(scene, mgr) }, null, this)
         }
     } else if (!myState && enState) {//my win
+        scene.gameEndBool = true
         panel_print_called(scene, mgr, scene.infoPanel, myWinText)
         panel_clear_called(scene, mgr, scene.mainConsole)
         scene.mainConsole.lockInput()
         mgr.stopTimer()
         scene.infoPanel.onFinish = function () {
+            scene.blankPanel = new Phaser.GameObjects.Rectangle(scene, 0,0,width,height,0x00000, 100)
             scene.bigGameOverText = new Typewriter(scene, width / 2, height / 2, "wgfont", `WINNER: ${me.name}`, 150, 72, 1)
             scene.bigGameOverText.setOrigin(0.5, 0.5)
             scene.bigGameOverText.startTypingWithoutGlow()
@@ -556,11 +560,13 @@ function winCons(scene, mgr) {
             }
         }
     } else if (1 == 1 || myState && !enState) {//their win
+        scene.gameEndBool = true
         panel_print_called(scene, mgr, scene.infoPanel, myLossText)
         panel_clear_called(scene, mgr, scene.mainConsole)
         scene.mainConsole.lockInput()
         mgr.stopTimer()
         scene.infoPanel.onFinish = function () {
+            scene.blankPanel = new Phaser.GameObjects.Rectangle(scene, 0,0,width,height,0x00000, 100)
             scene.bigGameOverText = new Typewriter(scene, width / 2, height / 2, "wgfont", `WINNER: ${them.name}`, 150, 72, 1)
             scene.bigGameOverText.setOrigin(0.5, 0.5)
             scene.bigGameOverText.startTypingWithoutGlow()

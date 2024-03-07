@@ -18,6 +18,8 @@ class MainMenu extends Phaser.Scene {
         // start at middling difficulty and adapt as the player plays.
         this.playerResponseTimes = [25000]
         this.playerResponseSlidingAverage = 25000
+
+        this.gameEndBool = false
     }
 
     create() {
