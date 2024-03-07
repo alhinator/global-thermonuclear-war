@@ -63,7 +63,7 @@ class Target {
     }
 
     bombLanded(strength){
-        console.log("in bomb landed: " + this.name + "   s" + strength)
+        //console.log("in bomb landed: " + this.name + "   s" + strength)
         for(let i = 1; i <= strength ; i++){
             //strength = the number of bombs being sent. 
             //repeat for each bomb that's attempted.
@@ -85,7 +85,7 @@ class Target {
                 let civ_inj = Math.floor(civ_killed * 0.5 * safeCoefficient) //a middling amount of civilians are injured.
                 let civ_irr = Math.floor(civ_killed * 0.25 * safeCoefficient) //a smaller amount are irradiated.
                 //so, the effective difference is that both injured and irradiated civilians will  have a chance to die or recover; irradiation is more deadly.
-                console.log(`killed by bomb ${i}: ${civ_killed} alr_inj:${civ_alr_inj_killed} alr_irr:${civ_alr_irr_killed} |  inj: ${civ_inj} |  irr: ${civ_irr} `)
+                //console.log(`killed by bomb ${i}: ${civ_killed} alr_inj:${civ_alr_inj_killed} alr_irr:${civ_alr_irr_killed} |  inj: ${civ_inj} |  irr: ${civ_irr} `)
                 this.population -= (civ_killed + civ_inj + civ_irr)
                 this.dead_citizens += civ_killed
                 this.injured_citizens += civ_inj - civ_alr_inj_killed
@@ -181,7 +181,7 @@ class Vehicle {
         if (this.dependencies[0] == "NONE") {return true}
         for (let i = 0 ; i < this.dependencies.length; i++) {
             let dep = this.owner.getTargetByName(this.dependencies[i])
-            if (!dep) { console.log(`${this.name} : verifyDepend() : dependency not in owner's targets`)}
+            if (!dep) { console.log(`${this.name} : verifyDepend() : ERROR: dependency not in owner's targets`)}
             if (dep && dep.getDestroyed() == false){
                 return true
             }
@@ -193,7 +193,7 @@ class Vehicle {
         //console.log(target_zone)
         for (const i in this.zones) {
             if (this.zones[i] === "ALL" || this.zones[i] === target_zone) {
-                console.log(this.zones[i])
+                //console.log(this.zones[i])
                 return true
             }
         }

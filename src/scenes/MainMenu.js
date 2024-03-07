@@ -13,8 +13,11 @@ class MainMenu extends Phaser.Scene {
         this.enemyAggroHigh = 32000
 
         this.timeSincePlayerResponse = 0
-        this.playerResponseTimes = []
-        this.playerSlidingAverageResponse = 0
+
+        //start with faux player response times; this allows the game ai to 
+        // start at middling difficulty and adapt as the player plays.
+        this.playerResponseTimes = [25000]
+        this.playerResponseSlidingAverage = 25000
     }
 
     create() {
@@ -112,7 +115,7 @@ class MainMenu extends Phaser.Scene {
 
 
         if(this.GameManager.gameRawTime >= this.enemyAggroTick){
-            computeEnemyAggroTimes(this, mgr)
+            computeEnemyAggroTimes(this, this.GameManager)
             this.enemyAggroTick += Phaser.Math.Between(this.enemyAggroLow, this.enemyAggroHigh)
             enemyAttack(this, this.GameManager)
         }

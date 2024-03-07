@@ -7,17 +7,17 @@
 
     the united states has less overall citizens, but they are better protected by superior air defense.
 
-    the USA is generally more "balanced" in terms of its options, however ,its power comes from localized command centers,
+    the USA is generally more "balanced" in terms of its options, however ,its power comes from centralized command centers,
     that, if disabled, cause the player to lose access to their weapons.
-    ex:   the united states loses all of its icbms if it loses NORAD in colorado.
-    additionally, most of its submarine power comes from pearl harbor & california.
+    ex:   the united states loses all of its icbms if it loses NORAD and washington dc.
+    additionally, most of its submarine power comes from pearl harbor.
   
     the soviet union relies heavily on decentralized icbm's and submarines. 
     they contain less individual power on their own, but taking out one base or vehicle has minimal impact.
     additionaly, while city populations may SEEM larger, more citizens are killed during nuclear strikes
     due to high urban crowding and overpopulation.
 
-    the united states also has slightly more missiles.
+    the united states also has slightly more missiles, however, it really doesn't matter.
 */
 
 class GameManager {
@@ -72,7 +72,7 @@ class GameManager {
     }
 
     createMissile(target, strength) { //target should be a pointer to a target instance.
-        console.log("in create missile for " + target.name)
+        //console.log("in create missile for " + target.name)
         //first, check to see if target already has smth aimed at it.
         let missileKey = target.name
 
@@ -437,7 +437,7 @@ PAYLOAD FAILED TO DELIVER.`)
     }
 
     if (!enemy){
-        computePlayerResponseTime()
+        computePlayerResponseTime(scene, mgr)
     }
 }
 
@@ -513,17 +513,17 @@ function winCons(scene, mgr) {
     //trivial case first
     if (!myState && !enState) { return }
     // warnings now.
-    else if (!this.alreadyWarnedMe && myState == -1 && !enState) {
+    else if (!scene.alreadyWarnedMe && myState == -1 && !enState) {
         scene.mainConsole.lockInput()
-        this.alreadyWarnedMe = true
+        scene.alreadyWarnedMe = true
         panel_print_called(scene, mgr, scene.infoPanel, lossWarningText)
         scene.infoPanel.onFinish = function () {
             scene.mainConsole.unlockInput()
             scene.infoPanel.onFinish = function (){}
         }
-    } else if (!this.alredyWarnedThem && !myState && enState == -1) {
+    } else if (!scene.alredyWarnedThem && !myState && enState == -1) {
         scene.mainConsole.lockInput()
-        this.alreadyWarnedThem = true
+        scene.alreadyWarnedThem = true
         panel_print_called(scene, mgr, scene.infoPanel, winWarningText)
         scene.infoPanel.onFinish = function () {
             scene.mainConsole.unlockInput()
@@ -572,10 +572,53 @@ function winCons(scene, mgr) {
 }
 
 function computePlayerResponseTime(scene, mgr){ //this is called whenever a player responds.
+    console.log("in player response time:")
     let newTime = mgr.gameRawTime - scene.timeSincePlayerResponse
+    console.log(newTime)
+    scene.timeSincePlayerResponse = mgr.gameRawTime
+    scene.playerResponseTimes.push(newTime)
+    if (scene.playerResponseTimes.length > 5){
+        scene.playerResponseTimes.shift()
+    }
+    //averaging function from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce 
+    let initialValue = 0;
+    scene.playerResponseSlidingAverage = scene.playerResponseTimes.reduce(
+    (accumulator, currentValue) => accumulator + currentValue, initialValue,) / scene.playerResponseTimes.length;
 
 }
 
 function computeEnemyAggroTimes(scene, mgr){
-    //let 
+    let base = scene.playerResponseSlidingAverage
+
+    //math:  set the LOW END of random response time
+        //minimum response time cannot exceed 80,000ms or be less than 10,000ms.
+        //otherwise, low end response time is 3,000ms faster than the player's average response.
+    scene.enemyAggroLow = base > 80000 ? 80000 : base < 4000 ? 1000 : base - 3000
+
+    //the reason minimums are so low is to prevent "pause-spamming".
+    //when a player launches missiles, the timer auto-starts again, which should allow the machine to 
+    //get a chance to respond, if they are pause-spamming.
+
+    //math: set the HIGH END of random response time
+        //maximum response time cannot exceetd 120,000ms or be less than 3,000ms
+        //otherwise, high end response is 3,000ms slower than the player's average response.
+
+    scene.enemyAggroHigh = base > 120000 ? 120000 : base < 3000 ? 3000 : base + 3000
+
+    /* visualization:
+
+
+                   longest response                             
+                if player has shortest time                    longest possible
+                      3,000ms                                  ai response time.
+     0ms ----------------------------------------------------- 120,000ms (2 minutes)
+            1,000ms                    80,000ms                                         
+            shortest possible           shortest response
+            ai response time.           if player has longest time
+
+
+
+    */
+
+    console.log(`en aggro times: ${scene.enemyAggroLow}, ${scene.enemyAggroHigh}`)
 }

@@ -4,7 +4,7 @@ class InitialState extends State {
         console.log("end initialstate enter")
 
         //SKIP MAP THANG
-        //scene.map.finishTyping()
+        scene.map.finishTyping()
     }
     execute(scene, mgr) {
 
@@ -190,7 +190,7 @@ class LaunchMode extends State {
                     } else { // good DEST   INPUT
                         this.activeDest = dest
                         this.state = "payload"
-                        do_panel_magic(scene, mgr, `\n\nCAPACITY: ${this.activeSource.capacity}${launchText3}`)
+                        do_panel_magic(scene, mgr, `\n\nWARHEADS AVAILABLE: ${this.activeSource.capacity}${launchText3}`)
                     }
                     break
                 case "payload":

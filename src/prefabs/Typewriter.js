@@ -18,7 +18,7 @@ class Typewriter extends Phaser.GameObjects.BitmapText {
 
         this.skipSpaces = false
 
-        this.onFinish = function () { console.log("Finished Typing!") }
+        this.onFinish = function () { /*console.log("Finished Typing!")*/ }
     }
 
     //command functions
