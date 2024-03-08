@@ -11,13 +11,13 @@ class Country {
     //get commands
     getTargets() {
         let retVal = "SIGNIFICANT TARGETS IN THE " + this.name + ":\n\n"
-        for (const zz in this.zones){
+        for (const zz in this.zones) {
             let c_zone = this.zones[zz]
             let lr = 0
-            retVal += "["+c_zone+"]\n"
+            retVal += "[" + c_zone + "]\n"
             //less efficient, but better for players. sort by zone.
             for (const key in this.targets) {
-                if(this.targets[key].zone == c_zone){
+                if (this.targets[key].zone == c_zone) {
                     let nm = this.targets[key].name
                     if (this.targets[key].destroyed) { nm += " (x)" }
                     if (lr == 0 || lr == 1) { retVal += nm; for (let i = 0; i < 20 - nm.length; i++) { retVal += " " } }
@@ -25,13 +25,13 @@ class Country {
                     lr++; if (lr > 2) { lr = 0 }
                 }
             }
-            if(retVal.charAt(retVal.length-1) != '\n') {
-                retVal+='\n'
-            } 
+            if (retVal.charAt(retVal.length - 1) != '\n') {
+                retVal += '\n'
+            }
             retVal += '\n'
         }
 
-        
+
         //console.log(retVal)
         return retVal
     }
@@ -75,11 +75,11 @@ DEPENDENCIES: ${tg.dependencies}
 `
         if (tg.dependencies[0] == "NONE") {
             retVal +=
-            `THIS VEHICLE WILL REMAIN OPERATIONAL
+                `THIS VEHICLE WILL REMAIN OPERATIONAL
 UNTIL ALL CITIES ARE DESTROYED.`}
         else if (tg.verifyDepend()) {
             retVal +=
-            `IF ALL DEPENDENCIES ARE DESTROYED,
+                `IF ALL DEPENDENCIES ARE DESTROYED,
 THIS VEHICLE BECOMES INACTIVE.`}
         else { retVal += `\n\n!!INACTIVE!!` }
         return retVal
@@ -121,7 +121,7 @@ AIR DEFENSE COEFFICIENT: ${tg.defense_rating}`
             dead: dead,
             irradiated: irr,
             injured: inj,
-            percent: Math.floor((curr+inj+irr) / og * 100)
+            percent: Math.floor((curr + inj + irr) / og * 100)
         }
         return pop_data
     }
@@ -139,7 +139,7 @@ CURRENT INJURED POPULATION (${mgr.gameTime}): ${pop_data.injured}`
         return retVal
     }
 
-    checkDestroyed(mgr){
+    checkDestroyed(mgr) {
         let pop_data = this.internalGetStats(mgr)
         if (pop_data.percent < 20) {
             //if less than twenty percent of the population remains, including the irradiated and injured, this country CANNOT WIN
@@ -147,7 +147,7 @@ CURRENT INJURED POPULATION (${mgr.gameTime}): ${pop_data.injured}`
             return -1
         } else if (pop_data.percent <= 0) {
             //this country has been utterly destroyed.
-            console.log(this.name + " has been destroyed.")
+            //console.log(this.name + " has been destroyed.")
             return 1
         } else {
             return 0
