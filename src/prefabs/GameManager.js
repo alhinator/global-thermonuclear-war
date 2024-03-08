@@ -267,7 +267,7 @@ function populateUSACities(ct) { //gonna do 24,  and get a nice spread
 
     //console.log("in populateusacities")
     //console.log(ct.getTargets())
-    //ct.targets["SEATTLE"].setDestroyed(true)
+
 }
 
 function populateUSAMilitary(ct) {
@@ -325,7 +325,7 @@ function populateUSSRCities(ct) {
 
     ct.addTarget("YEREVAN", 1201500, "RU_SOUTH", 645, 270)
 
-    //ct.targets["ALMA-ATA"].setDestroyed(true) //debug print test
+
 }
 
 //INFO FROM nuke.fas.org/guide/russia/facility/icbm/icbm_1.gif 
@@ -405,8 +405,8 @@ function chooseEnemyTargets(scene, mgr, initial = false) {
                 //       however; aiming for 0.2 every time is inefficient. let's only launch 80%
                 //          of the missiles we need.
                 let ideal_reduction = highest.defense_rating - 0.2
-                console.log("ideal reduction:" + ideal_reduction)
-                if (Math.ceil(ideal_reduction *80) > src.capacity) { strength = src.capacity }
+                //console.log("ideal reduction:" + ideal_reduction)
+                if (Math.ceil(ideal_reduction * 80) > src.capacity) { strength = src.capacity }
                 else { strength = Math.ceil(ideal_reduction * 80) }
 
                 launchHelper(scene, mgr, highest, src, strength, true)
@@ -423,7 +423,7 @@ function chooseEnemyTargets(scene, mgr, initial = false) {
 }
 
 function launchHelper(scene, mgr, target, vehicle, strength, enemy = false) {
-    console.log(`in launch helper! \n   ${target}\n     ${vehicle}\n    ${strength}`)
+    //console.log(`in launch helper! \n   ${target}\n     ${vehicle}\n    ${strength}`)
 
     //decrease capacity
     vehicle.capacity -= strength
@@ -550,54 +550,39 @@ function winCons(scene, mgr) {
     // now for global collapses.
     //logic: need to cover: -1 & -1, 1 & -1, -1 & 1, 1 & 1. ez claps
     else if (Math.abs(myState * enState) == 1) {
-        scene.gameEndBool = true
-        panel_print_called(scene, mgr, scene.infoPanel, bothLossText)
-        panel_clear_called(scene, mgr, scene.mainConsole)
-        scene.mainConsole.lockInput()
-        scene.infoPanel.onFinish = function () {
-            scene.blankPanel = new Phaser.GameObjects.Rectangle(scene, 0, 0, width, height, 0x00000, 100)
-            scene.bigGameOverText = new Typewriter(scene, width / 2, height / 2, "wgfont", bothLossBig, 150, 72, 1)
-            scene.bigGameOverText.setOrigin(0.5, 0.5)
-            scene.bigGameOverText.startTypingWithoutGlow()
-            scene.time.delayedCall(3000, () => { game_restart_called(scene, mgr) }, null, this)
-        }
+
+        makeGameOverPanel(scene, mgr, bothLossText, bothLossBig)
+
     } else if (!myState && enState) {//my win
-        scene.gameEndBool = true
-        panel_print_called(scene, mgr, scene.infoPanel, myWinText)
-        panel_clear_called(scene, mgr, scene.mainConsole)
-        scene.mainConsole.lockInput()
-        mgr.stopTimer()
-        scene.infoPanel.onFinish = function () {
-            scene.blankPanel = new Phaser.GameObjects.Rectangle(scene, 0, 0, width, height, 0x00000, 100)
-            scene.bigGameOverText = new Typewriter(scene, width / 2, height / 2, "wgfont", `WINNER: ${me.name}`, 150, 72, 1)
-            scene.bigGameOverText.setOrigin(0.5, 0.5)
-            scene.bigGameOverText.startTypingWithoutGlow()
-            scene.bigGameOverText.onFinish = function () {
-                scene.time.delayedCall(3000, () => { game_restart_called(scene, mgr) }, null, this)
-            }
-        }
-    } else if (1 == 1 || myState && !enState) {//their win
-        scene.gameEndBool = true
-        panel_print_called(scene, mgr, scene.infoPanel, myLossText)
-        panel_clear_called(scene, mgr, scene.mainConsole)
-        scene.mainConsole.lockInput()
-        mgr.stopTimer()
-        scene.infoPanel.onFinish = function () {
-            scene.blankPanel = new Phaser.GameObjects.Rectangle(scene, 0, 0, width, height, 0x00000, 100)
-            scene.bigGameOverText = new Typewriter(scene, width / 2, height / 2, "wgfont", `WINNER: ${them.name}`, 150, 72, 1)
-            scene.bigGameOverText.setOrigin(0.5, 0.5)
-            scene.bigGameOverText.startTypingWithoutGlow()
-            scene.bigGameOverText.onFinish = function () {
-                scene.time.delayedCall(3000, () => { game_restart_called(scene, mgr) }, null, this)
-            }
-        }
+        makeGameOverPanel(scene, mgr, myLossText, `WINNER: ${me.name}`)
+
+
+    } else if (myState && !enState) {//their win
+        makeGameOverPanel(scene, mgr, myLossText, `WINNER: ${them.name}`)
+    }
+}
+
+function makeGameOverPanel(scene, mgr, smol, big) {
+    scene.gameEndBool = true
+    panel_print_called(scene, mgr, scene.infoPanel, smol)
+    panel_clear_called(scene, mgr, scene.mainConsole)
+    scene.mainConsole.lockInput()
+    mgr.stopTimer()
+    scene.infoPanel.onFinish = function () {
+        scene.blankPanel = scene.add.rectangle(0, 0, width * 2, height * 2, 0x00000, 1)
+        scene.blankPanel.setDepth(6)
+        scene.bigGameOverText = new Typewriter(scene, width / 2, height / 2, "wgfont", big, 150, 72, 1)
+        scene.bigGameOverText.setDepth(7)
+        scene.bigGameOverText.setOrigin(0.5, 0.5)
+        scene.bigGameOverText.startTypingWithoutGlow()
+        scene.time.delayedCall(3000, () => { game_restart_called(scene, mgr) }, null, this)
     }
 }
 
 function computePlayerResponseTime(scene, mgr) { //this is called whenever a player responds.
-    console.log("in player response time:")
+    //console.log("in player response time:")
     let newTime = mgr.gameRawTime - scene.timeSincePlayerResponse
-    console.log(newTime)
+    //console.log(newTime)
     scene.timeSincePlayerResponse = mgr.gameRawTime
     scene.playerResponseTimes.push(newTime)
     if (scene.playerResponseTimes.length > 5) {
@@ -643,5 +628,5 @@ function computeEnemyAggroTimes(scene, mgr) {
 
     */
 
-    console.log(`en aggro times: ${scene.enemyAggroLow}, ${scene.enemyAggroHigh}`)
+    //console.log(`en aggro times: ${scene.enemyAggroLow}, ${scene.enemyAggroHigh}`)
 }

@@ -72,14 +72,14 @@ class MainMenu extends Phaser.Scene {
         ///make fsm
         this.GameManager = new GameManager(this)
 
-        console.log('done making fsm')
-//create map & console & timer, but do nothing with it yet.
+        //console.log('done making fsm')
+        //create map & console & timer, but do nothing with it yet.
         this.map = new Typewriter(this, upperConsoleX, upperConsoleY, "wgfont", USA_RUSSIA_new, 20)
         this.map.setSpacesSkippable(true)
-        this.map.onFinish = function (){this.scene.GameManager.FSM.transition("SideSelect")}
+        this.map.onFinish = function () { this.scene.GameManager.FSM.transition("SideSelect") }
 
         this.mainConsole = new TextInput(this, leftConsoleX, leftConsoleY, "wgfont", whichSideText)
-        this.input.keyboard.on('keydown', this.mainConsoleListener,this)
+        this.input.keyboard.on('keydown', this.mainConsoleListener, this)
 
         this.infoPanel = new Typewriter(this, rightConsoleX, rightConsoleY, "wgfont", "", 16)
 
@@ -89,8 +89,8 @@ class MainMenu extends Phaser.Scene {
 
         this.airspaceAlert = new Typewriter(this, rightConsoleX, rightConsoleY - 64, "wgfont", "", 16, 0)
         this.airspaceAlert.onFinish = function () {
-            this.scene.time.delayedCall(5000, ()=>{
-                if(this.state = "done"){ //in-case it gets overwritten.
+            this.scene.time.delayedCall(5000, () => {
+                if (this.state = "done") { //in-case it gets overwritten.
                     panel_clear_called(this.scene, this.scene.GameManager, this)
                 }
             }, null, this)
@@ -107,10 +107,10 @@ class MainMenu extends Phaser.Scene {
 
     }
 
-    update(time, delta) { 
+    update(time, delta) {
         this.GameManager.FSM.step()
         this.GameManager.incTimer(delta)
-        if(this.GameManager.gameRawTime >= this.lastInjIrrTick){
+        if (this.GameManager.gameRawTime >= this.lastInjIrrTick) {
             this.lastInjIrrTick += 10000
             tickAllCityPops(this, this.GameManager)
             //console.log("done ticking city pops")
@@ -119,24 +119,24 @@ class MainMenu extends Phaser.Scene {
         }
 
 
-        if(this.GameManager.gameRawTime >= this.enemyAggroTick){
+        if (this.GameManager.gameRawTime >= this.enemyAggroTick) {
             computeEnemyAggroTimes(this, this.GameManager)
             this.enemyAggroTick += Phaser.Math.Between(this.enemyAggroLow, this.enemyAggroHigh)
             enemyAttack(this, this.GameManager)
         }
 
         //set clock text to game time.
-        if(this.GameManager.gameRawTime != 0){
-           // console.log("game timeer tick")
+        if (this.GameManager.gameRawTime != 0) {
+            // console.log("game timeer tick")
             this.gameTimerText.text = this.GameManager.gameTime
         }
     }
 
-    userHitEnter(){
+    userHitEnter() {
         this.GameManager.FSM.recieveReturnKey()
     }
 
-    mainConsoleListener(){
+    mainConsoleListener() {
         //console.log("in keyboard listener")
         this.mainConsole.handleInput(this)
     }

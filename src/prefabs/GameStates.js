@@ -12,7 +12,7 @@ class InitialState extends State {
 }
 
 class SideSelect extends State {
-    
+
     enter(scene, mgr) {
         scene.infoPanel.clearText()
         scene.mainConsole.startBufferOscillation() //start typing
@@ -28,14 +28,14 @@ class SideSelect extends State {
 
         this.beginnerTime++
         //console.log(this.beginnerTime)
-        if(!this.alreadyAlerted && this.beginnerTime >= 500){
+        if (!this.alreadyAlerted && this.beginnerTime >= 500) {
             this.alreadyAlerted = true
             panel_print_called(scene, mgr, scene.infoPanel, gettingStartedText)
         }
     }
     submit(scene, mgr) {
         let input = scene.mainConsole.getInputString()
-        console.log(input)
+        //console.log(input)
         if (input === "") { return }
         if (input === "1" || input == "UNITED STATES") { mgr.team = 1; mgr.FSM.transition('FirstTarget') }
         else if (input === "2" || input == "SOVIET UNION") { mgr.team = 2; mgr.FSM.transition('FirstTarget') }
@@ -76,7 +76,7 @@ class FirstTarget extends State {
 
             mgr.FSM.transition('LaunchMode')
 
-        } 
+        }
     }
 
     submit(scene, mgr) {
@@ -84,7 +84,7 @@ class FirstTarget extends State {
         let tg
         let me = mgr.team == 1 ? mgr.USA : mgr.USSR
         let them = mgr.team == 1 ? mgr.USSR : mgr.USA
-        console.log("submit input from firstTarget:" + input)
+        //console.log("submit input from firstTarget:" + input)
         if (input === "") { return }
         if (mgr.myInitialTargets[input]) { //we have already chosen this target as part of initial select.
             scene.mainConsole.clearUserInput()
@@ -98,7 +98,7 @@ class FirstTarget extends State {
             this.targetsChosen++
             //now, add the "good" target to the active list.
             mgr.myInitialTargets[tg.name] = tg
-            console.log(mgr.myInitialTargets)
+            //console.log(mgr.myInitialTargets)
             do_panel_magic(scene, mgr, '\n\n')
 
 
@@ -173,7 +173,7 @@ class LaunchMode extends State {
             let src, dest, payload
             switch (this.state) {
                 case "source": //we need to verify the user has input a valid source.
-                    
+
                     if ((src = me.getVehicleByName(input)) == false) {
                         //bad vehicle.
                         panel_print_called(scene, mgr, scene.infoPanel, basicBadVehicleText)
@@ -194,7 +194,7 @@ class LaunchMode extends State {
                     break
                 case "dest":
                     //console.log(this.activeSource)
-                    
+
                     if ((dest = them.getTargetByName(input)) == false) {
                         //bad target.
                         panel_print_called(scene, mgr, scene.infoPanel, basicBadTargetText)
@@ -245,7 +245,7 @@ class ViewMode extends State { //this is our neutral state.
     submit(scene, mgr) {
         let input = scene.mainConsole.getInputString()
         let tg
-        console.log("submit input from viewmode:" + input)
+        //console.log("submit input from viewmode:" + input)
         if (input === "") { return }
         else if (input === "LAUNCH") { mgr.FSM.transition("LaunchMode") }
         else if (parseOtherCommands(scene, mgr, input) != -1) { scene.mainConsole.clearUserInput() }
