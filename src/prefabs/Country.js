@@ -121,7 +121,7 @@ AIR DEFENSE COEFFICIENT: ${tg.defense_rating}`
             dead: dead,
             irradiated: irr,
             injured: inj,
-            percent: Math.floor((curr + inj + irr) / og * 100)
+            percent: Math.floor(((curr + inj + irr) / og) * 100)
         }
         return pop_data
     }
