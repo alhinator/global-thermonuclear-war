@@ -32,7 +32,7 @@ class Loading extends Phaser.Scene {
 
     update() {
         //SKIP INTRO (debug)
-        this.scene.start("mainMenuScene")
+        //this.scene.start("mainMenuScene")
 
         if (Phaser.Input.Keyboard.JustDown(keySPACE)) {
             this.myConsole.setFast(true)
