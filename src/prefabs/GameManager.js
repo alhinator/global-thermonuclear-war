@@ -553,11 +553,11 @@ function winCons(scene, mgr) {
 
         makeGameOverPanel(scene, mgr, bothLossText, bothLossBig)
 
-    } else if (!myState && enState) {//my win
+    } else if (myState == 0 && enState == 1) {//my win
         makeGameOverPanel(scene, mgr, myLossText, `WINNER: ${me.name}`)
 
 
-    } else if (myState && !enState) {//their win
+    } else if (myState == 1 && enState == 0) {//their win
         makeGameOverPanel(scene, mgr, myLossText, `WINNER: ${them.name}`)
     }
 }
@@ -575,7 +575,7 @@ function makeGameOverPanel(scene, mgr, smol, big) {
         scene.bigGameOverText.setDepth(7)
         scene.bigGameOverText.setOrigin(0.5, 0.5)
         scene.bigGameOverText.startTypingWithoutGlow()
-        scene.time.delayedCall(3000, () => { game_restart_called(scene, mgr) }, null, this)
+        scene.time.delayedCall(10000, () => { game_restart_called(scene, mgr) }, null, this)
     }
 }
 
