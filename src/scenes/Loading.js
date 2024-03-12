@@ -17,7 +17,7 @@ class Loading extends Phaser.Scene {
 
 
     create() {
-        this.myConsole = new TextInput(this, upperConsoleX, upperConsoleY, 'wgfont', "LOGON: Joshua")
+        this.myConsole = new TextInput(this, upperConsoleX, upperConsoleY, 'wgfont', "LOGON: Joshua",30)
         this.myConsole.startBufferOscillation()
         this.myConsole.startTyping()
 
@@ -32,7 +32,7 @@ class Loading extends Phaser.Scene {
 
     update() {
         //SKIP INTRO (debug)
-        //this.scene.start("mainMenuScene")
+        this.scene.start("mainMenuScene")
 
         if (Phaser.Input.Keyboard.JustDown(keySPACE)) {
             this.myConsole.setFast(true)

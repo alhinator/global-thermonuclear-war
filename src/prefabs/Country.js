@@ -93,11 +93,14 @@ THIS VEHICLE BECOMES INACTIVE.`}
         let retVal = `DISPLAYING ${tg.name.toUpperCase()} INFO:\n\n` +
             `PARENT COUNTRY: ${this.name}
 ZONE: ${tg.zone}
+
 ORIGINAL POPULATION: ${tg.original_population}
 CURRENT LIVING POPULATION: ${tg.population + tg.injured_citizens + tg.irradiated_citizens} (${Math.floor(((tg.population + tg.injured_citizens + tg.irradiated_citizens) / tg.original_population) * 100)}%)
 POPULATION KILLED SINCE T0: ${tg.dead_citizens}
+
 CURRENT IRRADIATED POPULATION (${mgr.gameTime}): ${tg.irradiated_citizens}
 CURRENT INJURED POPULATION (${mgr.gameTime}): ${tg.injured_citizens}
+
 AIR DEFENSE COEFFICIENT: ${tg.defense_rating}`
 
         if (tg.getDestroyed()) { retVal += `\n\n!!DESTROYED!!` }
@@ -130,9 +133,11 @@ AIR DEFENSE COEFFICIENT: ${tg.defense_rating}`
         let pop_data = this.internalGetStats(mgr)
 
         let retVal = `POPULATION DATA FOR ${this.name}:\n\n` +
+
             `ORIGINAL POPULATION (T0): ${pop_data.original}
 CURRENT LIVING POPULATION (${mgr.gameTime}): ${pop_data.current} (${pop_data.percent}%)
 POPULATION KILLED SINCE T0: ${pop_data.dead}
+
 CURRENT IRRADIATED POPULATION (${mgr.gameTime}): ${pop_data.irradiated}
 CURRENT INJURED POPULATION (${mgr.gameTime}): ${pop_data.injured}`
 
@@ -152,6 +157,18 @@ CURRENT INJURED POPULATION (${mgr.gameTime}): ${pop_data.injured}`
         } else {
             return 0
         }
+    }
+
+    checkLaunchable(mgr){
+        for (const v in this.vehicles) {
+            let obj = this.vehicles[v]
+            if(obj.verifyAll) {
+                return true //if at least one silo is left standing, we're launchable.
+            }
+            
+        }
+        return false //no silos left
+
     }
 
     //set commands

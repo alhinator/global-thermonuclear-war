@@ -4,7 +4,7 @@ class InitialState extends State {
         console.log("end initialstate enter")
 
         //SKIP MAP THANG
-        //scene.map.finishTyping()
+        scene.map.finishTyping()
     }
     execute(scene, mgr) {
 
@@ -17,21 +17,22 @@ class SideSelect extends State {
         scene.infoPanel.clearText()
         scene.mainConsole.startBufferOscillation() //start typing
         scene.mainConsole.startTyping()
+        scene.mainConsole.onFinish = function () {
+            panel_print_called(scene, mgr, scene.infoPanel, gettingStartedText)
+            scene.infoPanel.onFinish = function(){
+                scene.mainConsole.unlockInput()
+                scene.infoPanel.onFinish = function (){}
+            }
+            scene.infoPanel.finishTyping()
+            scene.mainConsole.onFinish = function (){}
+        }   
 
-        this.beginnerTime = 0
-        this.alreadyAlerted = 0
+
+
     }
     execute(scene, mgr) {
-        if (!scene.mainConsole.allowInput && scene.mainConsole.state == "done") { //once done typing, allow input
-            scene.mainConsole.unlockInput()
-        }
-
-        this.beginnerTime++
-        //console.log(this.beginnerTime)
-        if (!this.alreadyAlerted && this.beginnerTime >= 500) {
-            this.alreadyAlerted = true
-            panel_print_called(scene, mgr, scene.infoPanel, gettingStartedText)
-        }
+    
+    
     }
     submit(scene, mgr) {
         let input = scene.mainConsole.getInputString()
@@ -129,7 +130,9 @@ class LaunchMode extends State {
             let tt = launchTextMe + "\n" +
                 Object.keys(mgr.myInitialTargets) + "\n\n" +
                 launchTextThem + "\n" +
-                Object.keys(mgr.enemyInitialTargets)
+                Object.keys(mgr.enemyInitialTargets) +`
+USE COMMAND 'LAUNCH' TO ENTER LAUNCH MODE WHEN READY OR 
+COMMAND 'HELP' TO VIEW ALL COMMANDS.`
             panel_print_called(scene, mgr, scene.infoPanel, tt)
             mgr.startTimer()
             for (const key in mgr.myInitialTargets) {

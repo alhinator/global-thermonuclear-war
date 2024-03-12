@@ -100,10 +100,12 @@ function parseOtherCommands(scene, mgr, input, target = scene.infoPanel) {
     //look for "name-based" commands first.
     if (input.slice(0, 4) === "VIEW") {
         panel_print_called(scene, mgr, target, getViewRequest(mgr, input.slice(5)))
+        target.finishTyping()
         return
     }
     if (input.slice(0, 4) === "INFO") {
         panel_print_called(scene, mgr, target, getInfoRequest(mgr, input.slice(5)))
+        target.finishTyping()
         return
     }
 
@@ -150,26 +152,32 @@ function parseOtherCommands(scene, mgr, input, target = scene.infoPanel) {
         case "LIST 1":
         case "LIST UNITED STATES":
             panel_print_called(scene, mgr, scene.infoPanel, mgr.USA.getTargets())
+            scene.infoPanel.finishTyping()
             break;
         case "LIST 2":
         case "LIST SOVIET UNION":
             panel_print_called(scene, mgr, scene.infoPanel, mgr.USSR.getTargets())
+            scene.infoPanel.finishTyping()
             break;
         case "NUKES 1":
         case "NUKES UNITED STATES":
             panel_print_called(scene, mgr, scene.infoPanel, mgr.USA.getVehicles())
+            scene.infoPanel.finishTyping()
             break;
         case "NUKES 2":
         case "NUKES SOVIET UNION":
             panel_print_called(scene, mgr, scene.infoPanel, mgr.USSR.getVehicles())
+            scene.infoPanel.finishTyping()
             break;
         case "POP 1":
         case "POP UNITED STATES":
             panel_print_called(scene, mgr, scene.infoPanel, mgr.USA.getPopulationStats(mgr))
+            scene.infoPanel.finishTyping()
             break;
         case "POP 2":
         case "POP SOVIET UNION":
             panel_print_called(scene, mgr, scene.infoPanel, mgr.USSR.getPopulationStats(mgr))
+            scene.infoPanel.finishTyping()
             break;
         case "TOGGLE":
             mgr.USAVisOnMap = !mgr.USAVisOnMap
