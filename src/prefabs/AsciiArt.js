@@ -324,4 +324,4 @@ under a Creative Commons Attribution Non-commercial No Derivatives license
 
 
 
-PRESS ENTER TO EXIT CREDITS`
+PRESS ESCAPE TO EXIT CREDITS`
