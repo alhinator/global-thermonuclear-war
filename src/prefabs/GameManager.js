@@ -71,7 +71,7 @@ class GameManager {
         this.timerActive = false
     }
 
-    createMissile(target, strength) { //target should be a pointer to a target instance.
+    createMissile(target, strength, skipDelay = false) { //target should be a pointer to a target instance.
         //console.log("in create missile for " + target.name)
         //first, check to see if target already has smth aimed at it.
         let missileKey = target.name
@@ -81,6 +81,7 @@ class GameManager {
         let xOffset = mDir == missileDrawTextLeft ? 135 : 137
 
         let payloadDelay = 100 * strength //the larger an attack is, the longer it takes to arm.
+        if (skipDelay) { payloadDelay = 0 }
         this.scene.time.delayedCall(payloadDelay, () => {
             this.activeMissiles[missileKey] = new Typewriter(this.scene, target.x - xOffset, target.y - 85, "wgfont", mDir, 10, 16, "left")
             this.activeMissiles[missileKey].setTint(0xff0000).setDepth(5)
@@ -100,10 +101,12 @@ function parseOtherCommands(scene, mgr, input, target = scene.infoPanel) {
     //look for "name-based" commands first.
     if (input.slice(0, 4) === "VIEW") {
         panel_print_called(scene, mgr, target, getViewRequest(mgr, input.slice(5)))
+        target.finishTyping()
         return
     }
     if (input.slice(0, 4) === "INFO") {
         panel_print_called(scene, mgr, target, getInfoRequest(mgr, input.slice(5)))
+        target.finishTyping()
         return
     }
 
@@ -150,26 +153,32 @@ function parseOtherCommands(scene, mgr, input, target = scene.infoPanel) {
         case "LIST 1":
         case "LIST UNITED STATES":
             panel_print_called(scene, mgr, scene.infoPanel, mgr.USA.getTargets())
+            scene.infoPanel.finishTyping()
             break;
         case "LIST 2":
         case "LIST SOVIET UNION":
             panel_print_called(scene, mgr, scene.infoPanel, mgr.USSR.getTargets())
+            scene.infoPanel.finishTyping()
             break;
         case "NUKES 1":
         case "NUKES UNITED STATES":
             panel_print_called(scene, mgr, scene.infoPanel, mgr.USA.getVehicles())
+            scene.infoPanel.finishTyping()
             break;
         case "NUKES 2":
         case "NUKES SOVIET UNION":
             panel_print_called(scene, mgr, scene.infoPanel, mgr.USSR.getVehicles())
+            scene.infoPanel.finishTyping()
             break;
         case "POP 1":
         case "POP UNITED STATES":
             panel_print_called(scene, mgr, scene.infoPanel, mgr.USA.getPopulationStats(mgr))
+            scene.infoPanel.finishTyping()
             break;
         case "POP 2":
         case "POP SOVIET UNION":
             panel_print_called(scene, mgr, scene.infoPanel, mgr.USSR.getPopulationStats(mgr))
+            scene.infoPanel.finishTyping()
             break;
         case "TOGGLE":
             mgr.USAVisOnMap = !mgr.USAVisOnMap
@@ -181,6 +190,32 @@ function parseOtherCommands(scene, mgr, input, target = scene.infoPanel) {
                 mgr.USSR.targets[key].setVisible(mgr.USSRVisOnMap)
             }
             break;
+
+
+        //grader stuff, remove after class
+        case "HELP GRADER":
+            mgr.graderMode = true
+            panel_print_called(scene, mgr, target, helpGraderText)
+            target.finishTyping()
+            break;
+        case "FORCE WIN 1":
+            if (mgr.graderMode) { annihilate(scene, mgr, mgr.USSR); break }
+
+            return -1;
+        case "FORCE WIN 2":
+            if (mgr.graderMode) { annihilate(scene, mgr, mgr.USA); break }
+            return -1;
+        case "FORCE DRAW":
+            if (mgr.graderMode) { annihilate(scene, mgr, mgr.USA); annihilate(scene, mgr, mgr.USSR); break }
+            return -1;
+        case "FORCE NUKES 1":
+            if (mgr.graderMode) { rmvNukes(scene, mgr, mgr.USA); break }
+            return -1;
+        case "FORCE NUKES 2":
+            if (mgr.graderMode) { rmvNukes(scene, mgr, mgr.USSR); break }
+            return -1;
+
+
         default:
             return -1
     }
@@ -518,48 +553,100 @@ function winCons(scene, mgr) {
     /*out of our two returns, we have multiple cases: (we stan truth tables)
         top is self, left is  enemy
 
-                ok       warn      dead
-        ok      nthg      warn s    win en
+                ok        warn         dead        
+        ok      nthg      warn s      win en
                             
-        warn    warn en   lose bth   lose bth
+        warn    warn en   lose bth    lose bth
 
-        dead    win s     lose bth      lose bth
-
-        
+        dead    win s     lose bth    lose bth
     */
     //trivial case first
-    if (scene.gameEndBool == true || (!myState && !enState)) { return }
-    // warnings now.
-    else if (!scene.alreadyWarnedMe && myState == -1 && !enState) {
-        scene.mainConsole.lockInput()
-        scene.alreadyWarnedMe = true
-        panel_print_called(scene, mgr, scene.infoPanel, lossWarningText)
-        scene.infoPanel.onFinish = function () {
-            scene.mainConsole.unlockInput()
-            scene.infoPanel.onFinish = function () { }
+    if (!scene.gameEndBool && (myState != 0 || enState != 0)) {
+        // warnings now.
+        if (!scene.alreadyWarnedMe && myState == -1 && !enState) {
+            scene.mainConsole.lockInput()
+            scene.alreadyWarnedMe = true
+            panel_print_called(scene, mgr, scene.infoPanel, lossWarningText)
+            scene.infoPanel.onFinish = function () {
+                scene.mainConsole.unlockInput()
+                scene.infoPanel.onFinish = function () { }
+            }
+        } else if (!scene.alreadyWarnedThem && !myState && enState == -1) {
+            scene.mainConsole.lockInput()
+            scene.alreadyWarnedThem = true
+            panel_print_called(scene, mgr, scene.infoPanel, winWarningText)
+            scene.infoPanel.onFinish = function () {
+                scene.mainConsole.unlockInput()
+                scene.infoPanel.onFinish = function () { }
+            }
         }
-    } else if (!scene.alredyWarnedThem && !myState && enState == -1) {
-        scene.mainConsole.lockInput()
-        scene.alreadyWarnedThem = true
-        panel_print_called(scene, mgr, scene.infoPanel, winWarningText)
-        scene.infoPanel.onFinish = function () {
-            scene.mainConsole.unlockInput()
-            scene.infoPanel.onFinish = function () { }
+        // now for global collapses.
+        //logic: need to cover: -1 & -1, 1 & -1, -1 & 1, 1 & 1. ez claps
+        else if (Math.abs(myState * enState) == 1) {
+
+            makeGameOverPanel(scene, mgr, bothLossText, bothLossBig)
+
+        } else if (myState == 0 && enState == 1) {//my win
+            makeGameOverPanel(scene, mgr, myWinText, `WINNER: ${me.name}`)
+
+
+        } else if (myState == 1 && enState == 0) {//their win
+            makeGameOverPanel(scene, mgr, myLossText, `WINNER: ${them.name}`)
+        }
+    } else if (!scene.gameEndBool && (!me.checkLaunchable() || !them.checkLaunchable())) {
+        console.log("somone ran outta bombs")
+        //now, need to check if missiles are gone.
+        //we do this after death-checks so we can avoid conditions where i am missiless and dead, or they are missiless and dead.
+        /* 
+            table for when OUR SIDE runs out of missiles
+            top is self, left is enemy
+    
+                    ok          warn
+    
+            ok&m    lose        lose
+    
+            ok&no   draw        draw
+    
+            warn    draw        draw
+            
+            table for when THEIR SIDE  runs out of missiles
+            top is self, left is enemy. already checked if i dont have misiles so those cases are not needed
+            
+                    ok&m          warn 
+    
+            ok      wrncont       draw
+    
+            warn    wrncont       draw
+            
+        // 0 = ok , -1 = warn, 1 = dead
+        */
+        if (!me.checkLaunchable()) { // we have no more missiles
+            //our loss cons: ok+ok&m , warn+ok&m
+            if (enState == 0 && them.checkLaunchable()) {
+                makeGameOverPanel(scene, mgr, myLossMissiles, `WINNER: ${them.name}`)
+            } else {
+                makeGameOverPanel(scene, mgr, myDrawMissiles, bothLossBig)
+            }
+        }
+        else if (!them.checkLaunchable()) { //they have no more missiles
+            //our "warn" cons: ok&m
+            if (!scene.alreadyWarnedThemMissiles && myState == 0) { //can win
+                scene.mainConsole.lockInput()
+                scene.alreadyWarnedThemMissiles = true
+                panel_print_called(scene, mgr, scene.infoPanel, theirWarnMissiles)
+                scene.infoPanel.onFinish = function () {
+                    scene.mainConsole.unlockInput()
+                    scene.infoPanel.onFinish = function () { }
+                }
+            } else if ((myState == -1)) { //cant win -> force draw for simplicity
+                makeGameOverPanel(scene, mgr, theirWarnMissilesDraw, bothLossBig)
+            }
         }
     }
-    // now for global collapses.
-    //logic: need to cover: -1 & -1, 1 & -1, -1 & 1, 1 & 1. ez claps
-    else if (Math.abs(myState * enState) == 1) {
-
-        makeGameOverPanel(scene, mgr, bothLossText, bothLossBig)
-
-    } else if (myState == 0 && enState == 1) {//my win
-        makeGameOverPanel(scene, mgr, myLossText, `WINNER: ${me.name}`)
 
 
-    } else if (myState == 1 && enState == 0) {//their win
-        makeGameOverPanel(scene, mgr, myLossText, `WINNER: ${them.name}`)
-    }
+
+
 }
 
 function makeGameOverPanel(scene, mgr, smol, big) {
@@ -569,13 +656,15 @@ function makeGameOverPanel(scene, mgr, smol, big) {
     scene.mainConsole.lockInput()
     mgr.stopTimer()
     scene.infoPanel.onFinish = function () {
-        scene.blankPanel = scene.add.rectangle(0, 0, width * 2, height * 2, 0x00000, 1)
-        scene.blankPanel.setDepth(6)
-        scene.bigGameOverText = new Typewriter(scene, width / 2, height / 2, "wgfont", big, 150, 72, 1)
-        scene.bigGameOverText.setDepth(7)
-        scene.bigGameOverText.setOrigin(0.5, 0.5)
-        scene.bigGameOverText.startTypingWithoutGlow()
-        scene.time.delayedCall(10000, () => { game_restart_called(scene, mgr) }, null, this)
+        scene.time.delayedCall(5000, () => {
+            scene.blankPanel = scene.add.rectangle(0, 0, width * 2, height * 2, 0x00000, 1)
+            scene.blankPanel.setDepth(6)
+            scene.bigGameOverText = new Typewriter(scene, width / 2, height / 2, "wgfont", big, 150, 72, 1)
+            scene.bigGameOverText.setDepth(7)
+            scene.bigGameOverText.setOrigin(0.5, 0.5)
+            scene.bigGameOverText.startTypingWithoutGlow()
+            scene.time.delayedCall(10000, () => { game_restart_called(scene, mgr) }, null, this)
+        })
     }
 }
 
@@ -629,4 +718,20 @@ function computeEnemyAggroTimes(scene, mgr) {
     */
 
     //console.log(`en aggro times: ${scene.enemyAggroLow}, ${scene.enemyAggroHigh}`)
+}
+
+function annihilate(scene, mgr, country) {
+    for (const key in country.targets) {
+        let tg = country.targets[key]
+
+        mgr.createMissile(tg, 100, true)
+    }
+}
+
+function rmvNukes(scene, mgr, country) {
+    for (const key in country.vehicles) {
+        let veh = country.vehicles[key]
+
+        veh.capacity = 0
+    }
 }

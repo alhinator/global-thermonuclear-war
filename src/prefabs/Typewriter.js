@@ -1,5 +1,5 @@
 class Typewriter extends Phaser.GameObjects.BitmapText {
-    constructor(scene, x, y, font, _full_text, _speed = 30, size = 16, align = 'left') {
+    constructor(scene, x, y, font, _full_text, _speed = 20, size = 16, align = 'left') {
         super(scene, x, y, font, "", size, align)
         scene.add.existing(this)
 

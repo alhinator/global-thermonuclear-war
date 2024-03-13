@@ -71,8 +71,8 @@ class Target {
             let dfReal = this.defense_rating - strength*0.01 //using many bombs at once increases the chance of one breaching air defense.
             dfReal < 0 ? dfReal = 0.1 : dfReal              //however, they should never be guaranteed 100% success.
             if (success < dfReal){ continue;} //this means the bomb did not go off.
-            console.log("mydf: " + this.defense_rating)
-            console.log("mydfreal: " + dfReal)
+            //console.log("mydf: " + this.defense_rating)
+            //console.log("mydfreal: " + dfReal)
             this.myLocation.setTint(0xffff00) //it did - we are under attack.
             //okay. time for nuclear devastaion.
             if(this.population < 80000) { //if population is less than 90,000 - wipe that city off the map.
@@ -161,7 +161,7 @@ class Target {
     
 }
 
-/*VEHICLE TYPES 
+/*LAUNCH SITE TYPES 
     SUB
     ICBM
     JET

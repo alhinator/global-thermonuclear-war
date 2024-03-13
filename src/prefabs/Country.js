@@ -75,12 +75,12 @@ DEPENDENCIES: ${tg.dependencies}
 `
         if (tg.dependencies[0] == "NONE") {
             retVal +=
-                `THIS VEHICLE WILL REMAIN OPERATIONAL
+                `THIS LAUNCH SITE WILL REMAIN OPERATIONAL
 UNTIL ALL CITIES ARE DESTROYED.`}
         else if (tg.verifyDepend()) {
             retVal +=
                 `IF ALL DEPENDENCIES ARE DESTROYED,
-THIS VEHICLE BECOMES INACTIVE.`}
+THIS LAUNCH SITE BECOMES INACTIVE.`}
         else { retVal += `\n\n!!INACTIVE!!` }
         return retVal
 
@@ -93,11 +93,14 @@ THIS VEHICLE BECOMES INACTIVE.`}
         let retVal = `DISPLAYING ${tg.name.toUpperCase()} INFO:\n\n` +
             `PARENT COUNTRY: ${this.name}
 ZONE: ${tg.zone}
+
 ORIGINAL POPULATION: ${tg.original_population}
 CURRENT LIVING POPULATION: ${tg.population + tg.injured_citizens + tg.irradiated_citizens} (${Math.floor(((tg.population + tg.injured_citizens + tg.irradiated_citizens) / tg.original_population) * 100)}%)
 POPULATION KILLED SINCE T0: ${tg.dead_citizens}
+
 CURRENT IRRADIATED POPULATION (${mgr.gameTime}): ${tg.irradiated_citizens}
 CURRENT INJURED POPULATION (${mgr.gameTime}): ${tg.injured_citizens}
+
 AIR DEFENSE COEFFICIENT: ${tg.defense_rating}`
 
         if (tg.getDestroyed()) { retVal += `\n\n!!DESTROYED!!` }
@@ -130,9 +133,11 @@ AIR DEFENSE COEFFICIENT: ${tg.defense_rating}`
         let pop_data = this.internalGetStats(mgr)
 
         let retVal = `POPULATION DATA FOR ${this.name}:\n\n` +
+
             `ORIGINAL POPULATION (T0): ${pop_data.original}
 CURRENT LIVING POPULATION (${mgr.gameTime}): ${pop_data.current} (${pop_data.percent}%)
 POPULATION KILLED SINCE T0: ${pop_data.dead}
+
 CURRENT IRRADIATED POPULATION (${mgr.gameTime}): ${pop_data.irradiated}
 CURRENT INJURED POPULATION (${mgr.gameTime}): ${pop_data.injured}`
 
@@ -141,17 +146,31 @@ CURRENT INJURED POPULATION (${mgr.gameTime}): ${pop_data.injured}`
 
     checkDestroyed(mgr) {
         let pop_data = this.internalGetStats(mgr)
-        if (pop_data.percent < 20) {
-            //if less than twenty percent of the population remains, including the irradiated and injured, this country CANNOT WIN
-            //HOWEVER, they may continue launching missiles if they are able.
-            return -1
-        } else if (pop_data.percent <= 0) {
+        if (pop_data.percent <= 0) {
             //this country has been utterly destroyed.
             //console.log(this.name + " has been destroyed.")
             return 1
+        } else if (pop_data.percent < 20) {
+            //if less than twenty percent of the population remains, including the irradiated and injured, this country CANNOT WIN
+            //HOWEVER, they may continue launching missiles if they are able.
+            return -1
         } else {
             return 0
         }
+    }
+
+   
+
+    checkLaunchable(mgr){
+        for (const v in this.vehicles) {
+            let obj = this.vehicles[v]
+            if(obj.verifyAll()) {
+                return true //if at least one silo is left standing, we're launchable.
+            }
+            
+        }
+        return false //no silos left
+
     }
 
     //set commands
