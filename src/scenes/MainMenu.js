@@ -12,7 +12,7 @@ class MainMenu extends Phaser.Scene {
         this.alreadyWarnedThemMissiles = false
         this.gameEndBool = false
 
-        this.lastInjIrrTick = 8000
+        this.lastInjIrrTick = 5000
         this.enemyAggroTick = 20000
         this.enemyAggroLow = 16000
         this.enemyAggroHigh = 32000
@@ -112,7 +112,7 @@ class MainMenu extends Phaser.Scene {
         this.GameManager.FSM.step()
         this.GameManager.incTimer(delta)
         if (this.GameManager.gameRawTime >= this.lastInjIrrTick) {
-            this.lastInjIrrTick += 6000
+            this.lastInjIrrTick += 5000
             tickAllCityPops(this, this.GameManager)
             //console.log("done ticking city pops")
             //check game winCons.

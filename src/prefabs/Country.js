@@ -75,12 +75,12 @@ DEPENDENCIES: ${tg.dependencies}
 `
         if (tg.dependencies[0] == "NONE") {
             retVal +=
-                `THIS VEHICLE WILL REMAIN OPERATIONAL
+                `THIS LAUNCH SITE WILL REMAIN OPERATIONAL
 UNTIL ALL CITIES ARE DESTROYED.`}
         else if (tg.verifyDepend()) {
             retVal +=
                 `IF ALL DEPENDENCIES ARE DESTROYED,
-THIS VEHICLE BECOMES INACTIVE.`}
+THIS LAUNCH SITE BECOMES INACTIVE.`}
         else { retVal += `\n\n!!INACTIVE!!` }
         return retVal
 

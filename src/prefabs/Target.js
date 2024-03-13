@@ -161,7 +161,7 @@ class Target {
     
 }
 
-/*VEHICLE TYPES 
+/*LAUNCH SITE TYPES 
     SUB
     ICBM
     JET

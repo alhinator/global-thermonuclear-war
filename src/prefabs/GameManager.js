@@ -553,10 +553,10 @@ function winCons(scene, mgr) {
     /*out of our two returns, we have multiple cases: (we stan truth tables)
         top is self, left is  enemy
 
-                ok       warn          dead        
+                ok        warn         dead        
         ok      nthg      warn s      win en
                             
-        warn    warn en    lose bth   lose bth
+        warn    warn en   lose bth    lose bth
 
         dead    win s     lose bth    lose bth
     */
