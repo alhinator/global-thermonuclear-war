@@ -9,8 +9,12 @@ class Country {
     }
 
     //get commands
-    getTargets() {
+    getTargets(zoneFlag = false) {
         let retVal = "SIGNIFICANT TARGETS IN THE " + this.name + ":\n\n"
+        
+        if(zoneFlag){
+            retVal = "TARGETS IN RANGE IN THE " + this.name + ":\n\n"
+        }
         for (const zz in this.zones) {
             let c_zone = this.zones[zz]
             let lr = 0
@@ -30,6 +34,40 @@ class Country {
             }
             retVal += '\n'
         }
+
+
+
+        //console.log(retVal)
+        return retVal
+    }
+
+        //get commands
+    getTargetsByZone(zones) {
+
+        if(zones[0] == "ALL") {return(this.getTargets(true))}
+        let retVal = "TARGETS IN RANGE IN THE " + this.name + ":\n\n"
+
+
+        for (const zz in zones) {
+            let c_zone = zones[zz]
+            let lr = 0
+            retVal += "[" + c_zone + "]\n"
+            //less efficient, but better for players. sort by zone.
+            for (const key in this.targets) {
+                if (this.targets[key].zone == c_zone) {
+                    let nm = this.targets[key].name
+                    if (this.targets[key].destroyed) { nm += " (x)" }
+                    if (lr == 0 || lr == 1) { retVal += nm; for (let i = 0; i < 20 - nm.length; i++) { retVal += " " } }
+                    else { retVal += nm + "\n" }
+                    lr++; if (lr > 2) { lr = 0 }
+                }
+            }
+            if (retVal.charAt(retVal.length - 1) != '\n') {
+                retVal += '\n'
+            }
+            retVal += '\n'
+        }
+        
 
 
         //console.log(retVal)
