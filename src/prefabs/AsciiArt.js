@@ -84,20 +84,19 @@ OTHER HELP:
 COMMANDS:
     TOGGLE : TOGGLES CITY VISIBILITY ON MAP.
     MANUAL : OPENS WOPR OPERATIONS MANUAL.
-    LAUNCH : ENTERS LAUNCH MODE IF ABLE. ONLY AVAILABLE
-        AFTER FIRST STRIKE COMMAND.
+    CREDITS : SHOWS GAME CREDITS.
+    EXIT : TERMINATES CONNECTION TO WOPR SYSTEM.
+
+    LAUNCH : ENTERS LAUNCH MODE.
     CLEAR : CLEARS INFORMATION PANEL.
     PAUSE : PAUSES SIMULATION.
     RESUME : RESUMES SIMULATION.
-    EXIT : TERMINATES CONNECTION TO WOPR SYSTEM.
-COMMANDS WITH <ARGUMENT>:
+    
     LIST <COUNTRY> : LISTS ALL TARGETS IN COUNTRY.
     POP <COUNTRY> : SHOWS POPULATION DATA OF COUNTRY.
     NUKES <COUNTRY> : SHOWS LAUNCH SITES IN COUNTRY.
     VIEW <TARGET> : DISPLAYS STATS OF CITY.
-    INFO <SITE> : DISPLAYS STATS OF LAUNCH SITE.
-
-`
+    INFO <SITE> : DISPLAYS STATS OF LAUNCH SITE.`
 
 let gettingStartedText = 
 `NEW USERS SHOULD FAMILIARIZE THEMSELVES WITH THE
@@ -301,3 +300,28 @@ let theirWarnMissilesDraw =
 ENEMY WARHEAD RESERVES DEPLETED.
 SOCIETAL COLLAPSE IMMINENT. VICTORY IS IMPOSSIBLE.
 SIMULATION TERMINATING....`
+
+let creditsText = 
+`GLOBAL THERMONUCLEAR WAR
+
+Developed by alhinator
+
+Special thanks to UCSC's Prof. Nathan Altice
+and all of the people who helped playtest this game <3
+
+This game was made with the free Phaser.js framework, found at
+https://phaser.io/ 
+
+Intro-script, the original WOPR system, and audio effects
+belong to WarGames (1983), distributed by MGM/UA Entertainment Company.
+
+The FontStruction “WarGames”
+(https://fontstruct.com/fontstructions/show/789830) by Damien Guard is licensed
+under a Creative Commons Attribution Non-commercial No Derivatives license
+(http://creativecommons.org/licenses/by-nc-nd/3.0/).
+
+
+
+
+
+PRESS ENTER TO EXIT CREDITS`

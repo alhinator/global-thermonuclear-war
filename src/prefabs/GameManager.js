@@ -118,6 +118,10 @@ function parseOtherCommands(scene, mgr, input, target = scene.infoPanel) {
         case "MANUAL":
             window.open('./WOPR System Operation Manual.pdf', '_blank')
             break;
+        case "CREDITS":
+            scene.scene.launch('creditsScene')
+            scene.scene.pause('mainMenuScene')
+            break;
         case "HELP GAMES":
             panel_print_called(scene, mgr, target, helpGamesText)
             break;

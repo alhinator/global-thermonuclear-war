@@ -4,7 +4,7 @@ class InitialState extends State {
         console.log("end initialstate enter")
 
         //SKIP MAP THANG
-        //scene.map.finishTyping()
+        scene.map.finishTyping()
     }
     execute(scene, mgr) {
 
