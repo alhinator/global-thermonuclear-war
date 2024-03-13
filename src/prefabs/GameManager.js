@@ -118,6 +118,10 @@ function parseOtherCommands(scene, mgr, input, target = scene.infoPanel) {
         case "MANUAL":
             window.open('./WOPR System Operation Manual.pdf', '_blank')
             break;
+        case "CREDITS":
+            scene.scene.launch('creditsScene')
+            scene.scene.pause('mainMenuScene')
+            break;
         case "HELP GAMES":
             panel_print_called(scene, mgr, target, helpGamesText)
             break;
@@ -594,7 +598,7 @@ function winCons(scene, mgr) {
             makeGameOverPanel(scene, mgr, myLossText, `WINNER: ${them.name}`)
         }
     } else if (!scene.gameEndBool && (!me.checkLaunchable() || !them.checkLaunchable())) {
-        console.log("somone ran outta bombs")
+        //console.log("somone ran outta bombs")
         //now, need to check if missiles are gone.
         //we do this after death-checks so we can avoid conditions where i am missiless and dead, or they are missiless and dead.
         /* 
