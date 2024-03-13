@@ -561,7 +561,7 @@ function winCons(scene, mgr) {
         dead    win s     lose bth    lose bth
     */
     //trivial case first
-    if (!scene.gameEndBool && !(!myState && !enState)) {
+    if (!scene.gameEndBool && (myState != 0 || enState != 0)) {
         // warnings now.
         if (!scene.alreadyWarnedMe && myState == -1 && !enState) {
             scene.mainConsole.lockInput()
@@ -593,7 +593,8 @@ function winCons(scene, mgr) {
         } else if (myState == 1 && enState == 0) {//their win
             makeGameOverPanel(scene, mgr, myLossText, `WINNER: ${them.name}`)
         }
-    } else if (!scene.gameEndBool && !(me.checkLaunchable() && them.checkLaunchable())) {
+    } else if (!scene.gameEndBool && (!me.checkLaunchable() || !them.checkLaunchable())) {
+        console.log("somone ran outta bombs")
         //now, need to check if missiles are gone.
         //we do this after death-checks so we can avoid conditions where i am missiless and dead, or they are missiless and dead.
         /* 

@@ -164,7 +164,7 @@ CURRENT INJURED POPULATION (${mgr.gameTime}): ${pop_data.injured}`
     checkLaunchable(mgr){
         for (const v in this.vehicles) {
             let obj = this.vehicles[v]
-            if(obj.verifyAll) {
+            if(obj.verifyAll()) {
                 return true //if at least one silo is left standing, we're launchable.
             }
             
