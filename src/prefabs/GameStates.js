@@ -191,8 +191,17 @@ COMMAND 'HELP' TO VIEW ALL COMMANDS.`
                         this.activeSource = src
                         this.state = "dest"
                         do_panel_magic(scene, mgr, `\n\nZONES IN RANGE:\n${this.activeSource.zones}${launchText2}`)
-                        panel_print_called(scene, mgr, scene.infoPanel, them.getTargets())
+                        panel_print_called(scene, mgr, scene.infoPanel, them.getTargetsByZone(this.activeSource.zones))
                         scene.infoPanel.finishTyping()
+                        break;
+                    }
+                    //only called on bad input
+                    scene.infoPanel.onFinish = function () {
+                        scene.time.delayedCall(1000, ()=>{
+                            panel_print_called(scene, mgr, scene.infoPanel, me.getVehicles())
+                            scene.infoPanel.finishTyping()
+                        }, null, this)
+                        scene.infoPanel.onFinish = function (){}
                     }
                     break
                 case "dest":
@@ -212,7 +221,20 @@ COMMAND 'HELP' TO VIEW ALL COMMANDS.`
                         this.activeDest = dest
                         this.state = "payload"
                         do_panel_magic(scene, mgr, `\n\nWARHEADS AVAILABLE: ${this.activeSource.capacity}${launchText3}`)
+                        break
                     }
+                    //code should only be called if we badinput
+                    //only called on bad input
+                    let zz = them.getTargetsByZone(this.activeSource.zones)
+                    console.log(zz)
+                    scene.infoPanel.onFinish = function () {
+                        scene.time.delayedCall(1000, ()=>{
+                            panel_print_called(scene, mgr, scene.infoPanel, zz)
+                            scene.infoPanel.finishTyping()
+                        }, null, this)
+                        scene.infoPanel.onFinish = function (){}
+                    }
+                    
                     break
                 case "payload":
                     payload = parseInt(input)
