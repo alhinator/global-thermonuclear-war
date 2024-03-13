@@ -193,27 +193,27 @@ function parseOtherCommands(scene, mgr, input, target = scene.infoPanel) {
 
 
         //grader stuff, remove after class
-        case "HELP GRADER":
-            mgr.graderMode = true
-            panel_print_called(scene, mgr, target, helpGraderText)
-            target.finishTyping()
-            break;
-        case "FORCE WIN 1":
-            if (mgr.graderMode) { annihilate(scene, mgr, mgr.USSR); break }
+        // case "HELP GRADER":
+        //     mgr.graderMode = true
+        //     panel_print_called(scene, mgr, target, helpGraderText)
+        //     target.finishTyping()
+        //     break;
+        // case "FORCE WIN 1":
+        //     if (mgr.graderMode) { annihilate(scene, mgr, mgr.USSR); break }
 
-            return -1;
-        case "FORCE WIN 2":
-            if (mgr.graderMode) { annihilate(scene, mgr, mgr.USA); break }
-            return -1;
-        case "FORCE DRAW":
-            if (mgr.graderMode) { annihilate(scene, mgr, mgr.USA); annihilate(scene, mgr, mgr.USSR); break }
-            return -1;
-        case "FORCE NUKES 1":
-            if (mgr.graderMode) { rmvNukes(scene, mgr, mgr.USA); break }
-            return -1;
-        case "FORCE NUKES 2":
-            if (mgr.graderMode) { rmvNukes(scene, mgr, mgr.USSR); break }
-            return -1;
+        //     return -1;
+        // case "FORCE WIN 2":
+        //     if (mgr.graderMode) { annihilate(scene, mgr, mgr.USA); break }
+        //     return -1;
+        // case "FORCE DRAW":
+        //     if (mgr.graderMode) { annihilate(scene, mgr, mgr.USA); annihilate(scene, mgr, mgr.USSR); break }
+        //     return -1;
+        // case "FORCE NUKES 1":
+        //     if (mgr.graderMode) { rmvNukes(scene, mgr, mgr.USA); break }
+        //     return -1;
+        // case "FORCE NUKES 2":
+        //     if (mgr.graderMode) { rmvNukes(scene, mgr, mgr.USSR); break }
+        //     return -1;
 
 
         default:
@@ -594,7 +594,7 @@ function winCons(scene, mgr) {
             makeGameOverPanel(scene, mgr, myLossText, `WINNER: ${them.name}`)
         }
     } else if (!scene.gameEndBool && (!me.checkLaunchable() || !them.checkLaunchable())) {
-        console.log("somone ran outta bombs")
+        //console.log("somone ran outta bombs")
         //now, need to check if missiles are gone.
         //we do this after death-checks so we can avoid conditions where i am missiless and dead, or they are missiless and dead.
         /* 
