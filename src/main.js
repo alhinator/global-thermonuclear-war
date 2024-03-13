@@ -11,7 +11,7 @@ let config = {
             debug: true
         }
     },
-    scene: [Loading, MainMenu, ExitScene]
+    scene: [Loading, MainMenu, ExitScene, Credits]
 }
 let game = new Phaser.Game(config)
 
@@ -29,4 +29,4 @@ let key1, key2, key3, key4, key5, key6, key7, key8, key9, key0, keyMINUS
 let keyQ, keyW, keyE, keyR, keyT, keyY, keyU, keyI, keyO, keyP
 let keyA, keyS, keyD, keyF, keyG, keyH, keyJ, keyK, keyL
 let keyZ, keyX, keyC, keyV, keyB, keyN, keyM
-let keyBACK, keyENTER, keySPACE
+let keyBACK, keyENTER, keySPACE, keyESC
