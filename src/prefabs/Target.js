@@ -202,6 +202,6 @@ class Vehicle {
     }
 
     verifyAll(){
-        return this.verifyDepend() && this.capacity > 0
+        return (this.verifyDepend() == true) && (this.capacity > 0)
     }
 }

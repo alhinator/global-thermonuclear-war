@@ -95,12 +95,13 @@ class FirstTarget extends State {
             scene.mainConsole.clearUserInput()
             panel_print_called(scene, mgr, scene.infoPanel, selectedSelfTargetText)
         }
-        else if ((tg = them.getTargetByName(input)) != false) { //selected GOOD RUSSIAN TARGET
+        else if ((tg = them.getTargetByName(input)) != false) { //selected GOOD ENEMY TARGET
             this.targetsChosen++
             //now, add the "good" target to the active list.
             mgr.myInitialTargets[tg.name] = tg
             //console.log(mgr.myInitialTargets)
             do_panel_magic(scene, mgr, '\n\n')
+            panel_print_called(scene, mgr, scene.infoPanel, firstStrikeText2)
 
 
         }

@@ -135,6 +135,7 @@ class MainMenu extends Phaser.Scene {
 
     userHitEnter() {
         //console.log("enter got")
+        if (this.mainConsole.allowInput == false) { return }
         this.GameManager.FSM.recieveReturnKey()
     }
 
