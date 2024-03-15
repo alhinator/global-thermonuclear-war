@@ -428,7 +428,7 @@ function chooseEnemyTargets(scene, mgr, initial = false) {
             let highest
             for (const kiki in me.targets) {
                 const potential_dest = me.targets[kiki]
-                if ((!highest || potential_dest.population > highest.population) && !potential_dest.getDestroyed() && src.verifyZone(potential_dest.zone)) {
+                if ((!highest || potential_dest.population > highest.population) /*&& !potential_dest.getDestroyed()*/ && src.verifyZone(potential_dest.zone)) {
                     highest = potential_dest
                 }
             }
