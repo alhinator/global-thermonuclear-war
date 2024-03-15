@@ -1,3 +1,16 @@
+// alex leghart
+
+// graders: use command HELP GRADER to enter debug mode
+
+// phaser components used: bitmap text, timers, post-processing, audio/sfx, finite state machine
+
+// cool features you may miss during gameplay: see section 3 in the game manual for missile stuff
+// the game also adjusts its difficulty based on the response time of the player; enemy country
+// launches at a rate based off of the player's last five response times useing a sliding average window.
+// additionally, the population statistics are drawn from the 1980 US & USSR census
+
+
+
 let config = {
     type: Phaser.WEBGL,
     width: 1080,
