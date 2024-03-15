@@ -9,6 +9,19 @@
 // launches at a rate based off of the player's last five response times useing a sliding average window.
 // additionally, the population statistics are drawn from the 1980 US & USSR census
 
+//asset citations are on credits page in-game
+
+/*
+//random object picking code taken & slightly edited from https://stackoverflow.com/questions/2532218/pick-random-property-from-a-javascript-object 
+//info from https://en.wikipedia.org/wiki/United_States_Navy_submarine_bases 
+// and https://en.wikipedia.org/wiki/List_of_United_States_Air_Force_installations
+
+//United States population data retrieved from https://en.wikipedia.org/wiki/1980_United_States_census#City_rankings
+//Soviet Union population data retrieved from https://sashamaps.net/docs/maps/biggest-soviet-cities/
+
+
+*/
+
 
 
 let config = {
